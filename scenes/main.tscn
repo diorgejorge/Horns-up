@@ -13,7 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ViewportContainer" type="SubViewportContainer" parent="."]
-texture_filter = 1
+texture_filter = 2
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,12 +21,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 stretch = true
-stretch_shrink = 4
+stretch_shrink = 1
 
 [node name="GameViewport" type="SubViewport" parent="ViewportContainer"]
 handle_input_locally = false
-canvas_item_default_texture_filter = 0
-size = Vector2i(320, 180)
+msaa_3d = 2
+size = Vector2i(1280, 720)
 render_target_update_mode = 4
 
 [node name="SideCamera" type="Camera3D" parent="ViewportContainer/GameViewport"]

@@ -21,7 +21,7 @@
 - Fora desta entrega: peças do Mjolnir, runas, amuletos, ferreiro, chefe, outras habilidades, mapa/minimapa, bando de ovelhas, vídeo final.
 - **Como rodar os testes (correção do plano anterior):** antes da primeira rodada, e sempre que um arquivo novo com `class_name` for criado, rodar `godot --headless --path . --import` (registra os `class_name`; sem isso o runner falha com "Identifier not declared"). Depois: `godot --headless --path . -s tests/run_tests.gd`. Expected em todo "ver passar": `0 failed`, código de saída 0.
 - **Alvos de colisão reais nos testes (correção do plano anterior):** todo alvo que um `Area3D` precisa detectar é um corpo de física de verdade (`StaticBody3D` ou `CharacterBody3D` com `CollisionShape3D` e shape não vazia), dentro da árvore, nunca um `Node3D` solto. Depois de posicionar, esperar `await physics_frames(2)` antes de checar `get_overlapping_bodies()` ou sinais de contato. Reusar `tests/fake_target.gd` (já é `StaticBody3D`) quando servir.
-- **Render 320x180 (correção do plano anterior):** com `SubViewportContainer.stretch = true`, o container sobrescreve o `size` do `SubViewport`. O tamanho de 320x180 vem de `stretch_shrink = 4` sobre a janela de 1280x720. Ao mexer em `scenes/main.tscn`, manter `stretch = true` e `stretch_shrink = 4`; `tests/test_view.gd` continua passando sem mudança.
+- **Render em HD (decisão do autor em 2026-11-13, substitui o 320x180):** `scenes/main.tscn` usa `stretch = true` com `stretch_shrink = 1`, `msaa_3d = 4x` e filtro linear. Ao mexer em `scenes/main.tscn`, manter isso; `tests/test_view.gd::test_main_scene_is_hd` cobre. O bode e a ovelha usam os modelos `bode_hd.glb` e `ovelha_hd.glb` dentro do nó `Visual`.
 - Troca de sala sempre com `call_deferred` (nunca dentro de `body_entered` ou de `_physics_process`), para não remover corpos durante a consulta de física.
 
 ## Review Focus
@@ -139,7 +139,7 @@ Estas escolhas são do plano, não do autor: nome do id da habilidade (`martelo_
 
 **Files:**
 - Create: `scripts/world.gd`, `tests/test_world.gd`
-- Modify: `scenes/main.tscn` (no `GameViewport`, trocar a instância de `Room` por um nó `World` com uma instância de `player.tscn` como filho; manter `stretch = true` e `stretch_shrink = 4`), `scripts/side_camera.gd` (achar o bode pelo grupo `player`, se ainda não achar)
+- Modify: `scenes/main.tscn` (no `GameViewport`, trocar a instância de `Room` por um nó `World` com uma instância de `player.tscn` como filho; manter `stretch = true`, `stretch_shrink = 1` e o MSAA 4x), `scripts/side_camera.gd` (achar o bode pelo grupo `player`, se ainda não achar)
 
 **Interfaces:**
 - Consumes: `SaveData` (Task 1), `Player` (Tasks 2 e 4), `AbilityPickup` (Task 2), `Room`/`Door`/`ThorStatue` (Task 5), `SaveGame`.
@@ -147,7 +147,7 @@ Estas escolhas são do plano, não do autor: nome do id da habilidade (`martelo_
 - Ligações ao carregar uma sala: `Door.used` → `call_deferred("load_room", target_room, target_door)`; `ThorStatue.activated` → `data.statue_id = id`, `data.room_id = current_room.room_id`, grava; `AbilityPickup.collected` → `data.add_ability(id)`, grava na hora; `AbilityPickup.refresh(player)`.
 - Ao iniciar: `data = SaveData.from_dict(SaveGame.read(save_path))`, passa `data.abilities` ao bode e chama `load_room(data.room_id)`. Ao `Player.died`: `respawn()` = `load_room(data.room_id)`, `heal_full()`, `grant_invulnerability(RESPAWN_INVULN_SECONDS)`.
 
-- [ ] **Step 1: Escrever os testes**, com `save_path = "user://test_world.json"` apagado ao fim, e um `sala2.tscn` mínimo provisório (chão, `SpawnPoint`, porta `oeste`) só para os testes passarem antes da Task 7: `test_no_save_starts_sala1_spawn`; `test_old_save_starts_at_statue` (`{"statue_id": "sala1"}`); `test_unknown_room_falls_back` (`{"room_id": "x"}` → `sala1` no spawn); `test_door_moves_to_other_room` (chamar `load_room("sala2", "oeste")`, `await tree.process_frame`: `current_room.room_id == "sala2"`, bode no `Arrival` da porta oeste); `test_statue_touch_saves_room_and_statue`; `test_pickup_saves_ability_immediately`; `test_death_in_sala2_respawns_at_saved_statue` (save na estátua da sala 1, `load_room("sala2")`, zerar a vida, `await tree.process_frame` → sala 1, na estátua, vida cheia, com a habilidade); `test_main_scene_still_low_res` (instanciar `main.tscn`, `await tree.process_frame`, `GameViewport.size == Vector2i(320, 180)`).
+- [ ] **Step 1: Escrever os testes**, com `save_path = "user://test_world.json"` apagado ao fim, e um `sala2.tscn` mínimo provisório (chão, `SpawnPoint`, porta `oeste`) só para os testes passarem antes da Task 7: `test_no_save_starts_sala1_spawn`; `test_old_save_starts_at_statue` (`{"statue_id": "sala1"}`); `test_unknown_room_falls_back` (`{"room_id": "x"}` → `sala1` no spawn); `test_door_moves_to_other_room` (chamar `load_room("sala2", "oeste")`, `await tree.process_frame`: `current_room.room_id == "sala2"`, bode no `Arrival` da porta oeste); `test_statue_touch_saves_room_and_statue`; `test_pickup_saves_ability_immediately`; `test_death_in_sala2_respawns_at_saved_statue` (save na estátua da sala 1, `load_room("sala2")`, zerar a vida, `await tree.process_frame` → sala 1, na estátua, vida cheia, com a habilidade); `test_main_scene_still_hd` (instanciar `main.tscn`, `await tree.process_frame`, `GameViewport.size == Vector2i(1280, 720)`).
 - [ ] **Step 2: Rodar e ver falhar.** Expected: falhas em `test_world`.
 - [ ] **Step 3: Implementar `World`.** A sala antiga sai com `queue_free()` e a nova entra no mesmo quadro diferido; o bode nunca é recriado (mantém vida e habilidades).
 - [ ] **Step 4: Rodar a suíte inteira e ver passar** (com `--import` antes).
@@ -173,7 +173,7 @@ Estas escolhas são do plano, não do autor: nome do id da habilidade (`martelo_
 
 - [ ] **Step 1: Escrever os testes** de estrutura: `test_has_required_nodes` (porta `oeste` apontando para `sala1`, um `AbilityPickup` com `martelo_gelo`, um `StoneBlock`, pelo menos duas `IceWall`, estátua `sala2_topo`); `test_top_statue_unreachable_by_jump` (diferença de altura entre o chão e a estátua maior que a altura máxima do pulo, `JUMP_SPEED² / (2 * GRAVITY)` ≈ 1,6, com folga); `test_pickup_reachable_by_jump` (altura da plataforma do pickup menor que 1,4).
 - [ ] **Step 2: Rodar e ver falhar.** Expected: falhas em `test_sala2_layout`.
-- [ ] **Step 3: Montar a cena.** Gelo em azul-claro, pedra cinza-escura rachada, neve branca: as três leituras precisam ser distintas em 320x180.
+- [ ] **Step 3: Montar a cena.** Gelo em azul-claro, pedra cinza-escura rachada, neve branca: as três leituras precisam ser distintas na tela.
 - [ ] **Step 4: Rodar a suíte inteira e ver passar** (com `--import` antes).
 - [ ] **Step 5: Commit** `feat: sala de gelo com poço e primeira habilidade`.
 
@@ -193,5 +193,5 @@ Estas escolhas são do plano, não do autor: nome do id da habilidade (`martelo_
 - [ ] **Step 2: Rodar e ver falhar.**
 - [ ] **Step 3: Implementar.**
 - [ ] **Step 4: Rodar a suíte inteira e ver passar.** Run: `godot --headless --path . --import` e `godot --headless --path . -s tests/run_tests.gd`. Expected: `0 failed`.
-- [ ] **Step 5: Verificação manual do critério de pronto.** Apagar o save (`user://save.json`) e rodar `godot --path .`. Conferir, na ordem: tudo da primeira sala ainda funciona; a porta da direita leva à sala 2 e a da esquerda da sala 2 volta; sem a habilidade, a pedra não quebra e não dá para grudar no gelo; pegar o objeto mostra o aviso; a pedra quebra com o martelo; segurando contra o gelo o bode gruda, e Espaço pula de parede até o topo; tocar a estátua do topo salva; fechar e reabrir começa no topo da sala 2 com a habilidade; morrer renasce na última estátua tocada. Registrar o resultado na descrição do PR, com capturas em 320x180.
+- [ ] **Step 5: Verificação manual do critério de pronto.** Apagar o save (`user://save.json`) e rodar `godot --path .`. Conferir, na ordem: tudo da primeira sala ainda funciona; a porta da direita leva à sala 2 e a da esquerda da sala 2 volta; sem a habilidade, a pedra não quebra e não dá para grudar no gelo; pegar o objeto mostra o aviso; a pedra quebra com o martelo; segurando contra o gelo o bode gruda, e Espaço pula de parede até o topo; tocar a estátua do topo salva; fechar e reabrir começa no topo da sala 2 com a habilidade; morrer renasce na última estátua tocada. Registrar o resultado na descrição do PR, com capturas do jogo.
 - [ ] **Step 6: Commit** `feat: aviso da habilidade no HUD`.
