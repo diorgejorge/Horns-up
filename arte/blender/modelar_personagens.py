@@ -91,77 +91,106 @@ class Modelo:
         return [o[0] for o in self.ossos].index(nome)
 
     # -- fechamento de cada peça
-    def _peca(self, verts, matriz, mat, osso):
-        bmesh.ops.transform(self.bm, matrix=matriz, verts=verts)
+    def _copiar(self, t, matriz, mat, osso, chanfro=0.0):
+        """Copia a peça montada no bmesh temporário `t` para a malha final,
+        com chanfro opcional nas arestas (tira a cara de caixote)."""
+        if chanfro > 0:
+            bmesh.ops.bevel(t, geom=list(t.verts) + list(t.edges),
+                            offset=chanfro, offset_type="OFFSET", segments=1,
+                            profile=0.5, affect="EDGES", clamp_overlap=True)
         if mat not in self.mats:
             self.mats.append(mat)
         mi = self.mats.index(mat)
-        for f in {f for v in verts for f in v.link_faces}:
-            f.material_index = mi
-            f.smooth = False
         bi = self._indice_osso(osso)
-        for v in verts:
-            v[self.deform][bi] = 1.0
+        mapa = {}
+        for v in t.verts:
+            nv = self.bm.verts.new(matriz @ v.co)
+            nv[self.deform][bi] = 1.0
+            mapa[v] = nv
+        for f in t.faces:
+            nf = self.bm.faces.new([mapa[v] for v in f.verts])
+            nf.material_index = mi
+            nf.smooth = False
+        t.free()
+
+    @staticmethod
+    def _chanfro(*medidas, frac=0.16):
+        return max(0.0, min(m for m in medidas if m > 0) * frac)
 
     # -- primitivas
     def caixa(self, tam, loc, mat, osso, rot=(0, 0, 0), topo=(1, 1),
-              base=(1, 1), desloc_topo=(0, 0)):
+              base=(1, 1), desloc_topo=(0, 0), chanfro=True):
         """Caixa com afunilamento opcional no topo (+Z local) e na base."""
-        vs = bmesh.ops.create_cube(self.bm, size=1.0)["verts"]
-        for v in vs:
-            t = topo if v.co.z > 0 else base
-            v.co.x *= tam[0] * t[0]
-            v.co.y *= tam[1] * t[1]
+        t = bmesh.new()
+        bmesh.ops.create_cube(t, size=1.0)
+        for v in t.verts:
+            k = topo if v.co.z > 0 else base
+            v.co.x *= tam[0] * k[0]
+            v.co.y *= tam[1] * k[1]
             v.co.z *= tam[2]
             if v.co.z > 0:
                 v.co.x += desloc_topo[0]
                 v.co.y += desloc_topo[1]
-        self._peca(vs, mat4(loc, rot), mat, osso)
+        c = self._chanfro(*tam) if chanfro else 0.0
+        self._copiar(t, mat4(loc, rot), mat, osso, c)
 
-    def caixa_entre(self, p0, p1, larg, prof, mat, osso, topo=(1, 1)):
+    def caixa_entre(self, p0, p1, larg, prof, mat, osso, topo=(1, 1),
+                    chanfro=True):
         """Caixa esticada de p0 a p1 (membros, cabos)."""
         m, comp = alinhar(p0, p1)
-        vs = bmesh.ops.create_cube(self.bm, size=1.0)["verts"]
-        for v in vs:
-            t = topo if v.co.z > 0 else (1, 1)
-            v.co.x *= larg * t[0]
-            v.co.y *= prof * t[1]
+        t = bmesh.new()
+        bmesh.ops.create_cube(t, size=1.0)
+        for v in t.verts:
+            k = topo if v.co.z > 0 else (1, 1)
+            v.co.x *= larg * k[0]
+            v.co.y *= prof * k[1]
             v.co.z *= comp
-        self._peca(vs, m, mat, osso)
+        c = self._chanfro(larg, prof, comp) if chanfro else 0.0
+        self._copiar(t, m, mat, osso, c)
 
-    def cilindro(self, r1, r2, alt, loc, mat, osso, rot=(0, 0, 0), lados=6,
+    def cilindro(self, r1, r2, alt, loc, mat, osso, rot=(0, 0, 0), lados=8,
                  escala=(1, 1, 1)):
-        vs = bmesh.ops.create_cone(self.bm, cap_ends=True, cap_tris=False,
-                                   segments=lados, radius1=r1, radius2=r2,
-                                   depth=alt)["verts"]
-        self._peca(vs, mat4(loc, rot, escala), mat, osso)
+        t = bmesh.new()
+        bmesh.ops.create_cone(t, cap_ends=True, cap_tris=False, segments=lados,
+                              radius1=r1, radius2=r2, depth=alt)
+        self._copiar(t, mat4(loc, rot, escala), mat, osso)
 
-    def cilindro_entre(self, p0, p1, r0, r1, mat, osso, lados=6):
+    def cilindro_entre(self, p0, p1, r0, r1, mat, osso, lados=8):
         m, comp = alinhar(p0, p1)
-        vs = bmesh.ops.create_cone(self.bm, cap_ends=True, cap_tris=False,
-                                   segments=lados, radius1=r0, radius2=r1,
-                                   depth=comp)["verts"]
-        self._peca(vs, m, mat, osso)
+        t = bmesh.new()
+        bmesh.ops.create_cone(t, cap_ends=True, cap_tris=False, segments=lados,
+                              radius1=r0, radius2=r1, depth=comp)
+        self._copiar(t, m, mat, osso)
 
-    def bola(self, r, loc, mat, osso, escala=(1, 1, 1), rot=(0, 0, 0), sub=1):
-        vs = bmesh.ops.create_icosphere(self.bm, subdivisions=sub,
-                                        radius=r)["verts"]
-        self._peca(vs, mat4(loc, rot, escala), mat, osso)
+    def bola(self, r, loc, mat, osso, escala=(1, 1, 1), rot=(0, 0, 0), sub=2):
+        t = bmesh.new()
+        bmesh.ops.create_icosphere(t, subdivisions=sub, radius=r)
+        self._copiar(t, mat4(loc, rot, escala), mat, osso)
 
-    def tubo(self, pontos, raios, mat, ossos, lados=6):
+    def tubo(self, pontos, raios, mat, ossos, lados=8, juntas=True):
         """Corrente de troncos de cone (chifres, rabo). `ossos` pode ser um
-        nome só ou uma lista com um osso por trecho."""
+        nome só ou uma lista com um osso por trecho. Bolinhas nas juntas
+        escondem as emendas."""
         for i in range(len(pontos) - 1):
             osso = ossos if isinstance(ossos, str) else ossos[i]
             self.cilindro_entre(pontos[i], pontos[i + 1], raios[i],
                                 raios[i + 1], mat, osso, lados)
+            if juntas and 0 < i and raios[i] > 0.02:
+                self.bola(raios[i] * 0.98, pontos[i], mat, osso, sub=1)
+
+    def tufo(self, base, direcao, larg, mat, osso, lados=4):
+        """Ponta de pelo / espinho: cone fino saindo de `base`."""
+        base = Vector(base)
+        self.cilindro_entre(base, base + Vector(direcao), larg, 0.0, mat, osso,
+                            lados)
 
     def lamina(self, pontos, faces, mat, osso):
         """Superfície fina feita à mão (membrana da asa)."""
-        vs = [self.bm.verts.new(Vector(p)) for p in pontos]
+        t = bmesh.new()
+        vs = [t.verts.new(Vector(p)) for p in pontos]
         for f in faces:
-            self.bm.faces.new([vs[i] for i in f])
-        self._peca(vs, Matrix.Identity(4), mat, osso)
+            t.faces.new([vs[i] for i in f])
+        self._copiar(t, Matrix.Identity(4), mat, osso)
 
     # -- montagem final no Blender
     def construir(self):
@@ -271,7 +300,7 @@ def bode():
     m.caixa((0.48, 0.52, 0.45), (0.03, 0, 0.98), pelo, "tronco",
             topo=(1.12, 1.18))
     m.caixa((0.1, 0.38, 0.26), (0.27, 0, 1.0), pelo, "tronco", topo=(1.1, 1))
-    m.caixa((0.6, 0.64, 0.07), (0.04, 0, 1.0), couro, "tronco", rot=(38, 0, 0))
+    m.caixa((0.53, 0.64, 0.07), (0.04, 0, 1.0), couro, "tronco", rot=(38, 0, 0))
     m.cilindro(0.06, 0.06, 0.03, (0.33, 0, 0.98), ferro, "tronco",
                rot=(0, 90, 0), lados=8)
     m.caixa((0.2, 0.62, 0.08), (0.0, 0, 1.2), pelo_sombra, "tronco")  # pelo do pescoço
@@ -343,6 +372,89 @@ def bode():
         b = centro + perp * 0.1 * s
         m.caixa_entre(b - perp * 0.03, b + perp * 0.03, 0.32, 0.34, couro,
                       "martelo")
+
+
+    # ---- detalhes (definição) ----
+    chifre_esc = material("bode_chifre_anel", "#33271f")
+    iris = material("bode_iris", "#c9963a")
+    # peitoral e abdômen marcados
+    for s in (1, -1):
+        m.caixa((0.08, 0.2, 0.15), (0.3, 0.11 * s, 1.07), pelo, "tronco",
+                rot=(0, -8, 0))
+    for i, z in enumerate((0.92, 0.84)):
+        for s in (1, -1):
+            m.caixa((0.05, 0.1, 0.06), (0.31 - i * 0.01, 0.06 * s, z),
+                    pelo_sombra, "tronco")
+    # rebites na correia e no cinto (lado da câmera)
+    for t in (-0.18, 0.0, 0.18):
+        m.bola(0.022, (0.04 + t * 0.6, -0.33, 1.0 + t * 0.78), ferro,
+               "tronco", sub=1)
+    for x in (-0.15, 0.0, 0.15):
+        m.bola(0.02, (x, -0.255, 0.75), ferro, "quadril", sub=1)
+    # tiras do saiote e franja de pelo na barra
+    for x in (-0.14, 0.02, 0.17):
+        m.caixa((0.02, 0.012, 0.22), (x, -0.235, 0.58), couro_esc, "quadril",
+                chanfro=False)
+    for i in range(7):
+        a = math.radians(i * 360 / 7)
+        b = Vector((0.25 * math.cos(a), 0.23 * math.sin(a), 0.47))
+        m.tufo(b, (0.02 * math.cos(a), 0.02 * math.sin(a), -0.07), 0.035,
+               pelo_sombra, "quadril")
+    # tufos de pelo nos ombros, cotovelos, tornozelos e bochechas
+    for s, lado in ((1, "E"), (-1, "D")):
+        for k in range(3):
+            m.tufo((0.04 - 0.07 * k, 0.4 * s, 1.08 + 0.03 * k),
+                   (-0.05, 0.03 * s, -0.08), 0.04, pelo_sombra, f"braco.{lado}")
+        for k in range(4):
+            a = math.radians(k * 90 + 45)
+            m.tufo((0.0 + 0.09 * math.cos(a), 0.14 * s + 0.09 * math.sin(a),
+                    0.12), (0.03 * math.cos(a), 0.03 * math.sin(a), -0.06),
+                   0.03, pelo_sombra, f"canela.{lado}")
+        m.caixa((0.02, 0.01, 0.06), (0.1, 0.14 * s - 0.075 * s, 0.045),
+                couro_esc, f"pe.{lado}", chanfro=False)  # fenda do casco
+        for k in range(3):
+            m.tufo((0.18, 0.16 * s, 1.24 - 0.05 * k), (-0.06, 0.03 * s, -0.04),
+                   0.035, pelo, "cabeca")
+    # barba em mechas
+    for k, (dx, dy) in enumerate(((0.0, 0.0), (0.04, 0.04), (0.04, -0.04),
+                                  (-0.03, 0.05), (-0.03, -0.05))):
+        m.tufo((0.31 + dx, dy, 1.04), (0.02, dy * 0.3, -0.14 + 0.02 * k),
+               0.035, pelo_sombra, "cabeca")
+    # rosto: íris âmbar, narinas, boca, pálpebra brava
+    for s in (1, -1):
+        m.caixa((0.035, 0.014, 0.03), (0.255, 0.174 * s, 1.37), iris,
+                "cabeca", chanfro=False)
+        m.caixa((0.016, 0.016, 0.026), (0.265, 0.18 * s, 1.37), olho,
+                "cabeca", chanfro=False)
+        m.caixa((0.02, 0.02, 0.025), (0.488, 0.035 * s, 1.31), olho,
+                "cabeca", chanfro=False)
+        m.caixa((0.14, 0.012, 0.012), (0.37, 0.101 * s, 1.215), olho,
+                "cabeca", rot=(0, 6, 0), chanfro=False)
+    # anéis nos chifres
+    for s in (1, -1):
+        for (x, y, z), r in (((0.075, 0.11 * s, 1.55), 0.072),
+                             ((0.0, 0.13 * s, 1.68), 0.062),
+                             ((-0.14, 0.145 * s, 1.745), 0.052),
+                             ((-0.28, 0.155 * s, 1.7), 0.042)):
+            m.bola(r, (x, y, z), chifre_esc, "cabeca", escala=(1, 1, 0.45),
+                   sub=1)
+    # braçadeiras com tiras e martelo com tiras em X e lascas
+    for lado in ("D", "E"):
+        cot, mao = bracos[lado][1], bracos[lado][2]
+        for t in (0.45, 0.75):
+            c = Vector(cot) + (Vector(mao) - Vector(cot)) * t
+            m.cilindro_entre(c - Vector((0.015, 0, 0)), c + Vector((0.015, 0, 0)),
+                             0.1, 0.1, couro_esc, f"antebraco.{lado}")
+    face = centro + Vector((0, -0.165, 0))
+    for s in (1, -1):
+        d = (perp * 0.22 + eixo * 0.12 * s)
+        m.caixa_entre(face - d, face + d, 0.04, 0.012, couro, "martelo",
+                      chanfro=False)
+    for s in (1, -1):
+        for e in (1, -1):
+            q = centro + perp * 0.24 * s + eixo * 0.13 * e
+            m.caixa((0.06, 0.06, 0.06), q + Vector((0, -0.15, 0)), pedra_esc,
+                    "martelo", rot=(20 * e, 30 * s, 10))
 
     m.construir()
     exportar("bode")
@@ -458,6 +570,84 @@ def ovelha():
                rot=rot_escudo, lados=12)
     frente = Matrix.Rotation(math.radians(-40), 3, "Z") @ Vector((1, 0, 0))
     m.bola(0.07, centro_escudo + frente * 0.04, ferro_claro, "escudo")
+
+
+    # ---- detalhes (definição) ----
+    import random
+    sorte = random.Random(7)
+    branco = material("ovelha_olho_branco", "#f4efe6")
+    # tufos de lã espalhados no corpo, nas pernas e nos braços
+    for _ in range(26):
+        a = sorte.uniform(0, 2 * math.pi)
+        z = sorte.uniform(0.45, 0.8)
+        r = 0.3 * (1 - abs(z - 0.66) * 1.4)
+        p = (-0.02 + r * math.cos(a), 0.27 * math.sin(a), z)
+        if p[0] > 0.22:
+            continue
+        m.bola(sorte.uniform(0.05, 0.07), p,
+               la if sorte.random() > 0.35 else la_sombra, "quadril", sub=1)
+    for lado, s in (("E", 1), ("D", -1)):
+        for k in range(5):
+            a = k * 1.25
+            m.bola(0.06, (0.01 + 0.11 * math.cos(a), 0.13 * s + 0.1 * math.sin(a),
+                          0.3 + 0.04 * k), la_sombra if k % 2 else la,
+                   f"coxa.{lado}", sub=1)
+        ombro, cot = bracos[lado][0], bracos[lado][1]
+        for k in range(3):
+            c = Vector(ombro) + (Vector(cot) - Vector(ombro)) * (0.25 + 0.3 * k)
+            m.bola(0.07, c + Vector((0, 0.06 * s, 0)), la, f"braco.{lado}",
+                   sub=1)
+        m.caixa((0.015, 0.015, 0.05), (0.1, 0.13 * s - 0.06 * s, 0.035),
+                ferro, f"canela.{lado}", chanfro=False)  # fenda do casco
+    # olhos com branco e pupila, narinas, boca
+    for s in (1, -1):
+        m.caixa((0.055, 0.012, 0.045), (0.33, 0.106 * s, 1.08), branco,
+                "cabeca", chanfro=False)
+        m.caixa((0.022, 0.014, 0.03), (0.345, 0.11 * s, 1.078), olho,
+                "cabeca", chanfro=False)
+        m.caixa((0.015, 0.015, 0.02), (0.462, 0.03 * s, 1.03), olho,
+                "cabeca", chanfro=False)
+    m.caixa((0.06, 0.13, 0.012), (0.44, 0, 0.96), olho, "cabeca",
+            chanfro=False)
+    # elmo: rebites no aro, protetores de bochecha e faixa central
+    for k in range(10):
+        a = math.radians(k * 36)
+        m.bola(0.016, (0.19 + 0.235 * math.cos(a), 0.235 * math.sin(a), 1.16),
+               ferro, "cabeca", sub=1)
+    for s in (1, -1):
+        m.caixa((0.1, 0.03, 0.12), (0.26, 0.2 * s, 1.08), ferro, "cabeca",
+                rot=(0, -10, 0))
+    m.caixa((0.3, 0.05, 0.03), (0.19, 0, 1.33), ferro_claro, "cabeca",
+            rot=(0, 0, 0))
+    # tabardo: barra rasgada em pontas e brasão em forma de escudo
+    for k in range(9):
+        a = math.radians(k * 40 + 10)
+        b = Vector((0.04 + 0.25 * math.cos(a), 0.25 * math.sin(a), 0.45))
+        m.tufo(b, (0, 0, -0.06 - 0.04 * (k % 3)), 0.05, tabardo, "quadril",
+               lados=3)
+    m.tufo((0.302, 0, 0.56), (0, 0, -0.06), 0.06, emblema, "tronco", lados=3)
+    # peitoral com rebites e cinto com fivela
+    for z in (0.86, 0.98):
+        for s in (1, -1):
+            m.bola(0.016, (0.05, 0.215 * s, z), ferro_claro, "tronco", sub=1)
+    m.caixa((0.03, 0.07, 0.06), (0.27, 0, 0.74), ferro_claro, "tronco")
+    # escudo: tábuas e rebites na borda
+    nrm = frente
+    lado_esc = Matrix.Rotation(math.radians(-40), 3, "Z") @ Vector((0, 1, 0))
+    for k in (-1, 1):
+        c = centro_escudo + nrm * 0.032 + lado_esc * 0.09 * k
+        m.caixa_entre(c - Vector((0, 0, 0.24)), c + Vector((0, 0, 0.24)), 0.012,
+                      0.012, ferro, "escudo", chanfro=False)
+    for k in range(10):
+        a = math.radians(k * 36)
+        p = (centro_escudo + nrm * 0.03 + lado_esc * 0.24 * math.cos(a)
+             + Vector((0, 0, 0.24 * math.sin(a))))
+        m.bola(0.015, p, ferro_claro, "escudo", sub=1)
+    # lança: tiras de couro na pegada e amarração da ponta
+    for t in (0.5, 0.6, 0.97):
+        c = lanca0 + (lanca1 - lanca0) * t
+        m.cilindro_entre(c - eixo * 0.02, c + eixo * 0.02, 0.036, 0.036,
+                         couro, "lanca")
 
     m.construir()
     exportar("ovelha")
@@ -584,7 +774,8 @@ def rei_dragao():
     for i in range(7):
         a = math.radians(i * 360 / 7 + 15)
         p = Vector((0.12 + 0.44 * math.cos(a), 0.44 * math.sin(a), 2.17))
-        m.caixa((0.04, 0.04, 0.07), p, pinta, "tronco", rot=(0, 0, math.degrees(a)))
+        m.caixa((0.025, 0.025, 0.05), p + Vector((0, 0, -0.03)), pinta, "tronco",
+                rot=(0, 0, math.degrees(a)), chanfro=False)
 
     # braços: o da câmera segura a lança de Odin em pé
     lanca_x, lanca_y = 0.78, -0.42
@@ -646,6 +837,53 @@ def rei_dragao():
         pts = [ombro, cotovelo, pulso, *pontas, raiz]
         faces = [(2, 3, 4), (2, 4, 5), (1, 2, 5), (1, 5, 6), (0, 1, 6)]
         m.lamina(pts, faces, membrana, f"asa_ponta.{lado}")
+
+
+    # ---- detalhes (definição) ----
+    dente = material("dragao_dente", "#f2ead6")
+    escama = material("dragao_escama", "#871f24")
+    # dentes na boca
+    for k in range(5):
+        x = 0.8 + k * 0.06
+        for s in (1, -1):
+            m.tufo((x, 0.09 * s, 2.645), (0, 0, -0.05), 0.015, dente,
+                   "cabeca", lados=3)
+    m.tufo((1.03, -0.09, 2.66), (0.0, 0, -0.08), 0.02, dente, "cabeca",
+           lados=3)
+    # narina, sobrancelha, pupila
+    for s in (1, -1):
+        m.caixa((0.03, 0.02, 0.02), (1.1, 0.06 * s, 2.79), pinta, "cabeca",
+                chanfro=False)
+        m.caixa((0.02, 0.012, 0.045), (0.79, 0.168 * s, 2.82), pinta,
+                "cabeca", chanfro=False)
+    # crista de espinhos no pescoço, nas costas e no topo da cabeça
+    for p, d in (((0.33, 0, 2.5), (-0.12, 0, 0.1)), ((0.21, 0, 2.3), (-0.14, 0, 0.1)),
+                 ((0.47, 0, 2.7), (-0.12, 0, 0.1)), ((0.0, 0, 2.15), (-0.12, 0, 0.12))):
+        m.tufo(p, d, 0.05, verm_esc, "pescoco" if p[0] > 0.1 else "tronco")
+    # escamas em placas nas coxas e nos braços
+    for lado, s in (("E", 1), ("D", -1)):
+        for k in range(3):
+            m.caixa((0.14, 0.03, 0.09), (0.04 + 0.06 * k, 0.455 * s,
+                    1.15 - 0.15 * k), escama, f"coxa.{lado}", rot=(0, 20, 0))
+        ombro, cot = bracos[lado][0], bracos[lado][1]
+        c = (Vector(ombro) + Vector(cot)) / 2 + Vector((0, 0.09 * s, 0))
+        m.caixa((0.1, 0.03, 0.08), c, escama, f"braco.{lado}")
+        # esporão no calcanhar
+        m.tufo((-0.08, 0.3 * s, 0.14), (-0.1, 0, -0.04), 0.035, garra,
+               f"pe.{lado}")
+    # dobras no manto e pintas de arminho na barra
+    for k in range(3):
+        for s in (1, -1):
+            m.caixa((0.035, 0.07, 1.0), (-0.28 + 0.11 * k, 0.39 * s, 1.55),
+                    roxo_esc, "tronco", rot=(0, 10, 0), chanfro=False)
+    # ponta do rabo em lâmina
+    m.lamina([(-2.45, 0, 0.5), (-2.75, 0, 0.82), (-2.5, 0, 0.75),
+              (-2.65, 0, 0.55)], [(0, 3, 1, 2)], verm_esc, "rabo.5")
+    # garras nas pontas dos dedos das asas
+    for s in (1, -1):
+        for p in ((-1.35, 0.5 * s, 3.05), (-1.3, 0.5 * s, 2.35)):
+            m.tufo(p, (-0.06, 0, -0.08), 0.025, garra,
+                   "asa_ponta." + ("E" if s > 0 else "D"))
 
     m.construir()
     exportar("rei_dragao")
