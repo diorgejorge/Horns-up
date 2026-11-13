@@ -77,6 +77,13 @@ func tick_attack(delta: float) -> void:
 func _hit(node: Node) -> void:
 	if node == self or swing_hits.has(node):
 		return
+	if node.is_in_group("breakable"):
+		swing_hits.append(node)
+		if has_ability(ABILITY_ICE_HAMMER):
+			node.smash()
+		else:
+			node.bonk()
+		return
 	if not node.is_in_group("hurtable") or not node.has_method("take_hit"):
 		return
 	swing_hits.append(node)
