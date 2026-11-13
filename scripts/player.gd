@@ -25,6 +25,7 @@ var swing_hits: Array[Node] = []
 
 
 func _ready() -> void:
+	add_to_group("player")
 	health.died.connect(func(): died.emit())
 
 
