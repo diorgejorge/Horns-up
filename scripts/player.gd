@@ -3,6 +3,7 @@ extends CharacterBody3D
 ## O bode. Lógica de movimento em funções estáticas, testáveis sem cena.
 
 signal died
+signal ability_gained(id: String)
 
 const WALK_SPEED := 5.0
 const JUMP_SPEED := 9.0
@@ -12,6 +13,8 @@ const INVULN_SECONDS := 1.0
 const HAMMER_DAMAGE := 1
 const ATTACK_COOLDOWN := 0.5
 const HAMMER_ACTIVE_SECONDS := 0.1
+## Primeira habilidade: o martelo quebra pedra e gruda no gelo.
+const ABILITY_ICE_HAMMER := "martelo_gelo"
 
 var facing: int = 1
 var health: Health = Health.new(MAX_HP, INVULN_SECONDS)
@@ -19,6 +22,7 @@ var cooldown_left := 0.0
 var active_left := 0.0
 ## Alvos já atingidos nesta pancada; esvaziada a cada novo ataque.
 var swing_hits: Array[Node] = []
+var abilities: PackedStringArray = []
 
 @onready var visual: Node3D = $Visual
 @onready var hammer_hitbox: Area3D = $HammerHitbox
@@ -77,6 +81,19 @@ func _hit(node: Node) -> void:
 		return
 	swing_hits.append(node)
 	node.take_hit(HAMMER_DAMAGE, global_position.x)
+
+
+func has_ability(id: String) -> bool:
+	return abilities.has(id)
+
+
+## False e sem sinal se já tinha.
+func grant_ability(id: String) -> bool:
+	if abilities.has(id):
+		return false
+	abilities.append(id)
+	ability_gained.emit(id)
+	return true
 
 
 func take_hit(damage: int, _from_x: float) -> void:
