@@ -1,0 +1,188 @@
+[gd_scene load_steps=26 format=3]
+
+[ext_resource type="Script" path="res://scripts/room.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/door.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/sheep.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/thor_statue.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/ability_pickup.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/stone_block.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://scenes/ice_wall.tscn" id="7"]
+
+[sub_resource type="StandardMaterial3D" id="mat_rock"]
+albedo_color = Color(0.36, 0.33, 0.31, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_snow"]
+albedo_color = Color(0.9, 0.93, 0.97, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_mount"]
+albedo_color = Color(0.3, 0.36, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_peak"]
+albedo_color = Color(0.86, 0.9, 0.96, 1)
+
+[sub_resource type="BoxMesh" id="floor_mesh"]
+material = SubResource("mat_snow")
+size = Vector3(34, 2, 4)
+
+[sub_resource type="BoxShape3D" id="floor_shape"]
+size = Vector3(34, 2, 4)
+
+[sub_resource type="BoxMesh" id="wall_left_mesh"]
+material = SubResource("mat_rock")
+size = Vector3(1, 13, 4)
+
+[sub_resource type="BoxShape3D" id="wall_left_shape"]
+size = Vector3(1, 13, 4)
+
+[sub_resource type="BoxMesh" id="ledge_mesh"]
+material = SubResource("mat_rock")
+size = Vector3(3, 0.5, 3)
+
+[sub_resource type="BoxShape3D" id="ledge_shape"]
+size = Vector3(3, 0.5, 3)
+
+[sub_resource type="BoxMesh" id="top_mesh"]
+material = SubResource("mat_snow")
+size = Vector3(6, 1, 4)
+
+[sub_resource type="BoxShape3D" id="top_shape"]
+size = Vector3(6, 1, 4)
+
+[sub_resource type="BoxMesh" id="end_mesh"]
+material = SubResource("mat_rock")
+size = Vector3(1, 10, 4)
+
+[sub_resource type="BoxShape3D" id="end_shape"]
+size = Vector3(1, 10, 4)
+
+[sub_resource type="BoxMesh" id="col_mesh"]
+material = SubResource("mat_rock")
+size = Vector3(0.5, 12, 4)
+
+[sub_resource type="BoxShape3D" id="col_shape"]
+size = Vector3(0.5, 12, 4)
+
+[sub_resource type="PrismMesh" id="mount_mesh"]
+material = SubResource("mat_mount")
+size = Vector3(50, 22, 2)
+
+[sub_resource type="PrismMesh" id="peak_mesh"]
+material = SubResource("mat_peak")
+size = Vector3(12, 5, 2)
+
+[sub_resource type="Environment" id="env"]
+background_mode = 1
+background_color = Color(0.72, 0.82, 0.92, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.7, 0.8, 0.95, 1)
+ambient_light_energy = 0.7
+
+[node name="Room" type="Node3D"]
+script = ExtResource("1")
+room_id = "sala2"
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -1, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Geometry/Floor"]
+mesh = SubResource("floor_mesh")
+
+[node name="Shape" type="CollisionShape3D" parent="Geometry/Floor"]
+shape = SubResource("floor_shape")
+
+[node name="WallLeft" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, 9.5, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Geometry/WallLeft"]
+mesh = SubResource("wall_left_mesh")
+
+[node name="Shape" type="CollisionShape3D" parent="Geometry/WallLeft"]
+shape = SubResource("wall_left_shape")
+
+[node name="Ledge" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.95, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Geometry/Ledge"]
+mesh = SubResource("ledge_mesh")
+
+[node name="Shape" type="CollisionShape3D" parent="Geometry/Ledge"]
+shape = SubResource("ledge_shape")
+
+[node name="TopPlatform" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 11.5, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Geometry/TopPlatform"]
+mesh = SubResource("top_mesh")
+
+[node name="Shape" type="CollisionShape3D" parent="Geometry/TopPlatform"]
+shape = SubResource("top_shape")
+
+[node name="EndWall" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, 17, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Geometry/EndWall"]
+mesh = SubResource("end_mesh")
+
+[node name="Shape" type="CollisionShape3D" parent="Geometry/EndWall"]
+shape = SubResource("end_shape")
+
+[node name="ShaftRock" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.75, 9, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Geometry/ShaftRock"]
+mesh = SubResource("col_mesh")
+
+[node name="Shape" type="CollisionShape3D" parent="Geometry/ShaftRock"]
+shape = SubResource("col_shape")
+
+[node name="ShaftIceLeft" parent="Geometry" instance=ExtResource("7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 9, 0)
+size = Vector3(1, 12, 4)
+
+[node name="ShaftIceRight" parent="Geometry" instance=ExtResource("7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 6, 0)
+size = Vector3(1, 12, 4)
+
+[node name="Background" type="Node3D" parent="."]
+
+[node name="Mountain" type="MeshInstance3D" parent="Background"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 6, -34)
+mesh = SubResource("mount_mesh")
+
+[node name="MountainPeak" type="MeshInstance3D" parent="Background"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 14.5, -33.4)
+mesh = SubResource("peak_mesh")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.25, 0.433, 0, 0.866, 0.5, -0.5, -0.433, 0.75, 0, 20, 0)
+light_energy = 0.8
+
+[node name="SpawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
+
+[node name="DoorOeste" parent="." instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.6, 0, 0)
+door_id = "oeste"
+target_room = "sala1"
+target_door = "leste"
+arrival_offset = Vector3(1.6, 0, 0)
+
+[node name="Sheep" parent="." instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 0)
+patrol_left = -9.0
+patrol_right = -4.0
+
+[node name="AbilityPickup" parent="." instance=ExtResource("5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.2, 0)
+
+[node name="StoneBlock" parent="." instance=ExtResource("6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+
+[node name="ThorStatue" parent="." instance=ExtResource("4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 12, -0.5)
+statue_id = "sala2_topo"
