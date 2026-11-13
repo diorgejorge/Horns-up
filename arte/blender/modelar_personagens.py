@@ -13,9 +13,14 @@ Uso (Blender 4.2+):
 ou, com o módulo bpy do pip:
     python arte/blender/modelar_personagens.py
 
+Gera duas versões de cada personagem:
+- low-poly facetada, para o render pixel 320x180 do jogo;
+- HD (sufixo _hd): lisa, com chanfros redondos, mais segmentos e curvas
+  suaves nos chifres e no rabo, para vistas em resolução cheia.
+
 Saídas:
-    arte/blender/<nome>.blend            arquivo editável
-    assets/modelos/personagens/<nome>.glb    o que o Godot importa
+    arte/blender/<nome>[_hd].blend               arquivo editável
+    assets/modelos/personagens/<nome>[_hd].glb   o que o Godot importa
 """
 
 import math
@@ -28,6 +33,10 @@ from mathutils import Euler, Matrix, Vector
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 SAIDA_BLEND = os.path.join(RAIZ, "arte", "blender")
 SAIDA_GLB = os.path.join(RAIZ, "assets", "modelos", "personagens")
+
+# HD = versão lisa e arredondada (mais segmentos, chanfro redondo, normais
+# suaves). Sem HD = versão low-poly facetada para o render pixel 320x180.
+HD = False
 
 
 # ---------------------------------------------------------------- utilidades
@@ -72,6 +81,32 @@ def alinhar(p0, p1):
     return Matrix.Translation((p0 + p1) / 2) @ q.to_matrix().to_4x4(), d.length
 
 
+def _lados(n):
+    """No HD, cilindros e cones ganham bem mais lados."""
+    return max(n * 3, 14) if HD else n
+
+
+def _suavizar(pontos, raios, ossos, passos=4):
+    """Curva Catmull-Rom pelos pontos do tubo (chifres e rabo no HD)."""
+    P = [Vector(p) for p in pontos]
+    n = len(P)
+    novos, rs, os_ = [], [], []
+    for i in range(n - 1):
+        p0, p1 = P[max(i - 1, 0)], P[i]
+        p2, p3 = P[i + 1], P[min(i + 2, n - 1)]
+        for k in range(passos):
+            t = k / passos
+            t2, t3 = t * t, t * t * t
+            novos.append(0.5 * ((2 * p1) + (-p0 + p2) * t
+                                + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2
+                                + (-p0 + 3 * p1 - 3 * p2 + p3) * t3))
+            rs.append(raios[i] + (raios[i + 1] - raios[i]) * t)
+            os_.append(ossos if isinstance(ossos, str) else ossos[i])
+    novos.append(P[-1])
+    rs.append(raios[-1])
+    return novos, rs, (ossos if isinstance(ossos, str) else os_)
+
+
 class Modelo:
     """Junta primitivas numa malha só, com material e osso por peça."""
 
@@ -96,7 +131,8 @@ class Modelo:
         com chanfro opcional nas arestas (tira a cara de caixote)."""
         if chanfro > 0:
             bmesh.ops.bevel(t, geom=list(t.verts) + list(t.edges),
-                            offset=chanfro, offset_type="OFFSET", segments=1,
+                            offset=chanfro * (2.4 if HD else 1.0),
+                            offset_type="OFFSET", segments=3 if HD else 1,
                             profile=0.5, affect="EDGES", clamp_overlap=True)
         if mat not in self.mats:
             self.mats.append(mat)
@@ -110,7 +146,7 @@ class Modelo:
         for f in t.faces:
             nf = self.bm.faces.new([mapa[v] for v in f.verts])
             nf.material_index = mi
-            nf.smooth = False
+            nf.smooth = HD
         t.free()
 
     @staticmethod
@@ -151,26 +187,31 @@ class Modelo:
     def cilindro(self, r1, r2, alt, loc, mat, osso, rot=(0, 0, 0), lados=8,
                  escala=(1, 1, 1)):
         t = bmesh.new()
-        bmesh.ops.create_cone(t, cap_ends=True, cap_tris=False, segments=lados,
-                              radius1=r1, radius2=r2, depth=alt)
+        bmesh.ops.create_cone(t, cap_ends=True, cap_tris=False,
+                              segments=_lados(lados), radius1=r1, radius2=r2,
+                              depth=alt)
         self._copiar(t, mat4(loc, rot, escala), mat, osso)
 
     def cilindro_entre(self, p0, p1, r0, r1, mat, osso, lados=8):
         m, comp = alinhar(p0, p1)
         t = bmesh.new()
-        bmesh.ops.create_cone(t, cap_ends=True, cap_tris=False, segments=lados,
-                              radius1=r0, radius2=r1, depth=comp)
+        bmesh.ops.create_cone(t, cap_ends=True, cap_tris=False,
+                              segments=_lados(lados), radius1=r0, radius2=r1,
+                              depth=comp)
         self._copiar(t, m, mat, osso)
 
     def bola(self, r, loc, mat, osso, escala=(1, 1, 1), rot=(0, 0, 0), sub=2):
         t = bmesh.new()
-        bmesh.ops.create_icosphere(t, subdivisions=sub, radius=r)
+        bmesh.ops.create_icosphere(t, subdivisions=min(sub + 2, 4) if HD
+                                   else sub, radius=r)
         self._copiar(t, mat4(loc, rot, escala), mat, osso)
 
     def tubo(self, pontos, raios, mat, ossos, lados=8, juntas=True):
         """Corrente de troncos de cone (chifres, rabo). `ossos` pode ser um
         nome só ou uma lista com um osso por trecho. Bolinhas nas juntas
-        escondem as emendas."""
+        escondem as emendas. No HD o caminho vira curva suave."""
+        if HD:
+            pontos, raios, ossos = _suavizar(pontos, raios, ossos)
         for i in range(len(pontos) - 1):
             osso = ossos if isinstance(ossos, str) else ossos[i]
             self.cilindro_entre(pontos[i], pontos[i + 1], raios[i],
@@ -223,6 +264,12 @@ class Modelo:
         for nome, *_ in self.ossos:
             malha.vertex_groups.new(name=nome)
         malha.parent = arm
+        if HD:
+            # bordas vivas acima de 40 graus e normais pesadas pela área:
+            # faces grandes ficam retas e os chanfros ficam redondos
+            me.set_sharp_from_angle(angle=math.radians(40))
+            wn = malha.modifiers.new("Normais", "WEIGHTED_NORMAL")
+            wn.keep_sharp = True
         mod = malha.modifiers.new("Esqueleto", "ARMATURE")
         mod.object = arm
         return arm, malha
@@ -233,6 +280,8 @@ def limpar_cena():
 
 
 def exportar(nome):
+    if HD:
+        nome += "_hd"
     os.makedirs(SAIDA_BLEND, exist_ok=True)
     os.makedirs(SAIDA_GLB, exist_ok=True)
     bpy.ops.wm.save_as_mainfile(
@@ -240,7 +289,7 @@ def exportar(nome):
     bpy.ops.export_scene.gltf(
         filepath=os.path.join(SAIDA_GLB, nome + ".glb"),
         export_format="GLB",
-        export_apply=False,
+        export_apply=HD,
         export_skins=True,
         export_animations=False,
         export_yup=True,
@@ -300,7 +349,7 @@ def bode():
     m.caixa((0.48, 0.52, 0.45), (0.03, 0, 0.98), pelo, "tronco",
             topo=(1.12, 1.18))
     m.caixa((0.1, 0.38, 0.26), (0.27, 0, 1.0), pelo, "tronco", topo=(1.1, 1))
-    m.caixa((0.53, 0.64, 0.07), (0.04, 0, 1.0), couro, "tronco", rot=(38, 0, 0))
+    m.caixa((0.47, 0.64, 0.07), (0.05, 0, 1.0), couro, "tronco", rot=(38, 0, 0))
     m.cilindro(0.06, 0.06, 0.03, (0.33, 0, 0.98), ferro, "tronco",
                rot=(0, 90, 0), lados=8)
     m.caixa((0.2, 0.62, 0.08), (0.0, 0, 1.2), pelo_sombra, "tronco")  # pelo do pescoço
@@ -890,7 +939,8 @@ def rei_dragao():
 
 
 if __name__ == "__main__":
-    for gerar in (bode, ovelha, rei_dragao):
-        limpar_cena()
-        gerar()
+    for HD in (False, True):
+        for gerar in (bode, ovelha, rei_dragao):
+            limpar_cena()
+            gerar()
     print("modelos gerados em", SAIDA_GLB)

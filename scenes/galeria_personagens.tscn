@@ -1,9 +1,12 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/galeria_personagens.gd" id="1"]
 [ext_resource type="PackedScene" path="res://assets/modelos/personagens/bode.glb" id="2"]
 [ext_resource type="PackedScene" path="res://assets/modelos/personagens/ovelha.glb" id="3"]
 [ext_resource type="PackedScene" path="res://assets/modelos/personagens/rei_dragao.glb" id="4"]
+[ext_resource type="PackedScene" path="res://assets/modelos/personagens/bode_hd.glb" id="5"]
+[ext_resource type="PackedScene" path="res://assets/modelos/personagens/ovelha_hd.glb" id="6"]
+[ext_resource type="PackedScene" path="res://assets/modelos/personagens/rei_dragao_hd.glb" id="7"]
 
 [sub_resource type="Environment" id="env"]
 background_mode = 1
@@ -73,6 +76,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
 [node name="ReiDragao" parent="ViewportContainer/GameViewport/Modelos" instance=ExtResource("4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, 0, 0)
 
+[node name="ModelosHD" type="Node3D" parent="ViewportContainer/GameViewport"]
+visible = false
+
+[node name="BodeHD" parent="ViewportContainer/GameViewport/ModelosHD" instance=ExtResource("5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, 0)
+
+[node name="OvelhaHD" parent="ViewportContainer/GameViewport/ModelosHD" instance=ExtResource("6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+
+[node name="ReiDragaoHD" parent="ViewportContainer/GameViewport/ModelosHD" instance=ExtResource("7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, 0, 0)
+
 [node name="Ajuda" type="Label" parent="."]
 layout_mode = 0
 offset_left = 16.0
@@ -80,4 +95,4 @@ offset_top = 12.0
 offset_right = 900.0
 offset_bottom = 48.0
 theme_override_font_sizes/font_size = 22
-text = "Espaço: girar  |  Setas: girar na mão  |  R: voltar à vista do jogo"
+text = "H: pixel / HD  |  Espaço: girar  |  Setas: girar na mão  |  R: voltar à vista do jogo"
