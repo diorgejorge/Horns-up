@@ -1,7 +1,7 @@
 # Bode Mjolnir: design (título provisório)
 
 Data: 2026-11-13
-Status: v3. Inclui as folhas de referência enviadas pelo autor. Aguarda aprovação do autor.
+Status: v3. Aprovado pelo autor em 2026-11-13.
 
 Legenda: itens marcados **(proposta)** foram sugeridos por mim e o autor ainda não confirmou. Itens sem marca foram decididos pelo autor.
 
