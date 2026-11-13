@@ -68,3 +68,18 @@ func test_swing_ignores_target_behind() -> void:
 		await tree.physics_frame
 		p.tick_attack(DT)
 	check_eq(target.hits, 0, "alvo atrás não apanha")
+
+
+func test_swing_hits_real_sheep() -> void:
+	var p := _spawn_player()
+	var s: Sheep = preload("res://scenes/sheep.tscn").instantiate()
+	tree.root.add_child(s)
+	s.set_physics_process(false)
+	_nodes.append(s)
+	s.global_position = Vector3(1.2, 0, 0)
+	await physics_frames(2)
+	p.try_attack()
+	for i in 10:
+		await tree.physics_frame
+		p.tick_attack(DT)
+	check_eq(s.health.hp, Sheep.MAX_HP - Player.HAMMER_DAMAGE, "martelo acerta a ovelha de verdade")
