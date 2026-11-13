@@ -41,6 +41,11 @@ func heal_full() -> void:
 	changed.emit(hp)
 
 
+## Protege de dano por `seconds` (ex.: ao renascer).
+func grant_invulnerability(seconds: float) -> void:
+	invuln_left = max(invuln_left, seconds)
+
+
 func tick(delta: float) -> void:
 	invuln_left = max(invuln_left - delta, 0.0)
 

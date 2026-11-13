@@ -1,1 +1,1 @@
-{ "permissions": { "allow": ["Bash(curl:*)", "Bash(unzip:*)", "Bash(ln:*)", "Bash(godot:*)"] } }
+{ "permissions": { "allow": ["Bash(godot:*)"] } }

@@ -60,3 +60,11 @@ func test_heal_full_after_death_rearms_died() -> void:
 	check(not h.is_dead(), "cura explícita revive")
 	h.take_damage(5)
 	check_eq(count[0], 2, "died sai de novo na segunda morte")
+
+
+func test_grant_invulnerability() -> void:
+	var h := Health.new(5)
+	h.grant_invulnerability(1.5)
+	check(not h.take_damage(1), "protegido logo após conceder")
+	h.tick(1.5)
+	check(h.take_damage(1), "dano volta após o tempo")
