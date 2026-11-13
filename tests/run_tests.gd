@@ -22,7 +22,7 @@ func _run() -> void:
 	files.sort()
 	for f in files:
 		var script: Script = load(TEST_DIR.path_join(f))
-		if script == null:
+		if script == null or not script.can_instantiate():
 			print("FAIL %s: não carregou" % f)
 			failed += 1
 			continue
