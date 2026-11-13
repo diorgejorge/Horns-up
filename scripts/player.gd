@@ -15,6 +15,11 @@ const ATTACK_COOLDOWN := 0.5
 const HAMMER_ACTIVE_SECONDS := 0.1
 ## Primeira habilidade: o martelo quebra pedra e gruda no gelo.
 const ABILITY_ICE_HAMMER := "martelo_gelo"
+const WALL_JUMP_PUSH := 6.0
+## Depois do pulo de parede, ignora a direção por este tempo, para o bode
+## se afastar antes de voltar.
+const WALL_JUMP_LOCK := 0.15
+const CLING_PRESS := 0.5
 
 var facing: int = 1
 var health: Health = Health.new(MAX_HP, INVULN_SECONDS)
@@ -23,6 +28,10 @@ var active_left := 0.0
 ## Alvos já atingidos nesta pancada; esvaziada a cada novo ataque.
 var swing_hits: Array[Node] = []
 var abilities: PackedStringArray = []
+var clinging := false
+var input_lock_left := 0.0
+## Normal da última parede tocada: +1 parede à esquerda, -1 à direita.
+var wall_normal_x := 0.0
 
 @onready var visual: Node3D = $Visual
 @onready var hammer_hitbox: Area3D = $HammerHitbox
@@ -34,15 +43,66 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	health.tick(delta)
 	if Input.is_action_just_pressed("attack"):
 		try_attack()
-	tick_attack(delta)
 	var input_x := read_input_x(Input.is_action_pressed("move_left"), Input.is_action_pressed("move_right"))
-	velocity = compute_velocity(velocity, input_x, Input.is_action_just_pressed("jump"), is_on_floor(), delta)
-	facing = facing_for(facing, input_x)
+	step(delta, input_x, Input.is_action_just_pressed("jump"))
+
+
+## Um quadro de física sem ler o teclado (os testes chamam direto).
+func step(delta: float, input_x: float, jump_pressed: bool) -> void:
+	health.tick(delta)
+	tick_attack(delta)
+	var locked := input_lock_left > 0.0
+	if locked:
+		input_lock_left = max(input_lock_left - delta, 0.0)
+		input_x = 0.0
+	if clinging:
+		if jump_pressed:
+			clinging = false
+			velocity = wall_jump_velocity(wall_normal_x)
+			input_lock_left = WALL_JUMP_LOCK
+		elif should_cling(is_on_floor(), true, has_ability(ABILITY_ICE_HAMMER), input_x, wall_normal_x):
+			velocity = cling_velocity(velocity)
+			# empurrão mínimo contra a parede, para seguir encostado nela
+			velocity.x = -wall_normal_x * CLING_PRESS
+		else:
+			clinging = false
+			velocity = compute_velocity(velocity, input_x, false, is_on_floor(), delta)
+	else:
+		var vx := velocity.x
+		velocity = compute_velocity(velocity, input_x, jump_pressed, is_on_floor(), delta)
+		if locked:
+			velocity.x = vx # mantém o empurrão do pulo de parede
+	if clinging:
+		facing = 1 if wall_normal_x > 0.0 else -1 # de costas para a parede
+	else:
+		facing = facing_for(facing, input_x)
 	visual.scale.x = facing
 	move_and_slide()
+	_update_wall(input_x)
+
+
+## Depois do move_and_slide: acha parede quase vertical e decide se gruda.
+func _update_wall(input_x: float) -> void:
+	var ice := false
+	var touching := false
+	for i in get_slide_collision_count():
+		var col := get_slide_collision(i)
+		var n := col.get_normal()
+		if absf(n.x) < 0.7:
+			continue
+		touching = true
+		wall_normal_x = signf(n.x)
+		var other := col.get_collider()
+		ice = other is Node and other.is_in_group("ice_wall")
+		break
+	if not touching:
+		clinging = false
+		return
+	if not clinging and should_cling(is_on_floor(), ice, has_ability(ABILITY_ICE_HAMMER), input_x, wall_normal_x):
+		clinging = true
+		velocity = cling_velocity(velocity)
 
 
 ## Começa uma pancada na direção em que o bode encara. False na recarga.
@@ -123,6 +183,19 @@ static func compute_velocity(v: Vector3, input_x: float, jump_pressed: bool, on_
 	else:
 		out.y = v.y - GRAVITY * delta
 	return out
+
+
+## Gruda só no ar, em gelo, com a habilidade e segurando contra a parede.
+static func should_cling(on_floor: bool, wall_is_ice: bool, p_has_ability: bool, input_x: float, p_wall_normal_x: float) -> bool:
+	return not on_floor and wall_is_ice and p_has_ability and input_x * p_wall_normal_x < 0.0
+
+
+static func cling_velocity(_v: Vector3) -> Vector3:
+	return Vector3.ZERO
+
+
+static func wall_jump_velocity(p_wall_normal_x: float) -> Vector3:
+	return Vector3(WALL_JUMP_PUSH * p_wall_normal_x, JUMP_SPEED, 0)
 
 
 static func facing_for(current: int, input_x: float) -> int:
