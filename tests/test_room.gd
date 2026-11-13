@@ -75,6 +75,16 @@ func test_death_respawns_with_full_hp() -> void:
 	check_eq(player.health.hp, Player.MAX_HP, "segunda morte também renasce")
 
 
+func test_respawn_grants_short_invulnerability() -> void:
+	var room := _make_room()
+	var player: Player = room.get_node("Player")
+	player.health.take_damage(Player.MAX_HP)
+	check(not player.health.take_damage(1), "logo após renascer, dano é ignorado")
+	check_eq(player.health.hp, Player.MAX_HP, "vida segue cheia")
+	player.health.tick(Room.RESPAWN_INVULN_SECONDS)
+	check(player.health.take_damage(1), "proteção acaba após RESPAWN_INVULN_SECONDS")
+
+
 func test_room_statue_uses_room_save_path() -> void:
 	var room := _make_room()
 	check_eq(room.get_node("ThorStatue").save_path, PATH, "estátua grava no save da sala")

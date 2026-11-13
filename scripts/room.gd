@@ -2,6 +2,9 @@ class_name Room
 extends Node3D
 ## Primeira sala. Põe o bode no ponto de renascer ao iniciar e ao morrer.
 
+## Proteção ao renascer, para não apanhar de inimigo perto da estátua.
+const RESPAWN_INVULN_SECONDS := 1.5
+
 @export var save_path: String = SaveGame.DEFAULT_PATH
 
 @onready var player: Player = $Player
@@ -29,6 +32,7 @@ func respawn_position() -> Vector3:
 func _on_player_died() -> void:
 	_place_player()
 	player.health.heal_full()
+	player.health.grant_invulnerability(RESPAWN_INVULN_SECONDS)
 
 
 func _place_player() -> void:
