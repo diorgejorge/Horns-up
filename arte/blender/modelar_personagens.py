@@ -15,7 +15,7 @@ ou, com o módulo bpy do pip:
 
 Gera três versões de cada personagem:
 - voxel (sufixo _voxel): as mesmas formas preenchidas numa grade de cubos
-  de 3,5 cm. É a que o jogo usa;
+  de 2,2 cm, com sombra de contato e variação de tom por voxel. É a que o jogo usa;
 - HD (sufixo _hd): lisa, com chanfros redondos, mais segmentos e curvas
   suaves nos chifres e no rabo;
 - low-poly facetada (sem sufixo), do antigo render pixel 320x180.
@@ -44,7 +44,7 @@ HD = False
 # formas do modelo, preenchidas numa grade; detalhes menores que um voxel
 # viram um voxel só, para não sumirem.
 VOXEL = False
-VOXEL_TAM = 0.035
+VOXEL_TAM = 0.022
 
 
 # ---------------------------------------------------------------- utilidades
@@ -246,7 +246,7 @@ class Modelo:
             ossos[sel[:, 0], sel[:, 1], sel[:, 2]] = bi
 
         cheio = grade >= 0
-        verts, faces, mats, vossos = [], [], [], []
+        verts, faces, mats, vossos, cores = [], [], [], [], []
         # (direção, 4 cantos da face no cubo unitário, em ordem anti-horária)
         lados = [
             ((1, 0, 0), [(1, 0, 0), (1, 1, 0), (1, 1, 1), (1, 0, 1)]),
@@ -273,11 +273,42 @@ class Modelo:
             cs = np.array(cantos)
             vv = ((sel[:, None, :] + lo + cs[None, :, :]) * V).reshape(-1, 3)
             verts.append(vv)
+            cores.append(self._luz_voxel(pad_g, sel, np.array(d), cs, lo))
             faces.append(base + np.arange(n * 4).reshape(n, 4))
             mats.append(grade[sel[:, 0], sel[:, 1], sel[:, 2]])
             vossos.append(np.repeat(ossos[sel[:, 0], sel[:, 1], sel[:, 2]], 4))
         return (np.concatenate(verts), np.concatenate(faces),
-                np.concatenate(mats), np.concatenate(vossos), int(cheio.sum()))
+                np.concatenate(mats), np.concatenate(vossos), int(cheio.sum()),
+                np.concatenate(cores))
+
+    @staticmethod
+    def _luz_voxel(pad_g, sel, d, cantos, lo):
+        """Brilho por vértice: sombra de contato (oclusão nos cantos, como em
+        jogos de voxel) vezes uma variação leve de tom por voxel."""
+        import numpy as np
+        ocupado = lambda q: pad_g[q[:, 0], q[:, 1], q[:, 2]] >= 0
+        eixo = int(np.nonzero(d)[0][0])
+        t1, t2 = [a for a in range(3) if a != eixo]
+        frente = sel + 1 + d  # vizinho à frente da face (na grade com borda)
+        nivel = np.array([0.5, 0.68, 0.84, 1.0])
+        brilho = np.empty((len(sel), 4))
+        for k, c in enumerate(cantos):
+            s1 = np.zeros(3, int)
+            s2 = np.zeros(3, int)
+            s1[t1] = 1 if c[t1] else -1
+            s2[t2] = 1 if c[t2] else -1
+            a = ocupado(frente + s1)
+            b = ocupado(frente + s2)
+            q = ocupado(frente + s1 + s2)
+            ao = np.where(a & b, 0, 3 - (a.astype(int) + b + q))
+            brilho[:, k] = nivel[ao]
+        # variação de tom estável por voxel (hash da posição)
+        g = (sel + lo).astype(np.int64)
+        h = (g[:, 0] * 73856093) ^ (g[:, 1] * 19349663) ^ (g[:, 2] * 83492791)
+        ruido = 0.88 + 0.12 * ((h & 1023) / 1023.0)
+        # o glTF guarda a cor em inteiro normalizado: acima de 1 dá a volta
+        brilho = np.clip(brilho * ruido[:, None], 0.0, 1.0)
+        return np.repeat(brilho.reshape(-1, 1), 3, 1).reshape(-1, 3)
 
     @staticmethod
     def _chanfro(*medidas, frac=0.16):
@@ -384,11 +415,16 @@ class Modelo:
 
         me = bpy.data.meshes.new(self.nome + "_malha")
         if VOXEL:
-            verts, faces, mats, vossos, n = self._voxelizar()
+            import numpy as np
+            verts, faces, mats, vossos, n, cores = self._voxelizar()
             print(f"{self.nome}: {n} voxels, {len(faces)} faces")
             me.from_pydata([tuple(v) for v in verts], [],
                            [tuple(f) for f in faces])
             me.polygons.foreach_set("material_index", mats.astype(int).tolist())
+            cor = me.color_attributes.new("Luz", "FLOAT_COLOR", "POINT")
+            rgba = np.ones((len(cores), 4))
+            rgba[:, :3] = cores
+            cor.data.foreach_set("color", rgba.ravel().tolist())
             me.update()
         else:
             bmesh.ops.remove_doubles(self.bm, verts=self.bm.verts, dist=1e-5)
@@ -439,6 +475,7 @@ def exportar(nome):
         export_skins=True,
         export_animations=False,
         export_yup=True,
+        export_vertex_color="ACTIVE" if VOXEL else "MATERIAL",
     )
 
 
