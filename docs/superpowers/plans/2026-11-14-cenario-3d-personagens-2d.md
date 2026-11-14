@@ -88,6 +88,8 @@ Estas escolhas são do plano, não do autor: inclinação de 12° e FOV de 30°,
 
 **Andamento (2026-11-14):** Tasks 1 a 4 feitas neste mesmo PR, até o Step 6 da Task 4. Falta o Step 7 (o autor jogar o protótipo). Capturas em `arte/previas/prototipo_25d_*.png`, geradas por `tools/capturar_prototipo.gd`.
 
+**Pedidos do autor depois do protótipo (2026-11-14):** a ovelha foi refeita pelo concept (em pé, rosto à mostra, escudo de lado) e os sprites passaram a ser renderizados em três quartos (`GIRO_GRAUS = 30`). O cenário ganhou um adiantamento da Task 9 só no protótipo: `scenes/prototipo/cenario_gelo.gd` com texturas de 2048 px (`tools/gerar_texturas.gd` → `assets/texturas/`), shaders de rocha, neve, gelo (refração, rachaduras em profundidade, fresnel) e água (ondas, refração, espuma na margem) em `assets/shaders/`, lago em volta da plataforma, blocos de gelo boiando, pingentes, neve caindo, céu, névoa e sombra do sol. A Task 9 passa a levar isso para as salas de verdade.
+
 ### Task 1: Render de um quadro parado do bode (Blender)
 
 Primeira peça do protótipo: provar que o modelo vira um PNG limpo, do tamanho certo, com os pés no lugar certo.

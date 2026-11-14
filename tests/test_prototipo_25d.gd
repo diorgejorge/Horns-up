@@ -95,6 +95,7 @@ func test_prototype_scene() -> void:
 	var sheep: Node = world.current_room.get_node("Sheep")
 	check(sheep.get_node_or_null("Visual/Sprite") is CharacterSprite, "ovelha em sprite")
 	check(not sheep.get_node("Visual/OvelhaHD").visible, "modelo da ovelha escondido")
+	check(world.current_room.has_node("Cenario"), "sala 2 com o cenário caprichado")
 
 
 func test_prototype_can_be_orthographic() -> void:

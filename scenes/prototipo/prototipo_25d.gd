@@ -29,6 +29,8 @@ func _ready() -> void:
 ## As salas instanciam sheep.tscn (modelo 3D); aqui a ovelha vira sprite
 ## sem mexer na cena dela.
 func _dress_room() -> void:
+	if world.current_room.room_id == "sala2":
+		CenarioGelo.vestir(world.current_room)
 	for n in world.current_room.find_children("*", "CharacterBody3D", true, false):
 		if n is Sheep:
 			use_sprite(n.get_node("Visual"), SHEEP_FRAMES)
