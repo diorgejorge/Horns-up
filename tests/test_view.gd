@@ -7,7 +7,7 @@ func test_camera_follows_x_and_y_keeps_z() -> void:
 	check_eq(SideCamera.target_position(Vector3(3, 2, 0), Vector3(0, 1, 12)), Vector3(3, 3, 12), "segue x e y, mantém z")
 
 
-func test_main_scene_is_low_res_and_sharp() -> void:
+func test_main_scene_is_hd() -> void:
 	var main: Node = MAIN_SCENE.instantiate()
 	tree.root.add_child(main) # o tamanho do SubViewport só vale dentro da árvore
 	await tree.process_frame
@@ -15,10 +15,11 @@ func test_main_scene_is_low_res_and_sharp() -> void:
 	var container: SubViewportContainer = main.find_children("*", "SubViewportContainer")[0]
 	var vp: SubViewport = main.find_children("*", "SubViewport")[0]
 	var cam: Camera3D = main.find_child("SideCamera", true, false)
-	check_eq(vp.size, Vector2i(320, 180), "SubViewport 320x180")
+	check_eq(vp.size, Vector2i(1280, 720), "SubViewport na resolução cheia")
+	check_eq(vp.msaa_3d, Viewport.MSAA_4X, "antisserrilhado 4x")
 	check(cam is SideCamera, "câmera é SideCamera")
 	check_eq(cam.projection, Camera3D.PROJECTION_ORTHOGONAL, "câmera ortográfica")
-	check_eq(container.texture_filter, CanvasItem.TEXTURE_FILTER_NEAREST, "sem suavização")
+	check_eq(container.texture_filter, CanvasItem.TEXTURE_FILTER_LINEAR, "imagem suavizada")
 	main.queue_free()
 	await tree.process_frame
 
@@ -39,3 +40,12 @@ func test_ability_notice_shows_and_hides() -> void:
 	check(not notice.visible, "some depois de 3 s")
 	main.queue_free()
 	await tree.process_frame
+
+
+func test_characters_use_hd_models() -> void:
+	var player: Node = load("res://scenes/player.tscn").instantiate()
+	var sheep: Node = load("res://scenes/sheep.tscn").instantiate()
+	check(player.get_node_or_null("Visual/BodeHD") != null, "bode usa o modelo HD")
+	check(sheep.get_node_or_null("Visual/OvelhaHD") != null, "ovelha usa o modelo HD")
+	player.free()
+	sheep.free()

@@ -157,6 +157,6 @@ func test_main_scene_has_world_and_player() -> void:
 	await tree.process_frame
 	var w: World = main.find_child("World", true, false)
 	check(w.current_room != null, "sala carregada")
-	check_eq(main.find_children("*", "SubViewport")[0].size, Vector2i(320, 180), "segue 320x180")
+	check_eq(main.find_children("*", "SubViewport")[0].size, Vector2i(1280, 720), "segue em HD")
 	main.queue_free()
 	await tree.process_frame
