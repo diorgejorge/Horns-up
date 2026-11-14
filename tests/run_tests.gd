@@ -13,6 +13,9 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	# Em _initialize a árvore ainda não está pronta: nós adicionados agora
+	# não contam como dentro da árvore. Espera um quadro antes do 1º teste.
+	await process_frame
 	var passed := 0
 	var failed := 0
 	var files: Array[String] = []

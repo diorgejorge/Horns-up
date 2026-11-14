@@ -24,6 +24,24 @@ func test_main_scene_is_hd() -> void:
 	await tree.process_frame
 
 
+func test_ability_notice_shows_and_hides() -> void:
+	var main: Node = MAIN_SCENE.instantiate()
+	main.find_child("World", true, false).save_path = "user://test_view_notice.json"
+	tree.root.add_child(main)
+	await tree.process_frame
+	await tree.process_frame
+	var notice: AbilityNotice = main.find_child("AbilityNotice", true, false)
+	var player: Player = main.find_child("Player", true, false)
+	check(not notice.visible, "começa escondido")
+	player.grant_ability(Player.ABILITY_ICE_HAMMER)
+	check(notice.visible, "aparece ao ganhar")
+	check(notice.text.begins_with("Martelo desperto"), "texto do martelo")
+	notice.tick(AbilityNotice.SHOW_SECONDS + 0.1)
+	check(not notice.visible, "some depois de 3 s")
+	main.queue_free()
+	await tree.process_frame
+
+
 func test_characters_use_hd_models() -> void:
 	var player: Node = load("res://scenes/player.tscn").instantiate()
 	var sheep: Node = load("res://scenes/sheep.tscn").instantiate()

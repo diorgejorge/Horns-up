@@ -1,7 +1,7 @@
 [gd_scene load_steps=20 format=3]
 
 [ext_resource type="Script" path="res://scripts/room.gd" id="1"]
-[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/door.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/sheep.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/thor_statue.tscn" id="4"]
 
@@ -33,10 +33,10 @@ size = Vector3(1, 12, 4)
 
 [sub_resource type="BoxMesh" id="mesh3"]
 material = SubResource("mat_rock")
-size = Vector3(1, 12, 4)
+size = Vector3(1, 7, 4)
 
 [sub_resource type="BoxShape3D" id="shape3"]
-size = Vector3(1, 12, 4)
+size = Vector3(1, 7, 4)
 
 [sub_resource type="BoxMesh" id="mesh4"]
 material = SubResource("mat_rock")
@@ -66,6 +66,7 @@ ambient_light_energy = 0.6
 
 [node name="Room" type="Node3D"]
 script = ExtResource("1")
+room_id = "sala1"
 
 [node name="Geometry" type="Node3D" parent="."]
 
@@ -88,7 +89,7 @@ mesh = SubResource("mesh2")
 shape = SubResource("shape2")
 
 [node name="WallRight" type="StaticBody3D" parent="Geometry"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 6.5, 0)
 
 [node name="Mesh" type="MeshInstance3D" parent="Geometry/WallRight"]
 mesh = SubResource("mesh3")
@@ -138,5 +139,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
 patrol_left = -1.0
 patrol_right = 5.0
 
-[node name="Player" parent="." instance=ExtResource("2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 0)
+[node name="DoorLeste" parent="." instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.6, 0, 0)
+door_id = "leste"
+target_room = "sala2"
+target_door = "oeste"
+arrival_offset = Vector3(-1.6, 0, 0)

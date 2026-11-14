@@ -1,9 +1,11 @@
 class_name ThorStatue
 extends Area3D
-## Estátua de Thor: ao toque, cura a vida toda e salva o jogo.
+## Estátua de Thor: ao toque, cura a vida toda e avisa que foi ativada.
+## Quem grava o save é o World.
+
+signal activated(statue_id: String)
 
 @export var statue_id: String = ""
-@export var save_path: String = SaveGame.DEFAULT_PATH
 
 
 func _ready() -> void:
@@ -12,7 +14,7 @@ func _ready() -> void:
 
 func activate(player: Player) -> void:
 	player.health.heal_full()
-	SaveGame.write({"statue_id": statue_id}, save_path)
+	activated.emit(statue_id)
 
 
 func _on_body_entered(body: Node) -> void:

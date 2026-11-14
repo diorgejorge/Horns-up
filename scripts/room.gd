@@ -1,48 +1,52 @@
 class_name Room
 extends Node3D
-## Primeira sala. Põe o bode no ponto de renascer ao iniciar e ao morrer.
+## Uma sala: geometria, estátuas, portas e o ponto inicial. Não guarda o
+## bode nem o save; isso é do World.
 
-## Proteção ao renascer, para não apanhar de inimigo perto da estátua.
-const RESPAWN_INVULN_SECONDS := 1.5
+@export var room_id: String = ""
 
-@export var save_path: String = SaveGame.DEFAULT_PATH
-
-@onready var player: Player = $Player
 @onready var spawn_point: Node3D = $SpawnPoint
 
 
-func _ready() -> void:
-	for statue in _statues():
-		statue.save_path = save_path
-	player.died.connect(_on_player_died)
-	_place_player()
-
-
-## Posição da estátua gravada no save; o SpawnPoint se o save estiver
-## ausente, ruim ou apontar para uma estátua que não existe.
-func respawn_position() -> Vector3:
-	var id = SaveGame.read(save_path).get("statue_id")
-	if id is String:
-		for statue in _statues():
-			if statue.statue_id == id:
-				return statue.global_position
+func spawn_position() -> Vector3:
 	return spawn_point.global_position
 
 
-func _on_player_died() -> void:
-	_place_player()
-	player.health.heal_full()
-	player.health.grant_invulnerability(RESPAWN_INVULN_SECONDS)
+## Posição da estátua com este id, ou null.
+func statue_position(id: String) -> Variant:
+	for statue in statues():
+		if statue.statue_id == id:
+			return statue.global_position
+	return null
 
 
-func _place_player() -> void:
-	player.global_position = respawn_position()
-	player.velocity = Vector3.ZERO
+## Onde o bode chega pela porta com este id, ou null.
+func arrival_position(p_door_id: String) -> Variant:
+	for door in doors():
+		if door.door_id == p_door_id:
+			return door.arrival_position()
+	return null
 
 
-func _statues() -> Array[ThorStatue]:
+func statues() -> Array[ThorStatue]:
 	var out: Array[ThorStatue] = []
-	for n in find_children("*", "Area3D"):
+	for n in find_children("*", "Area3D", true, false):
 		if n is ThorStatue:
+			out.append(n)
+	return out
+
+
+func doors() -> Array[Door]:
+	var out: Array[Door] = []
+	for n in find_children("*", "Area3D", true, false):
+		if n is Door:
+			out.append(n)
+	return out
+
+
+func pickups() -> Array[AbilityPickup]:
+	var out: Array[AbilityPickup] = []
+	for n in find_children("*", "Area3D", true, false):
+		if n is AbilityPickup:
 			out.append(n)
 	return out
