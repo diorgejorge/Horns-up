@@ -126,7 +126,7 @@ Outros inimigos: a definir. Ovelha é só o mais fraco.
 
 ## Estilo visual e produção
 
-- 3D em HD, cor chapada. Modelos lisos e arredondados (versões `_hd`). Autor decidiu em 2026-11-13; antes era baixa resolução sem suavizar.
+- 3D em HD, cor chapada, personagens em voxel (versões `_voxel`, cubos de 3,5 cm). Autor pediu voxel em 2026-11-14; antes os personagens eram lisos (`_hd`), e antes disso o render era baixa resolução sem suavizar. Isso não é conversão de sprite: os voxels saem das formas 3D modeladas.
 - Bode modelado do zero no Blender, baixa poligonagem, textura pequena.
 - Cenário e inimigos também no Blender.
 - Exporta para Godot 4.

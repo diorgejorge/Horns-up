@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1"]
-[ext_resource type="PackedScene" path="res://assets/modelos/personagens/bode_hd.glb" id="2"]
+[ext_resource type="PackedScene" path="res://assets/modelos/personagens/bode_voxel.glb" id="2"]
 
 [sub_resource type="CapsuleShape3D" id="shape"]
 radius = 0.4
@@ -28,7 +28,7 @@ shape = SubResource("shape")
 
 [node name="Visual" type="Node3D" parent="."]
 
-[node name="BodeHD" parent="Visual" instance=ExtResource("2")]
+[node name="BodeVoxel" parent="Visual" instance=ExtResource("2")]
 
 [node name="HammerHitbox" type="Area3D" parent="."]
 collision_layer = 0
