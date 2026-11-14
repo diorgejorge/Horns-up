@@ -86,6 +86,8 @@ Estas escolhas são do plano, não do autor: inclinação de 12° e FOV de 30°,
 
 ---
 
+**Andamento (2026-11-14):** Tasks 1 a 4 feitas neste mesmo PR, até o Step 6 da Task 4. Falta o Step 7 (o autor jogar o protótipo). Capturas em `arte/previas/prototipo_25d_*.png`, geradas por `tools/capturar_prototipo.gd`.
+
 ### Task 1: Render de um quadro parado do bode (Blender)
 
 Primeira peça do protótipo: provar que o modelo vira um PNG limpo, do tamanho certo, com os pés no lugar certo.
@@ -94,11 +96,11 @@ Primeira peça do protótipo: provar que o modelo vira um PNG limpo, do tamanho 
 - Create: `arte/blender/renderizar_sprites.py`, `assets/sprites/bode/parado_00.png`, `tests/test_sprite_render.gd`
 
 **Interfaces:**
-- Produces (bpy): `renderizar(modelo: str, animacao: str | None, quadros: int, saida: str, inclinacao_graus=12.0, px_por_metro=160, altura_quadro_m=2.4, largura_quadro_m=3.2)`. Câmera ortográfica olhando de +Z para o modelo (que olha para +X), inclinada `inclinacao_graus` para baixo, enquadrada de modo que a origem (pés) fique no **centro da borda de baixo**, a uma margem fixa de 8 px. Fundo transparente (`film_transparent`), engine EEVEE, luz de sol fixa vinda de cima à esquerda da câmera.
+- Produces (bpy): `renderizar(modelo: str, animacao: str | None, quadros: int, saida: str, inclinacao_graus=12.0, px_por_metro=160, altura_quadro_m=2.4, largura_quadro_m=3.2)`. Câmera ortográfica olhando de +Z para o modelo (que olha para +X), inclinada `inclinacao_graus` para baixo, enquadrada de modo que a origem (pés) fique no **centro da borda de baixo**, a uma margem fixa de 16 px. Fundo transparente (`film_transparent`), engine EEVEE, luz de sol fixa vinda de cima à esquerda da câmera.
 - Linha de comando: `python arte/blender/renderizar_sprites.py bode_hd parado 1` → `assets/sprites/bode/parado_00.png`.
 - Tamanho do quadro: 3,2 m x 2,4 m a 160 px/m = **512 x 384 px**.
 
-- [ ] **Step 1: Escrever os testes** em `tests/test_sprite_render.gd` (lê o PNG com `Image.load_from_file`, sem depender do import): `test_frame_size` (512x384); `test_corners_transparent` (os 4 cantos com alfa 0); `test_feet_on_bottom_center` (na linha y = 384 − 8 − 1 há pixel opaco a até 40 px do centro, e a linha y = 384 − 8 + 2 é toda transparente); `test_height_matches_capsule` (do pixel opaco mais alto até os pés: entre 1,4 m e 2,2 m, ou seja 224 a 352 px; a cápsula tem 1,6 m e os chifres passam dela).
+- [ ] **Step 1: Escrever os testes** em `tests/test_sprite_render.gd` (lê o PNG com `Image.load_from_file`, sem depender do import): `test_frame_size` (512x384); `test_corners_transparent` (os 4 cantos com alfa 0); `test_feet_on_bottom_center` (na linha y = 384 − 16 − 2 há pixel opaco a até 60 px do centro, e a linha y = 384 − 16 + 10 é toda transparente: com a câmera inclinada, o pé mais perto dela desce uns pixels abaixo da origem); `test_height_matches_capsule` (do pixel opaco mais alto até os pés: entre 1,4 m e 2,2 m, ou seja 224 a 352 px; a cápsula tem 1,6 m e os chifres passam dela).
 - [ ] **Step 2: Rodar e ver falhar.** Expected: falhas em `test_sprite_render` (arquivo não existe).
 - [ ] **Step 3: Implementar o script.** Reusar `limpar_cena` e a importação de `.glb` do jeito de `modelar_personagens.py`. Importar `assets/modelos/personagens/<modelo>.glb`; não modelar nada aqui.
 - [ ] **Step 4: Rodar o script e os testes e ver passar.**
@@ -114,7 +116,7 @@ Primeira peça do protótipo: provar que o modelo vira um PNG limpo, do tamanho 
 **Interfaces:**
 - Produces: `class_name CharacterSprite extends AnimatedSprite3D`. `const PX_PER_METER := 160.0`; `const FOOT_MARGIN_PX := 8`; `static func pixel_size_for(px_per_meter: float) -> float` (= 1 / px_per_meter); `static func feet_offset(frame_height_px: int) -> Vector2` (deslocamento para os pés ficarem na origem: `Vector2(0, frame_height_px / 2.0 - FOOT_MARGIN_PX)`); em `_ready`: `billboard = BaseMaterial3D.BILLBOARD_FIXED_Y`, `alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD`, `shaded = false`, `texture_filter = TEXTURE_FILTER_LINEAR_WITH_MIPMAPS`, `pixel_size` e `offset` pelas funções acima.
 
-- [ ] **Step 1: Escrever os testes**: `test_pixel_size` (160 → 0,00625); `test_feet_offset` (384 → `Vector2(0, 184)`); `test_ready_config` (instanciar com um `SpriteFrames` de 1 quadro do PNG da Task 1, pôr na árvore: billboard Y, recorte de alfa, sem sombreamento); `test_feet_at_origin_in_world` (com a config, a borda de baixo do AABB do sprite fica a `FOOT_MARGIN_PX * pixel_size` abaixo de y = 0, com tolerância de 0,01).
+- [ ] **Step 1: Escrever os testes**: `test_pixel_size` (160 → 0,00625); `test_feet_offset` (384 → `Vector2(0, 176)`); `test_ready_config` (instanciar com um `SpriteFrames` de 1 quadro do PNG da Task 1, pôr na árvore: billboard Y, recorte de alfa, sem sombreamento); `test_feet_at_origin_in_world` (com a config, a borda de baixo do AABB do sprite fica a `FOOT_MARGIN_PX * pixel_size` abaixo de y = 0, com tolerância de 0,01).
 - [ ] **Step 2: Rodar e ver falhar** (com `--import`).
 - [ ] **Step 3: Implementar.**
 - [ ] **Step 4: Rodar e ver passar.**
@@ -149,7 +151,7 @@ O protótipo mínimo. Cena separada: o jogo de verdade continua igual.
 
 **Interfaces:**
 - `player_sprite.tscn`: herda de `scenes/player.tscn` (cena herdada), esconde `Visual/BodeHD`, acrescenta `Visual/Sprite` (`CharacterSprite`) e `Visual/Sombra` (quad horizontal escuro, transparente, raio 0,45, em y = 0,01).
-- `prototipo_25d.tscn`: copia de `main.tscn` com `SideCamera` em perspectiva (FOV 30, `pitch_degrees = 12`, distância 22), o `Player` trocado por `player_sprite.tscn`, e a sala 2 carregada direto. Uma luz direcional e um `WorldEnvironment` simples (céu de cor, névoa leve de profundidade) para o cenário ganhar volume. Um `@export var orthographic := false` na raiz troca para ortográfica inclinada, para comparar.
+- `prototipo_25d.tscn`: copia de `main.tscn` com `SideCamera` em perspectiva (FOV 30, `pitch_degrees = 12`, distância 18 (mostra ~9,6 m de altura, perto dos 9 m da câmera atual)), o `Player` trocado por `player_sprite.tscn`, e a sala 2 carregada direto. As salas já têm `Sun` e `WorldEnvironment`; o protótipo usa os delas. A ovelha vira sprite em tempo de execução pelo script da cena (`use_sprite`), sem mexer em `sheep.tscn`. Um `@export var orthographic := false` na raiz troca para ortográfica inclinada, para comparar.
 
 - [ ] **Step 1: Escrever os testes** em `tests/test_prototipo_25d.gd`: `test_player_has_sprite_not_model` (na cena herdada, `Visual/Sprite` visível e `Visual/BodeHD` escondido); `test_collision_unchanged` (a cápsula de `player_sprite.tscn` é igual à de `player.tscn`: raio, altura, posição); `test_flip_does_not_move_feet` (com `facing = -1`, a posição global do sprite e da sombra continua em x do bode); `test_ice_climb_still_works` (repete o roteiro de `test_sala2_playthrough.gd` com `player_sprite.tscn` no lugar do bode: chega ao topo); `test_camera_is_tilted_perspective`.
 - [ ] **Step 2: Rodar e ver falhar.**
