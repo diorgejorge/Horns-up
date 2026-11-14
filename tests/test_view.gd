@@ -42,10 +42,10 @@ func test_ability_notice_shows_and_hides() -> void:
 	await tree.process_frame
 
 
-func test_characters_use_hd_models() -> void:
+func test_characters_use_voxel_models() -> void:
 	var player: Node = load("res://scenes/player.tscn").instantiate()
 	var sheep: Node = load("res://scenes/sheep.tscn").instantiate()
-	check(player.get_node_or_null("Visual/BodeHD") != null, "bode usa o modelo HD")
-	check(sheep.get_node_or_null("Visual/OvelhaHD") != null, "ovelha usa o modelo HD")
+	check(player.get_node_or_null("Visual/BodeVoxel") != null, "bode usa o modelo voxel")
+	check(sheep.get_node_or_null("Visual/OvelhaVoxel") != null, "ovelha usa o modelo voxel")
 	player.free()
 	sheep.free()

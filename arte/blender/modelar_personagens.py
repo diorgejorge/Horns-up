@@ -13,14 +13,16 @@ Uso (Blender 4.2+):
 ou, com o módulo bpy do pip:
     python arte/blender/modelar_personagens.py
 
-Gera duas versões de cada personagem:
-- low-poly facetada, para o render pixel 320x180 do jogo;
+Gera três versões de cada personagem:
+- voxel (sufixo _voxel): as mesmas formas preenchidas numa grade de cubos
+  de 2,2 cm, com sombra de contato e variação de tom por voxel. É a que o jogo usa;
 - HD (sufixo _hd): lisa, com chanfros redondos, mais segmentos e curvas
-  suaves nos chifres e no rabo, para vistas em resolução cheia.
+  suaves nos chifres e no rabo;
+- low-poly facetada (sem sufixo), do antigo render pixel 320x180.
 
 Saídas:
-    arte/blender/<nome>[_hd].blend               arquivo editável
-    assets/modelos/personagens/<nome>[_hd].glb   o que o Godot importa
+    arte/blender/<nome>[_hd|_voxel].blend               arquivo editável
+    assets/modelos/personagens/<nome>[_hd|_voxel].glb   o que o Godot importa
 """
 
 import math
@@ -37,6 +39,12 @@ SAIDA_GLB = os.path.join(RAIZ, "assets", "modelos", "personagens")
 # HD = versão lisa e arredondada (mais segmentos, chanfro redondo, normais
 # suaves). Sem HD = versão low-poly facetada para o render pixel 320x180.
 HD = False
+
+# VOXEL = versão em voxels (cubos de VOXEL_TAM metros). Usa as mesmas
+# formas do modelo, preenchidas numa grade; detalhes menores que um voxel
+# viram um voxel só, para não sumirem.
+VOXEL = False
+VOXEL_TAM = 0.022
 
 
 # ---------------------------------------------------------------- utilidades
@@ -116,6 +124,7 @@ class Modelo:
         self.deform = self.bm.verts.layers.deform.verify()
         self.mats = []
         self.ossos = []  # (nome, cabeça, cauda, pai)
+        self.pecas_voxel = []
 
     # -- esqueleto
     def osso(self, nome, cabeca, cauda, pai=None):
@@ -129,6 +138,10 @@ class Modelo:
     def _copiar(self, t, matriz, mat, osso, chanfro=0.0):
         """Copia a peça montada no bmesh temporário `t` para a malha final,
         com chanfro opcional nas arestas (tira a cara de caixote)."""
+        if VOXEL:
+            self._registrar_voxel(t, matriz, mat, osso)
+            t.free()
+            return
         if chanfro > 0:
             bmesh.ops.bevel(t, geom=list(t.verts) + list(t.edges),
                             offset=chanfro * (2.4 if HD else 1.0),
@@ -148,6 +161,154 @@ class Modelo:
             nf.material_index = mi
             nf.smooth = HD
         t.free()
+
+    def _registrar_voxel(self, t, matriz, mat, osso):
+        """Guarda a peça como volume convexo (planos) ou lâmina (triângulos)
+        para preencher a grade de voxels no fim."""
+        if mat not in self.mats:
+            self.mats.append(mat)
+        mi = self.mats.index(mat)
+        bi = self._indice_osso(osso)
+        pts = [matriz @ v.co for v in t.verts]
+        idx = {v: i for i, v in enumerate(t.verts)}
+        aberta = any(e.is_boundary for e in t.edges)
+        if aberta:
+            tris = []
+            for f in t.faces:
+                vs = [pts[idx[v]] for v in f.verts]
+                for k in range(1, len(vs) - 1):
+                    tris.append((vs[0], vs[k], vs[k + 1]))
+            self.pecas_voxel.append(("lamina", tris, pts, mi, bi))
+            return
+        centro = sum(pts, Vector()) / len(pts)
+        planos = []
+        for f in t.faces:
+            vs = [pts[idx[v]] for v in f.verts]
+            n = (vs[1] - vs[0]).cross(vs[2] - vs[0])
+            if n.length < 1e-12:
+                continue
+            n.normalize()
+            if n.dot(vs[0] - centro) < 0:
+                n = -n
+            planos.append((n.x, n.y, n.z, n.dot(vs[0])))
+        self.pecas_voxel.append(("volume", planos, pts, mi, bi))
+
+    def _voxelizar(self):
+        """Preenche a grade e devolve a malha de cubos (só faces à mostra)."""
+        import numpy as np
+        V = VOXEL_TAM
+        todos = np.array([p[:] for peca in self.pecas_voxel for p in peca[2]])
+        lo = np.floor(todos.min(0) / V).astype(int) - 2
+        hi = np.ceil(todos.max(0) / V).astype(int) + 2
+        dim = hi - lo
+        grade = np.full(dim, -1, dtype=np.int32)      # material
+        ossos = np.full(dim, -1, dtype=np.int32)      # osso
+        folga = 0.25 * V
+        for tipo, dados, pts, mi, bi in self.pecas_voxel:
+            P = np.array([p[:] for p in pts])
+            a = np.floor(P.min(0) / V).astype(int) - 1 - lo
+            b = np.ceil(P.max(0) / V).astype(int) + 1 - lo
+            a = np.clip(a, 0, dim - 1)
+            b = np.clip(b, 1, dim)
+            ii, jj, kk = np.meshgrid(*[np.arange(a[d], b[d]) for d in range(3)],
+                                     indexing="ij")
+            cel = np.stack([ii.ravel(), jj.ravel(), kk.ravel()], 1)
+            c = (cel + lo + 0.5) * V
+            if tipo == "volume":
+                pl = np.array(dados)
+                dist = c @ pl[:, :3].T - pl[:, 3]
+                dentro = dist.max(1) <= folga
+            else:
+                dentro = np.zeros(len(c), bool)
+                for t0, t1, t2 in dados:
+                    A, B, C = (np.array(t0[:]), np.array(t1[:]), np.array(t2[:]))
+                    n = np.cross(B - A, C - A)
+                    ln = np.linalg.norm(n)
+                    if ln < 1e-12:
+                        continue
+                    n /= ln
+                    d = (c - A) @ n
+                    q = c - np.outer(d, n)
+                    v0, v1, v2 = B - A, C - A, q - A
+                    d00, d01, d11 = v0 @ v0, v0 @ v1, v1 @ v1
+                    d20, d21 = v2 @ v0, v2 @ v1
+                    den = d00 * d11 - d01 * d01
+                    bv = (d11 * d20 - d01 * d21) / den
+                    bw = (d00 * d21 - d01 * d20) / den
+                    m = 0.08
+                    dentro |= ((np.abs(d) <= 0.55 * V) & (bv >= -m) & (bw >= -m)
+                               & (bv + bw <= 1 + m))
+            sel = cel[dentro]
+            if len(sel) == 0:  # detalhe pequeno: um voxel no centro
+                cc = np.floor(P.mean(0) / V).astype(int) - lo
+                sel = cc[None, :]
+            grade[sel[:, 0], sel[:, 1], sel[:, 2]] = mi
+            ossos[sel[:, 0], sel[:, 1], sel[:, 2]] = bi
+
+        cheio = grade >= 0
+        verts, faces, mats, vossos, cores = [], [], [], [], []
+        # (direção, 4 cantos da face no cubo unitário, em ordem anti-horária)
+        lados = [
+            ((1, 0, 0), [(1, 0, 0), (1, 1, 0), (1, 1, 1), (1, 0, 1)]),
+            ((-1, 0, 0), [(0, 0, 0), (0, 0, 1), (0, 1, 1), (0, 1, 0)]),
+            ((0, 1, 0), [(0, 1, 0), (0, 1, 1), (1, 1, 1), (1, 1, 0)]),
+            ((0, -1, 0), [(0, 0, 0), (1, 0, 0), (1, 0, 1), (0, 0, 1)]),
+            ((0, 0, 1), [(0, 0, 1), (1, 0, 1), (1, 1, 1), (0, 1, 1)]),
+            ((0, 0, -1), [(0, 0, 0), (0, 1, 0), (1, 1, 0), (1, 0, 0)]),
+        ]
+        pad_g = np.pad(grade, 1, constant_values=-1)
+        pad_o = np.pad(ossos, 1, constant_values=-1)
+        idx = np.argwhere(cheio)
+        for d, cantos in lados:
+            viz = idx + 1 + np.array(d)
+            vg = pad_g[viz[:, 0], viz[:, 1], viz[:, 2]]
+            vo = pad_o[viz[:, 0], viz[:, 1], viz[:, 2]]
+            meu_o = ossos[idx[:, 0], idx[:, 1], idx[:, 2]]
+            mostra = (vg < 0) | (vo != meu_o)  # entre ossos fica a face
+            sel = idx[mostra]
+            base = len(verts) if not verts else sum(len(v) for v in verts)
+            n = len(sel)
+            if n == 0:
+                continue
+            cs = np.array(cantos)
+            vv = ((sel[:, None, :] + lo + cs[None, :, :]) * V).reshape(-1, 3)
+            verts.append(vv)
+            cores.append(self._luz_voxel(pad_g, sel, np.array(d), cs, lo))
+            faces.append(base + np.arange(n * 4).reshape(n, 4))
+            mats.append(grade[sel[:, 0], sel[:, 1], sel[:, 2]])
+            vossos.append(np.repeat(ossos[sel[:, 0], sel[:, 1], sel[:, 2]], 4))
+        return (np.concatenate(verts), np.concatenate(faces),
+                np.concatenate(mats), np.concatenate(vossos), int(cheio.sum()),
+                np.concatenate(cores))
+
+    @staticmethod
+    def _luz_voxel(pad_g, sel, d, cantos, lo):
+        """Brilho por vértice: sombra de contato (oclusão nos cantos, como em
+        jogos de voxel) vezes uma variação leve de tom por voxel."""
+        import numpy as np
+        ocupado = lambda q: pad_g[q[:, 0], q[:, 1], q[:, 2]] >= 0
+        eixo = int(np.nonzero(d)[0][0])
+        t1, t2 = [a for a in range(3) if a != eixo]
+        frente = sel + 1 + d  # vizinho à frente da face (na grade com borda)
+        nivel = np.array([0.5, 0.68, 0.84, 1.0])
+        brilho = np.empty((len(sel), 4))
+        for k, c in enumerate(cantos):
+            s1 = np.zeros(3, int)
+            s2 = np.zeros(3, int)
+            s1[t1] = 1 if c[t1] else -1
+            s2[t2] = 1 if c[t2] else -1
+            a = ocupado(frente + s1)
+            b = ocupado(frente + s2)
+            q = ocupado(frente + s1 + s2)
+            ao = np.where(a & b, 0, 3 - (a.astype(int) + b + q))
+            brilho[:, k] = nivel[ao]
+        # variação de tom estável por voxel (hash da posição)
+        g = (sel + lo).astype(np.int64)
+        h = (g[:, 0] * 73856093) ^ (g[:, 1] * 19349663) ^ (g[:, 2] * 83492791)
+        ruido = 0.88 + 0.12 * ((h & 1023) / 1023.0)
+        # o glTF guarda a cor em inteiro normalizado: acima de 1 dá a volta
+        brilho = np.clip(brilho * ruido[:, None], 0.0, 1.0)
+        return np.repeat(brilho.reshape(-1, 1), 3, 1).reshape(-1, 3)
 
     @staticmethod
     def _chanfro(*medidas, frac=0.16):
@@ -252,10 +413,23 @@ class Modelo:
                 eb.use_connect = False
         bpy.ops.object.mode_set(mode="OBJECT")
 
-        bmesh.ops.remove_doubles(self.bm, verts=self.bm.verts, dist=1e-5)
-        bmesh.ops.recalc_face_normals(self.bm, faces=self.bm.faces)
         me = bpy.data.meshes.new(self.nome + "_malha")
-        self.bm.to_mesh(me)
+        if VOXEL:
+            import numpy as np
+            verts, faces, mats, vossos, n, cores = self._voxelizar()
+            print(f"{self.nome}: {n} voxels, {len(faces)} faces")
+            me.from_pydata([tuple(v) for v in verts], [],
+                           [tuple(f) for f in faces])
+            me.polygons.foreach_set("material_index", mats.astype(int).tolist())
+            cor = me.color_attributes.new("Luz", "FLOAT_COLOR", "POINT")
+            rgba = np.ones((len(cores), 4))
+            rgba[:, :3] = cores
+            cor.data.foreach_set("color", rgba.ravel().tolist())
+            me.update()
+        else:
+            bmesh.ops.remove_doubles(self.bm, verts=self.bm.verts, dist=1e-5)
+            bmesh.ops.recalc_face_normals(self.bm, faces=self.bm.faces)
+            self.bm.to_mesh(me)
         self.bm.free()
         for m in self.mats:
             me.materials.append(m)
@@ -263,6 +437,12 @@ class Modelo:
         col.objects.link(malha)
         for nome, *_ in self.ossos:
             malha.vertex_groups.new(name=nome)
+        if VOXEL:
+            import numpy as np
+            for bi, vg in enumerate(malha.vertex_groups):
+                ids = np.nonzero(vossos == bi)[0].tolist()
+                if ids:
+                    vg.add(ids, 1.0, "REPLACE")
         malha.parent = arm
         if HD:
             # bordas vivas acima de 40 graus e normais pesadas pela área:
@@ -282,6 +462,8 @@ def limpar_cena():
 def exportar(nome):
     if HD:
         nome += "_hd"
+    if VOXEL:
+        nome += "_voxel"
     os.makedirs(SAIDA_BLEND, exist_ok=True)
     os.makedirs(SAIDA_GLB, exist_ok=True)
     bpy.ops.wm.save_as_mainfile(
@@ -293,6 +475,7 @@ def exportar(nome):
         export_skins=True,
         export_animations=False,
         export_yup=True,
+        export_vertex_color="ACTIVE" if VOXEL else "MATERIAL",
     )
 
 
@@ -495,7 +678,7 @@ def bode():
             m.cilindro_entre(c - Vector((0.015, 0, 0)), c + Vector((0.015, 0, 0)),
                              0.1, 0.1, couro_esc, f"antebraco.{lado}")
     face = centro + Vector((0, -0.165, 0))
-    for s in (1, -1):
+    for s in ((1, -1) if not VOXEL else ()):  # tiras em X somem no voxel
         d = (perp * 0.22 + eixo * 0.12 * s)
         m.caixa_entre(face - d, face + d, 0.04, 0.012, couro, "martelo",
                       chanfro=False)
@@ -634,12 +817,13 @@ def ovelha():
         if p[0] > 0.22:
             continue
         m.bola(sorte.uniform(0.05, 0.07), p,
-               la if sorte.random() > 0.35 else la_sombra, "quadril", sub=1)
+               la if (VOXEL or sorte.random() > 0.35) else la_sombra,
+               "quadril", sub=1)
     for lado, s in (("E", 1), ("D", -1)):
         for k in range(5):
             a = k * 1.25
             m.bola(0.06, (0.01 + 0.11 * math.cos(a), 0.13 * s + 0.1 * math.sin(a),
-                          0.3 + 0.04 * k), la_sombra if k % 2 else la,
+                          0.3 + 0.04 * k), la_sombra if (k % 2 and not VOXEL) else la,
                    f"coxa.{lado}", sub=1)
         ombro, cot = bracos[lado][0], bracos[lado][1]
         for k in range(3):
@@ -687,7 +871,7 @@ def ovelha():
         c = centro_escudo + nrm * 0.032 + lado_esc * 0.09 * k
         m.caixa_entre(c - Vector((0, 0, 0.24)), c + Vector((0, 0, 0.24)), 0.012,
                       0.012, ferro, "escudo", chanfro=False)
-    for k in range(10):
+    for k in range(0 if VOXEL else 10):  # rebites viram ruído no voxel
         a = math.radians(k * 36)
         p = (centro_escudo + nrm * 0.03 + lado_esc * 0.24 * math.cos(a)
              + Vector((0, 0, 0.24 * math.sin(a))))
@@ -939,7 +1123,7 @@ def rei_dragao():
 
 
 if __name__ == "__main__":
-    for HD in (False, True):
+    for HD, VOXEL in ((False, False), (True, False), (False, True)):
         for gerar in (bode, ovelha, rei_dragao):
             limpar_cena()
             gerar()
