@@ -49,3 +49,39 @@ func test_characters_use_hd_models() -> void:
 	check(sheep.get_node_or_null("Visual/OvelhaHD") != null, "ovelha usa o modelo HD")
 	player.free()
 	sheep.free()
+
+
+func test_tilted_offset_zero_pitch() -> void:
+	check(SideCamera.tilted_offset(12.0, 0.0, 1.0).is_equal_approx(Vector3(0, 1, 12)), "sem inclinação = câmera atual")
+
+
+func test_tilted_offset_12() -> void:
+	var o := SideCamera.tilted_offset(12.0, 12.0, 1.0)
+	var r := deg_to_rad(12.0)
+	check(o.is_equal_approx(Vector3(0, 1 + 12 * sin(r), 12 * cos(r))), "inclinada 12°: %s" % o)
+
+
+func test_tilted_camera_looks_at_player() -> void:
+	var vp := SubViewport.new()
+	vp.size = Vector2i(1280, 720)
+	var root := Node3D.new()
+	var player := Node3D.new()
+	player.add_to_group("player")
+	player.position = Vector3(5, 2, 0)
+	var cam := SideCamera.new()
+	cam.pitch_degrees = 12.0
+	cam.distance = 22.0
+	cam.fov = 30.0
+	root.add_child(player)
+	root.add_child(cam)
+	vp.add_child(root)
+	tree.root.add_child(vp)
+	await tree.process_frame
+	await tree.process_frame
+	check(is_equal_approx(cam.rotation_degrees.x, -12.0), "inclinada para baixo")
+	var p := cam.unproject_position(player.global_position + Vector3(0, 1, 0))
+	var center := Vector2(640, 360)
+	check(p.distance_to(center) < 0.05 * 1280, "bode perto do centro (%s)" % p)
+	player.remove_from_group("player")
+	vp.queue_free()
+	await tree.process_frame
