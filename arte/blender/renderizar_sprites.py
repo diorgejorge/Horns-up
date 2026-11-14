@@ -26,6 +26,10 @@ MODELOS = os.path.join(RAIZ, "assets", "modelos", "personagens")
 SPRITES = os.path.join(RAIZ, "assets", "sprites")
 
 INCLINACAO_GRAUS = 12.0
+# Giro do modelo em volta do eixo vertical, com a frente virando para a
+# câmera: vista de três quartos, como nos sprites do concept e do Ragnarok.
+# Espelhado para a esquerda, continua valendo (o giro é simétrico).
+GIRO_GRAUS = 30.0
 PX_POR_METRO = 160
 LARGURA_M = 3.2
 ALTURA_M = 2.4
@@ -44,6 +48,10 @@ def preparar_cena(modelo):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=os.path.join(MODELOS, modelo + ".glb"))
     cena = bpy.context.scene
+    for o in cena.objects:
+        if o.parent is None:
+            o.rotation_mode = "XYZ"
+            o.rotation_euler.z -= math.radians(GIRO_GRAUS)
     cena.render.engine = "CYCLES"
     cena.cycles.device = "CPU"
     cena.cycles.samples = 48

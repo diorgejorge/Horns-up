@@ -512,191 +512,195 @@ def bode():
 # ---------------------------------------------------------------- a ovelha
 
 def ovelha():
-    """Ovelha soldado: corpo de lã, elmo de ferro, peitoral, tabardo cáqui
-    rasgado, lança e escudo redondo. Altura ~1,35 m."""
-    la = material("ovelha_la", "#d2cbbd")
-    la_sombra = material("ovelha_la_sombra", "#a39b8d")
-    pele = material("ovelha_pele", "#e9dccb")
-    focinho = material("ovelha_focinho", "#dcb9ab")
+    """Ovelha soldado, como no concept (refs-bode/ovelha-soldado-sprites.jpg):
+    em pé, corpo de lã, ombreiras e braçadeiras de ferro enferrujado, tabardo
+    cáqui comprido e rasgado com brasão verde, elmo redondo de aba, rosto à
+    mostra, lança na diagonal na mão do lado da câmera e escudo redondo de
+    madeira no braço de longe, de lado (não cobre o corpo). Altura ~1,55 m."""
+    la = material("ovelha_la", "#d6cfc2")
+    la_sombra = material("ovelha_la_sombra", "#a8a093")
+    pele = material("ovelha_pele", "#ece2d4")
+    focinho = material("ovelha_focinho", "#d9b4a6")
     casco = material("ovelha_casco", "#3a312d")
-    ferro = material("ovelha_ferro", "#5e554e")
-    ferro_claro = material("ovelha_ferro_claro", "#8c8780")
-    tabardo = material("ovelha_tabardo", "#8b7547")
-    emblema = material("ovelha_emblema", "#4d5a33")
+    ferro = material("ovelha_ferro", "#5b4f47")
+    ferro_claro = material("ovelha_ferro_claro", "#8d837a")
+    ferrugem = material("ovelha_ferrugem", "#7a5236")
+    tabardo = material("ovelha_tabardo", "#8f7648")
+    tabardo_esc = material("ovelha_tabardo_esc", "#6e5935")
+    emblema = material("ovelha_emblema", "#58673a")
+    emblema_borda = material("ovelha_emblema_borda", "#b59a52")
     couro = material("ovelha_couro", "#5c3d26")
-    madeira = material("ovelha_madeira", "#6a4a2e")
-    lamina = material("ovelha_lamina", "#a3a9ae")
+    madeira = material("ovelha_madeira", "#6d4a2c")
+    lamina = material("ovelha_lamina", "#a8aeb3")
     olho = material("ovelha_olho", "#231a17")
+    branco = material("ovelha_olho_branco", "#f4efe6")
+
+    import random
+    sorte = random.Random(7)
 
     m = Modelo("ovelha")
-    m.osso("quadril", (0, 0, 0.48), (0, 0, 0.66))
-    m.osso("tronco", (0, 0, 0.66), (0.04, 0, 0.98), "quadril")
-    m.osso("cabeca", (0.12, 0, 1.0), (0.24, 0, 1.28), "tronco")
+    m.osso("quadril", (0, 0, 0.56), (0, 0, 0.74))
+    m.osso("tronco", (0, 0, 0.74), (0.03, 0, 1.08), "quadril")
+    m.osso("cabeca", (0.1, 0, 1.16), (0.22, 0, 1.48), "tronco")
 
+    # ---- pernas: coxa de lã, canela de lã, casco escuro
     for lado, s in (("E", 1), ("D", -1)):
-        y = 0.13 * s
-        m.osso(f"coxa.{lado}", (0.0, y, 0.5), (0.04, y, 0.28), "quadril")
-        m.osso(f"canela.{lado}", (0.04, y, 0.28), (0.0, y, 0.06), f"coxa.{lado}")
-        m.bola(0.15, (0.01, y, 0.38), la, f"coxa.{lado}", escala=(1, 0.9, 1.1))
-        m.caixa_entre((0.03, y, 0.3), (0.0, y, 0.06), 0.09, 0.09, casco,
-                      f"canela.{lado}")
-        m.caixa((0.15, 0.12, 0.07), (0.04, y, 0.035), casco, f"canela.{lado}",
+        y = 0.12 * s
+        m.osso(f"coxa.{lado}", (0.0, y, 0.56), (0.03, y, 0.31), "quadril")
+        m.osso(f"canela.{lado}", (0.03, y, 0.31), (0.0, y, 0.07),
+               f"coxa.{lado}")
+        m.bola(0.12, (0.01, y, 0.44), la, f"coxa.{lado}", escala=(1, 0.95, 1.3))
+        m.bola(0.09, (0.02, y, 0.22), la, f"canela.{lado}",
+               escala=(1, 1, 1.4))
+        m.caixa((0.16, 0.13, 0.08), (0.04, y, 0.04), casco, f"canela.{lado}",
                 topo=(0.8, 0.85))
+        for k in range(4):
+            a = k * 1.6 + (0.5 if s > 0 else 0)
+            m.bola(0.055, (0.02 + 0.09 * math.cos(a), y + 0.08 * math.sin(a),
+                           0.3 + 0.05 * k), la_sombra if k % 2 else la,
+                   f"canela.{lado}" if k < 2 else f"coxa.{lado}", sub=1)
 
-    # massa de lã do corpo (vários tufos para a silhueta fofa)
-    m.bola(0.34, (-0.02, 0, 0.66), la, "quadril", escala=(1.05, 0.95, 0.85),
-           sub=2)
-    m.bola(0.17, (-0.27, 0, 0.62), la_sombra, "quadril")
+    # ---- corpo de lã (aparece nos ombros, nas costas e embaixo do tabardo)
+    m.bola(0.3, (-0.03, 0, 0.86), la, "tronco", escala=(0.95, 1.0, 1.15))
+    m.bola(0.2, (-0.2, 0, 0.7), la_sombra, "quadril")
+    for _ in range(30):
+        a = sorte.uniform(0, 2 * math.pi)
+        z = sorte.uniform(0.62, 1.1)
+        p = (-0.04 + 0.27 * math.cos(a), 0.29 * math.sin(a), z)
+        if p[0] > 0.12:
+            continue  # a frente fica com o tabardo
+        m.bola(sorte.uniform(0.05, 0.075), p,
+               la if sorte.random() > 0.35 else la_sombra, "tronco", sub=1)
 
-    # tabardo rasgado sobre o corpo, cinto, emblema na frente
-    m.caixa((0.48, 0.5, 0.42), (0.04, 0, 0.72), tabardo, "tronco",
-            topo=(0.85, 0.85), base=(1.05, 1.05))
-    for i, x in enumerate((-0.15, 0.0, 0.15)):
-        m.caixa((0.12, 0.5, 0.08 + 0.03 * (i % 2)), (x + 0.04, 0, 0.47),
-                tabardo, "quadril")
-    m.caixa((0.46, 0.5, 0.06), (0.04, 0, 0.74), couro, "tronco")
-    m.caixa((0.02, 0.14, 0.15), (0.29, 0, 0.62), emblema, "tronco",
-            topo=(1, 0.5))
+    # ---- tabardo comprido até o joelho, barra rasgada, cinto, brasão
+    m.caixa((0.44, 0.48, 0.5), (0.04, 0, 0.74), tabardo, "tronco",
+            topo=(0.8, 0.82), base=(1.08, 1.06))
+    m.caixa((0.4, 0.44, 0.2), (0.05, 0, 0.42), tabardo, "quadril",
+            topo=(1.08, 1.04), base=(1.05, 1.0))
+    for k in range(11):
+        a = math.radians(k * 33 - 60)
+        b = Vector((0.05 + 0.23 * math.cos(a), 0.23 * math.sin(a), 0.33))
+        m.tufo(b, (0, 0, -0.06 - 0.05 * (k % 3)), 0.055,
+               tabardo if k % 2 else tabardo_esc, "quadril", lados=3)
+    m.caixa((0.46, 0.5, 0.06), (0.04, 0, 0.6), couro, "quadril")
+    m.caixa((0.035, 0.08, 0.07), (0.28, 0, 0.6), ferro_claro, "quadril")
+    # brasão em forma de escudo no peito do tabardo
+    m.caixa((0.02, 0.17, 0.15), (0.27, 0, 0.79), emblema_borda, "tronco",
+            chanfro=False)
+    m.caixa((0.025, 0.14, 0.12), (0.275, 0, 0.8), emblema, "tronco",
+            chanfro=False)
+    m.tufo((0.275, 0, 0.74), (0, 0, -0.07), 0.07, emblema, "tronco", lados=3)
 
-    # peitoral e ombreiras de ferro
-    m.caixa((0.38, 0.42, 0.26), (0.05, 0, 0.92), ferro, "tronco",
-            topo=(0.9, 0.95))
+    # ---- peitoral e ombreiras grandes de ferro enferrujado
+    m.caixa((0.34, 0.42, 0.2), (0.06, 0, 0.99), ferro, "tronco",
+            topo=(0.85, 0.9))
+    m.caixa((0.02, 0.36, 0.03), (0.23, 0, 0.92), ferrugem, "tronco",
+            chanfro=False)
     for s in (1, -1):
-        m.bola(0.14, (0.02, 0.26 * s, 1.0), ferro, "tronco",
-               escala=(1.1, 1, 0.8))
-        m.bola(0.03, (0.04, 0.38 * s, 1.03), ferro_claro, "tronco", sub=1)
+        for k, (r, z) in enumerate(((0.16, 1.05), (0.13, 0.97))):
+            m.bola(r, (0.0, 0.27 * s, z), ferro if k == 0 else ferrugem,
+                   "tronco", escala=(1.1, 1, 0.7))
+        for k in range(4):
+            a = math.radians(-60 + k * 40)
+            m.bola(0.017, (0.17 * math.cos(a), 0.27 * s + 0.12 * math.sin(a)
+                           * s, 1.1), ferro_claro, "tronco", sub=1)
 
-    # cabeça: tufo de lã, cara clara, focinho rosado, orelhas caídas, elmo
-    m.bola(0.16, (0.13, 0, 1.12), la, "cabeca")
-    m.caixa((0.2, 0.2, 0.2), (0.28, 0, 1.04), pele, "cabeca", topo=(0.9, 0.95))
-    m.caixa((0.1, 0.15, 0.11), (0.41, 0, 1.0), focinho, "cabeca",
+    # ---- cabeça para a frente e para cima, rosto à mostra
+    m.bola(0.17, (0.15, 0, 1.28), la, "cabeca")
+    m.caixa((0.25, 0.23, 0.25), (0.31, 0, 1.24), pele, "cabeca",
+            topo=(0.9, 0.95))
+    m.caixa((0.15, 0.18, 0.15), (0.47, 0, 1.18), focinho, "cabeca",
             topo=(0.8, 0.9))
     for s in (1, -1):
-        m.caixa((0.05, 0.02, 0.05), (0.33, 0.1 * s, 1.08), olho, "cabeca")
-        m.caixa((0.08, 0.17, 0.05), (0.18, 0.18 * s, 1.08), pele, "cabeca",
-                rot=(30 * s, 0, 0))
-    m.bola(0.21, (0.19, 0, 1.19), ferro, "cabeca", escala=(1.05, 1, 0.72), sub=2)
-    m.cilindro(0.23, 0.23, 0.035, (0.19, 0, 1.16), ferro_claro, "cabeca",
-               lados=10)
-    m.caixa((0.035, 0.045, 0.12), (0.41, 0, 1.12), ferro_claro, "cabeca")
-    m.cilindro(0.03, 0.0, 0.07, (0.19, 0, 1.36), ferro_claro, "cabeca")
+        # orelhas caídas saindo embaixo da aba do elmo
+        m.caixa((0.09, 0.18, 0.05), (0.2, 0.21 * s, 1.27), pele, "cabeca",
+                rot=(35 * s, 0, 0))
+        m.caixa((0.06, 0.013, 0.05), (0.39, 0.12 * s, 1.28), branco,
+                "cabeca", chanfro=False)
+        m.caixa((0.024, 0.016, 0.034), (0.405, 0.126 * s, 1.278), olho,
+                "cabeca", chanfro=False)
+        m.caixa((0.016, 0.016, 0.02), (0.545, 0.035 * s, 1.21), olho,
+                "cabeca", chanfro=False)
+    m.caixa((0.07, 0.13, 0.012), (0.51, 0, 1.12), olho, "cabeca",
+            chanfro=False)
+    # elmo redondo com aba (chapéu de ferro), rebites e faixa no topo
+    m.bola(0.22, (0.23, 0, 1.38), ferro, "cabeca", escala=(1.05, 1, 0.8),
+           sub=2)
+    m.cilindro(0.29, 0.29, 0.03, (0.23, 0, 1.34), ferro_claro, "cabeca",
+               lados=12)
+    m.bola(0.035, (0.23, 0, 1.55), ferrugem, "cabeca", sub=1)
+    for k in range(12):
+        a = math.radians(k * 30)
+        m.bola(0.015, (0.23 + 0.22 * math.cos(a), 0.22 * math.sin(a), 1.37),
+               ferro_claro, "cabeca", sub=1)
+    for k in range(5):  # lã escapando por baixo da aba, atrás
+        a = math.radians(140 + k * 20)
+        m.bola(0.05, (0.21 + 0.21 * math.cos(a), 0.21 * math.sin(a), 1.29), la,
+               "cabeca", sub=1)
 
-    # lança na mão do lado da câmera, escudo no braço de longe
-    lanca0 = Vector((-0.45, -0.3, 0.38))
-    lanca1 = Vector((0.92, -0.3, 1.3))
+    # ---- braços: lã no braço, braçadeira de ferro, mão-casco
+    lanca0 = Vector((-0.5, -0.32, 0.42))
+    lanca1 = Vector((1.0, -0.32, 1.2))
     eixo = (lanca1 - lanca0).normalized()
-    mao_lanca = lanca0 + (lanca1 - lanca0) * 0.55
-    centro_escudo = Vector((0.4, -0.04, 0.72))
-
+    mao_lanca = lanca0 + (lanca1 - lanca0) * 0.5
+    centro_escudo = Vector((0.22, 0.34, 0.66))
     bracos = {
-        "D": ((0.02, -0.28, 0.98), (0.12, -0.34, 0.78), mao_lanca),
-        "E": ((0.02, 0.28, 0.98), (0.14, 0.26, 0.74), centro_escudo
-              + Vector((-0.08, 0.06, 0))),
+        "D": ((0.02, -0.29, 1.0), (0.1, -0.35, 0.8), mao_lanca),
+        "E": ((0.02, 0.29, 1.0), (0.12, 0.33, 0.8),
+              centro_escudo + Vector((-0.06, -0.06, 0))),
     }
     for lado, (ombro, cotovelo, mao) in bracos.items():
+        s = 1 if lado == "E" else -1
         m.osso(f"braco.{lado}", ombro, cotovelo, "tronco")
         m.osso(f"antebraco.{lado}", cotovelo, mao, f"braco.{lado}")
         m.osso(f"mao.{lado}", mao, Vector(mao) + Vector((0.08, 0, 0)),
                f"antebraco.{lado}")
-        m.bola(0.11, (Vector(ombro) + Vector(cotovelo)) / 2, la,
-               f"braco.{lado}", escala=(1, 1, 1.3))
-        m.caixa_entre(cotovelo, mao, 0.11, 0.11, couro, f"antebraco.{lado}")
+        m.bola(0.1, (Vector(ombro) + Vector(cotovelo)) / 2, la,
+               f"braco.{lado}", escala=(1, 1, 1.4))
+        for k in range(3):
+            c = Vector(ombro) + (Vector(cotovelo) - Vector(ombro)) * (0.2 + 0.3 * k)
+            m.bola(0.06, c + Vector((0, 0.05 * s, 0)), la_sombra if k == 1
+                   else la, f"braco.{lado}", sub=1)
+        m.caixa_entre(cotovelo, mao, 0.12, 0.12, couro, f"antebraco.{lado}")
+        meio = Vector(cotovelo) + (Vector(mao) - Vector(cotovelo)) * 0.45
+        m.caixa_entre(meio - (Vector(mao) - Vector(cotovelo)) * 0.25,
+                      meio + (Vector(mao) - Vector(cotovelo)) * 0.25,
+                      0.14, 0.14, ferro, f"antebraco.{lado}")
         m.caixa((0.1, 0.1, 0.1), mao, casco, f"mao.{lado}")
 
+    # ---- lança na diagonal, passando abaixo do rosto
     m.osso("lanca", lanca0, lanca1, "mao.D")
-    m.cilindro_entre(lanca0, lanca1, 0.028, 0.028, madeira, "lanca", lados=5)
-    m.cilindro_entre(lanca1, lanca1 + eixo * 0.06, 0.04, 0.04, ferro,
+    m.cilindro_entre(lanca0, lanca1, 0.026, 0.026, madeira, "lanca", lados=6)
+    m.cilindro_entre(lanca1, lanca1 + eixo * 0.06, 0.038, 0.038, ferro,
                      "lanca", lados=6)
-    m.cilindro_entre(lanca1 + eixo * 0.06, lanca1 + eixo * 0.3, 0.06, 0.0,
+    m.cilindro_entre(lanca1 + eixo * 0.06, lanca1 + eixo * 0.32, 0.06, 0.0,
                      lamina, "lanca", lados=4)
-
-    m.osso("escudo", centro_escudo, centro_escudo + Vector((0.1, -0.1, 0)),
-           "mao.E")
-    rot_escudo = (0, 90, -40)  # disco virado para frente e um pouco para a câmera
-    m.cilindro(0.29, 0.29, 0.035, centro_escudo, ferro, "escudo",
-               rot=rot_escudo, lados=12)
-    m.cilindro(0.26, 0.26, 0.06, centro_escudo, madeira, "escudo",
-               rot=rot_escudo, lados=12)
-    frente = Matrix.Rotation(math.radians(-40), 3, "Z") @ Vector((1, 0, 0))
-    m.bola(0.07, centro_escudo + frente * 0.04, ferro_claro, "escudo")
-
-
-    # ---- detalhes (definição) ----
-    import random
-    sorte = random.Random(7)
-    branco = material("ovelha_olho_branco", "#f4efe6")
-    # tufos de lã espalhados no corpo, nas pernas e nos braços
-    for _ in range(26):
-        a = sorte.uniform(0, 2 * math.pi)
-        z = sorte.uniform(0.45, 0.8)
-        r = 0.3 * (1 - abs(z - 0.66) * 1.4)
-        p = (-0.02 + r * math.cos(a), 0.27 * math.sin(a), z)
-        if p[0] > 0.22:
-            continue
-        m.bola(sorte.uniform(0.05, 0.07), p,
-               la if sorte.random() > 0.35 else la_sombra, "quadril", sub=1)
-    for lado, s in (("E", 1), ("D", -1)):
-        for k in range(5):
-            a = k * 1.25
-            m.bola(0.06, (0.01 + 0.11 * math.cos(a), 0.13 * s + 0.1 * math.sin(a),
-                          0.3 + 0.04 * k), la_sombra if k % 2 else la,
-                   f"coxa.{lado}", sub=1)
-        ombro, cot = bracos[lado][0], bracos[lado][1]
-        for k in range(3):
-            c = Vector(ombro) + (Vector(cot) - Vector(ombro)) * (0.25 + 0.3 * k)
-            m.bola(0.07, c + Vector((0, 0.06 * s, 0)), la, f"braco.{lado}",
-                   sub=1)
-        m.caixa((0.015, 0.015, 0.05), (0.1, 0.13 * s - 0.06 * s, 0.035),
-                ferro, f"canela.{lado}", chanfro=False)  # fenda do casco
-    # olhos com branco e pupila, narinas, boca
-    for s in (1, -1):
-        m.caixa((0.055, 0.012, 0.045), (0.33, 0.106 * s, 1.08), branco,
-                "cabeca", chanfro=False)
-        m.caixa((0.022, 0.014, 0.03), (0.345, 0.11 * s, 1.078), olho,
-                "cabeca", chanfro=False)
-        m.caixa((0.015, 0.015, 0.02), (0.462, 0.03 * s, 1.03), olho,
-                "cabeca", chanfro=False)
-    m.caixa((0.06, 0.13, 0.012), (0.44, 0, 0.96), olho, "cabeca",
-            chanfro=False)
-    # elmo: rebites no aro, protetores de bochecha e faixa central
-    for k in range(10):
-        a = math.radians(k * 36)
-        m.bola(0.016, (0.19 + 0.235 * math.cos(a), 0.235 * math.sin(a), 1.16),
-               ferro, "cabeca", sub=1)
-    for s in (1, -1):
-        m.caixa((0.1, 0.03, 0.12), (0.26, 0.2 * s, 1.08), ferro, "cabeca",
-                rot=(0, -10, 0))
-    m.caixa((0.3, 0.05, 0.03), (0.19, 0, 1.33), ferro_claro, "cabeca",
-            rot=(0, 0, 0))
-    # tabardo: barra rasgada em pontas e brasão em forma de escudo
-    for k in range(9):
-        a = math.radians(k * 40 + 10)
-        b = Vector((0.04 + 0.25 * math.cos(a), 0.25 * math.sin(a), 0.45))
-        m.tufo(b, (0, 0, -0.06 - 0.04 * (k % 3)), 0.05, tabardo, "quadril",
-               lados=3)
-    m.tufo((0.302, 0, 0.56), (0, 0, -0.06), 0.06, emblema, "tronco", lados=3)
-    # peitoral com rebites e cinto com fivela
-    for z in (0.86, 0.98):
-        for s in (1, -1):
-            m.bola(0.016, (0.05, 0.215 * s, z), ferro_claro, "tronco", sub=1)
-    m.caixa((0.03, 0.07, 0.06), (0.27, 0, 0.74), ferro_claro, "tronco")
-    # escudo: tábuas e rebites na borda
-    nrm = frente
-    lado_esc = Matrix.Rotation(math.radians(-40), 3, "Z") @ Vector((0, 1, 0))
-    for k in (-1, 1):
-        c = centro_escudo + nrm * 0.032 + lado_esc * 0.09 * k
-        m.caixa_entre(c - Vector((0, 0, 0.24)), c + Vector((0, 0, 0.24)), 0.012,
-                      0.012, ferro, "escudo", chanfro=False)
-    for k in range(10):
-        a = math.radians(k * 36)
-        p = (centro_escudo + nrm * 0.03 + lado_esc * 0.24 * math.cos(a)
-             + Vector((0, 0, 0.24 * math.sin(a))))
-        m.bola(0.015, p, ferro_claro, "escudo", sub=1)
-    # lança: tiras de couro na pegada e amarração da ponta
-    for t in (0.5, 0.6, 0.97):
+    for t in (0.44, 0.56, 0.97):
         c = lanca0 + (lanca1 - lanca0) * t
-        m.cilindro_entre(c - eixo * 0.02, c + eixo * 0.02, 0.036, 0.036,
+        m.cilindro_entre(c - eixo * 0.02, c + eixo * 0.02, 0.034, 0.034,
                          couro, "lanca")
+
+    # ---- escudo redondo de madeira no braço de longe, virado para a frente
+    m.osso("escudo", centro_escudo, centro_escudo + Vector((0.1, 0, 0)),
+           "mao.E")
+    giro = -25  # quase de frente para +X, um pouco para a câmera
+    rot_escudo = (0, 90, giro)
+    m.cilindro(0.3, 0.3, 0.035, centro_escudo, ferro, "escudo",
+               rot=rot_escudo, lados=14)
+    m.cilindro(0.27, 0.27, 0.06, centro_escudo, madeira, "escudo",
+               rot=rot_escudo, lados=14)
+    nrm = Matrix.Rotation(math.radians(giro), 3, "Z") @ Vector((1, 0, 0))
+    lado_esc = Matrix.Rotation(math.radians(giro), 3, "Z") @ Vector((0, 1, 0))
+    m.bola(0.075, centro_escudo + nrm * 0.04, ferro_claro, "escudo")
+    for k in (-1, 1):
+        c = centro_escudo + nrm * 0.032 + lado_esc * 0.1 * k
+        m.caixa_entre(c - Vector((0, 0, 0.25)), c + Vector((0, 0, 0.25)),
+                      0.012, 0.012, ferro, "escudo", chanfro=False)
+    for k in range(12):
+        a = math.radians(k * 30)
+        p = (centro_escudo + nrm * 0.03 + lado_esc * 0.255 * math.cos(a)
+             + Vector((0, 0, 0.255 * math.sin(a))))
+        m.bola(0.015, p, ferro_claro, "escudo", sub=1)
 
     m.construir()
     exportar("ovelha")
