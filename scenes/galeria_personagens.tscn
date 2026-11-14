@@ -1,0 +1,98 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/galeria_personagens.gd" id="1"]
+[ext_resource type="PackedScene" path="res://assets/modelos/personagens/bode.glb" id="2"]
+[ext_resource type="PackedScene" path="res://assets/modelos/personagens/ovelha.glb" id="3"]
+[ext_resource type="PackedScene" path="res://assets/modelos/personagens/rei_dragao.glb" id="4"]
+[ext_resource type="PackedScene" path="res://assets/modelos/personagens/bode_hd.glb" id="5"]
+[ext_resource type="PackedScene" path="res://assets/modelos/personagens/ovelha_hd.glb" id="6"]
+[ext_resource type="PackedScene" path="res://assets/modelos/personagens/rei_dragao_hd.glb" id="7"]
+
+[sub_resource type="Environment" id="env"]
+background_mode = 1
+background_color = Color(0.8, 0.88, 0.95, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.75, 0.8, 0.9, 1)
+ambient_light_energy = 0.6
+
+[sub_resource type="StandardMaterial3D" id="chao_mat"]
+albedo_color = Color(0.42, 0.45, 0.5, 1)
+
+[sub_resource type="BoxMesh" id="chao"]
+material = SubResource("chao_mat")
+size = Vector3(20, 1, 3)
+
+[node name="Galeria" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="ViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 4
+
+[node name="GameViewport" type="SubViewport" parent="ViewportContainer"]
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(320, 180)
+render_target_update_mode = 4
+
+[node name="Camera" type="Camera3D" parent="ViewportContainer/GameViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 12)
+projection = 1
+current = true
+size = 9.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="ViewportContainer/GameViewport"]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="ViewportContainer/GameViewport"]
+transform = Transform3D(0.866, -0.25, 0.433, 0, 0.866, 0.5, -0.5, -0.433, 0.75, 0, 10, 0)
+light_energy = 0.9
+
+[node name="Chao" type="MeshInstance3D" parent="ViewportContainer/GameViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -0.5)
+mesh = SubResource("chao")
+
+[node name="Modelos" type="Node3D" parent="ViewportContainer/GameViewport"]
+
+[node name="Bode" parent="ViewportContainer/GameViewport/Modelos" instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, 0)
+
+[node name="Ovelha" parent="ViewportContainer/GameViewport/Modelos" instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+
+[node name="ReiDragao" parent="ViewportContainer/GameViewport/Modelos" instance=ExtResource("4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, 0, 0)
+
+[node name="ModelosHD" type="Node3D" parent="ViewportContainer/GameViewport"]
+visible = false
+
+[node name="BodeHD" parent="ViewportContainer/GameViewport/ModelosHD" instance=ExtResource("5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, 0)
+
+[node name="OvelhaHD" parent="ViewportContainer/GameViewport/ModelosHD" instance=ExtResource("6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+
+[node name="ReiDragaoHD" parent="ViewportContainer/GameViewport/ModelosHD" instance=ExtResource("7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, 0, 0)
+
+[node name="Ajuda" type="Label" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 900.0
+offset_bottom = 48.0
+theme_override_font_sizes/font_size = 22
+text = "H: pixel / HD  |  Espaço: girar  |  Setas: girar na mão  |  R: voltar à vista do jogo"

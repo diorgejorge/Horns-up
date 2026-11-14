@@ -26,7 +26,7 @@ O jogo é feito para quem gosta de explorar um mapa conectado, com caminhos bloq
 - Exploração metroidvania: mapa interligado, portões que só abrem com habilidade.
 - Combate de martelo com peso.
 - Três tipos de coleta com papéis claros (ver Progressão).
-- Visual 3D em baixa resolução, com cara de pixel.
+- Visual 3D em HD, câmera de lado. Autor trocou em 2026-11-13: antes era 3D em baixa resolução com cara de pixel.
 
 ## Não-metas
 
@@ -54,7 +54,7 @@ O jogo é feito para quem gosta de explorar um mapa conectado, com caminhos bloq
 2. **3D baixa resolução, câmera de lado (escolhida pelo autor):** modelo 3D pequeno, render com pouca resolução e filtro sem suavizar, câmera fixa de lado como em Hollow Knight. Tudo modelado no Blender.
 3. **3D com câmera livre:** mais espaço de cenário, mas a luta fica difícil de ler. Rejeitada.
 
-Escolhido: opção 2.
+Escolhido: opção 2. Atualização de 2026-11-13: o autor decidiu que o jogo inteiro renderiza em HD (resolução cheia, imagem suavizada, antisserrilhado). A câmera de lado continua; o filtro de pixel saiu.
 
 ## Controles
 
@@ -126,11 +126,11 @@ Outros inimigos: a definir. Ovelha é só o mais fraco.
 
 ## Estilo visual e produção
 
-- 3D baixa resolução, cor chapada, filtro sem suavizar.
+- 3D em HD, cor chapada. Modelos lisos e arredondados (versões `_hd`). Autor decidiu em 2026-11-13; antes era baixa resolução sem suavizar.
 - Bode modelado do zero no Blender, baixa poligonagem, textura pequena.
 - Cenário e inimigos também no Blender.
 - Exporta para Godot 4.
-- **(proposta)** Tamanho do render e escala do pixel a definir pelo construtor.
+- Render na resolução da janela (1280x720 de base), sem encolher. Modelos dos personagens em `assets/modelos/personagens/`, gerados por `arte/blender/modelar_personagens.py`.
 
 ## Deixado para quem constrói (minha escolha)
 
