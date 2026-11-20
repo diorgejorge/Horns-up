@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_kpdvv"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/p3_03_pedra_runica.glb" id="2_vysvn"]
+
+[node name="p3_03_pedra_runica" type="Node3D" unique_id=1399380578]
+script = ExtResource("1_kpdvv")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=944541650 instance=ExtResource("2_vysvn")]

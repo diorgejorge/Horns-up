@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_3dkuu"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v20_banca_coberta.glb" id="2_73ga4"]
+
+[node name="v20_banca_coberta" type="Node3D" unique_id=730432138]
+script = ExtResource("1_3dkuu")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=794948976 instance=ExtResource("2_73ga4")]

@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_2qu4e"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno2/t12_chao_floresta.glb" id="2_h3412"]
+
+[node name="t12_chao_floresta" type="Node3D" unique_id=437184802]
+script = ExtResource("1_2qu4e")
+altura_topo = 0.32
+
+[node name="Modelo" parent="." unique_id=162441893 instance=ExtResource("2_h3412")]

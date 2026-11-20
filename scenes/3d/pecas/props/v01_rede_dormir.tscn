@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_pstya"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v01_rede_dormir.glb" id="2_wiost"]
+
+[node name="v01_rede_dormir" type="Node3D" unique_id=1350402757]
+script = ExtResource("1_pstya")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1356613685 instance=ExtResource("2_wiost")]

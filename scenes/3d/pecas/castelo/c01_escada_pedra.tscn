@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_hlm8h"]
+[ext_resource type="PackedScene" path="res://assets/diorge/castelo/c01_escada_pedra.glb" id="2_o8io7"]
+
+[node name="c01_escada_pedra" type="Node3D" unique_id=354043105]
+script = ExtResource("1_hlm8h")
+piso = false
+andavel = false
+tamanho = Vector2i(2, 2)
+
+[node name="Modelo" parent="." unique_id=537892321 instance=ExtResource("2_o8io7")]

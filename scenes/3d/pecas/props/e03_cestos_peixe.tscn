@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_px4e0"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/e03_cestos_peixe.glb" id="2_wq24r"]
+
+[node name="e03_cestos_peixe" type="Node3D" unique_id=1555216932]
+script = ExtResource("1_px4e0")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=63105840 instance=ExtResource("2_wq24r")]

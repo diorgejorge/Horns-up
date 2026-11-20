@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_ghjai"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m26_arbustos_ouricos.glb" id="2_2ky41"]
+
+[node name="m26_arbustos_ouricos" type="Node3D" unique_id=490809272]
+script = ExtResource("1_ghjai")
+altura_topo = 0.55
+
+[node name="Modelo" parent="." unique_id=1387041493 instance=ExtResource("2_2ky41")]

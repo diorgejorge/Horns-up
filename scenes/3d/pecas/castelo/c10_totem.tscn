@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_0ig3y"]
+[ext_resource type="PackedScene" path="res://assets/diorge/castelo/c10_totem.glb" id="2_xufc0"]
+
+[node name="c10_totem" type="Node3D" unique_id=263416553]
+script = ExtResource("1_0ig3y")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=790360148 instance=ExtResource("2_xufc0")]

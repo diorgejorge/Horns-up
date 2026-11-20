@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_r2nly"]
+[ext_resource type="Material" path="res://scenes/3d/pecas/rocha_cinza.tres" id="2_838fa"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno/p24_ruina_pilar.glb" id="3_4kxbp"]
+
+[node name="p24_ruina_pilar" type="Node3D" unique_id=646048854]
+script = ExtResource("1_r2nly")
+piso = false
+andavel = false
+material_sobrepor = ExtResource("2_838fa")
+
+[node name="Modelo" parent="." unique_id=1779870155 instance=ExtResource("3_4kxbp")]

@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_ejyl7"]
+[ext_resource type="Material" path="res://scenes/3d/pecas/rocha_cinza.tres" id="2_l5jt2"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno/p10_bloco_pedra_a.glb" id="3_l3luj"]
+
+[node name="p10_bloco_pedra_a" type="Node3D" unique_id=1963842350]
+script = ExtResource("1_ejyl7")
+altura_topo = 0.73
+material_sobrepor = ExtResource("2_l5jt2")
+
+[node name="Modelo" parent="." unique_id=848237171 instance=ExtResource("3_l3luj")]

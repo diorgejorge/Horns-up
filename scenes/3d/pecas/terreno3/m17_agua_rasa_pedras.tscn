@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_tbhje"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m17_agua_rasa_pedras.glb" id="2_ls2o1"]
+
+[node name="m17_agua_rasa_pedras" type="Node3D" unique_id=1813388755]
+script = ExtResource("1_tbhje")
+altura_topo = 0.29
+
+[node name="Modelo" parent="." unique_id=1809191072 instance=ExtResource("2_ls2o1")]

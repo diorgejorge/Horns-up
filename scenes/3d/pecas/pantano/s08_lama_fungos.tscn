@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_7ir71"]
+[ext_resource type="PackedScene" path="res://assets/diorge/pantano/s08_lama_fungos.glb" id="2_se4kj"]
+
+[node name="s08_lama_fungos" type="Node3D" unique_id=887110090]
+script = ExtResource("1_7ir71")
+altura_topo = 0.26
+
+[node name="Modelo" parent="." unique_id=246910636 instance=ExtResource("2_se4kj")]

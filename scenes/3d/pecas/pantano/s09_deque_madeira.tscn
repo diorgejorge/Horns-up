@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_e42aj"]
+[ext_resource type="PackedScene" path="res://assets/diorge/pantano/s09_deque_madeira.glb" id="2_xsui7"]
+
+[node name="s09_deque_madeira" type="Node3D" unique_id=291584374]
+script = ExtResource("1_e42aj")
+altura_topo = 0.06
+
+[node name="Modelo" parent="." unique_id=785653019 instance=ExtResource("2_xsui7")]

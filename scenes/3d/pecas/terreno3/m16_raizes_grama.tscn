@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_k3its"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m16_raizes_grama.glb" id="2_g8ph3"]
+
+[node name="m16_raizes_grama" type="Node3D" unique_id=224712989]
+script = ExtResource("1_k3its")
+andavel = false
+altura_topo = 0.74
+
+[node name="Modelo" parent="." unique_id=1078809287 instance=ExtResource("2_g8ph3")]

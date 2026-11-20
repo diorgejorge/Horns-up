@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_oisve"]
+[ext_resource type="PackedScene" path="res://assets/diorge/floresta/f04_arvore_copa_densa.glb" id="2_7dpoc"]
+
+[node name="f04_arvore_copa_densa" type="Node3D" unique_id=799028564]
+script = ExtResource("1_oisve")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1049697779 instance=ExtResource("2_7dpoc")]

@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_gok0f"]
+[ext_resource type="Material" path="res://scenes/3d/pecas/rocha_cinza.tres" id="2_8bwl0"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno/p36_pinheiro_b.glb" id="3_o6o5n"]
+
+[node name="p36_pinheiro_b" type="Node3D" unique_id=580210843]
+script = ExtResource("1_gok0f")
+piso = false
+andavel = false
+material_sobrepor = ExtResource("2_8bwl0")
+
+[node name="Modelo" parent="." unique_id=279951518 instance=ExtResource("3_o6o5n")]

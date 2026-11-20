@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_ndph4"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m11_capim_ouricos.glb" id="2_k811m"]
+
+[node name="m11_capim_ouricos" type="Node3D" unique_id=1579056423]
+script = ExtResource("1_ndph4")
+altura_topo = 0.38
+
+[node name="Modelo" parent="." unique_id=1780398279 instance=ExtResource("2_k811m")]

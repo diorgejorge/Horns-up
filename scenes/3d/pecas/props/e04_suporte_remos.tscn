@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_o4ei1"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/e04_suporte_remos.glb" id="2_u0o05"]
+
+[node name="e04_suporte_remos" type="Node3D" unique_id=1939227165]
+script = ExtResource("1_o4ei1")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=594016313 instance=ExtResource("2_u0o05")]

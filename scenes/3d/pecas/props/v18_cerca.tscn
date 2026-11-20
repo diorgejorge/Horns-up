@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_kbx7e"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v18_cerca.glb" id="2_d0oqc"]
+
+[node name="v18_cerca" type="Node3D" unique_id=1056009479]
+script = ExtResource("1_kbx7e")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=604948797 instance=ExtResource("2_d0oqc")]

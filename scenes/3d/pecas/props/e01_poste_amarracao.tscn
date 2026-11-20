@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_nkk85"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/e01_poste_amarracao.glb" id="2_w2lxd"]
+
+[node name="e01_poste_amarracao" type="Node3D" unique_id=230289464]
+script = ExtResource("1_nkk85")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=312875315 instance=ExtResource("2_w2lxd")]

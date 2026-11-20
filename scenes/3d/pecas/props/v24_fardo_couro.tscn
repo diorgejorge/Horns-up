@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_xbjgg"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v24_fardo_couro.glb" id="2_g2ayd"]
+
+[node name="v24_fardo_couro" type="Node3D" unique_id=1934037836]
+script = ExtResource("1_xbjgg")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1357514604 instance=ExtResource("2_g2ayd")]

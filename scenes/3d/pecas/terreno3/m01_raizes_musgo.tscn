@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_ojjxe"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m01_raizes_musgo.glb" id="2_gjrfl"]
+
+[node name="m01_raizes_musgo" type="Node3D" unique_id=412378144]
+script = ExtResource("1_ojjxe")
+altura_topo = 0.36
+
+[node name="Modelo" parent="." unique_id=1331759239 instance=ExtResource("2_gjrfl")]

@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_755s7"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m06_terra_vermelha.glb" id="2_2ysv7"]
+
+[node name="m06_terra_vermelha" type="Node3D" unique_id=315664906]
+script = ExtResource("1_755s7")
+altura_topo = 0.25
+
+[node name="Modelo" parent="." unique_id=498405235 instance=ExtResource("2_2ysv7")]

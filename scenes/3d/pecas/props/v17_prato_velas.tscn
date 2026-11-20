@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_0jqlf"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v17_prato_velas.glb" id="2_jkspj"]
+
+[node name="v17_prato_velas" type="Node3D" unique_id=141263482]
+script = ExtResource("1_0jqlf")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=2118479590 instance=ExtResource("2_jkspj")]

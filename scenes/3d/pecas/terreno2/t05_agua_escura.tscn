@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_wuckq"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno2/t05_agua_escura.glb" id="2_580yg"]
+
+[node name="t05_agua_escura" type="Node3D" unique_id=980443741]
+script = ExtResource("1_wuckq")
+andavel = false
+altura_topo = 0.26
+
+[node name="Modelo" parent="." unique_id=390361337 instance=ExtResource("2_580yg")]

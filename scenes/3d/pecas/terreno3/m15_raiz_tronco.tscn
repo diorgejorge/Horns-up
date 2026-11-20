@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_aqjti"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m15_raiz_tronco.glb" id="2_24pby"]
+
+[node name="m15_raiz_tronco" type="Node3D" unique_id=2048320007]
+script = ExtResource("1_aqjti")
+andavel = false
+altura_topo = 0.7
+
+[node name="Modelo" parent="." unique_id=547485528 instance=ExtResource("2_24pby")]

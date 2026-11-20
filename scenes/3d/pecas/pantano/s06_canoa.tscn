@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_otvg8"]
+[ext_resource type="PackedScene" path="res://assets/diorge/pantano/s06_canoa.glb" id="2_c6ger"]
+
+[node name="s06_canoa" type="Node3D" unique_id=608157411]
+script = ExtResource("1_otvg8")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=134994729 instance=ExtResource("2_c6ger")]

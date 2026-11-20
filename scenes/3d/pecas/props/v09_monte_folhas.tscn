@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_xsyny"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v09_monte_folhas.glb" id="2_c73um"]
+
+[node name="v09_monte_folhas" type="Node3D" unique_id=2014024417]
+script = ExtResource("1_xsyny")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1882763582 instance=ExtResource("2_c73um")]

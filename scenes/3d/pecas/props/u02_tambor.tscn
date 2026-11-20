@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_ysfqk"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/u02_tambor.glb" id="2_10qrt"]
+
+[node name="u02_tambor" type="Node3D" unique_id=845049554]
+script = ExtResource("1_ysfqk")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1784224272 instance=ExtResource("2_10qrt")]

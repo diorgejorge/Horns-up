@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_6x7xg"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m05_lama_furos.glb" id="2_53suo"]
+
+[node name="m05_lama_furos" type="Node3D" unique_id=793089303]
+script = ExtResource("1_6x7xg")
+altura_topo = 0.23
+
+[node name="Modelo" parent="." unique_id=1917615439 instance=ExtResource("2_53suo")]

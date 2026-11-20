@@ -1,2 +1,22 @@
+# Godot 4
 .godot/
+/android/
+*.tmp
+
+# Arquivos-fonte pesados (ficam só no disco local)
+assets/**/fonte/
+assets/**/source/*
+!assets/**/source/scripts/
+!assets/**/source/.gdignore
+assets/diorge/*.zip
+assets/diorge/*.stl
+*.blend
 *.blend1
+*.obj
+*.mtl
+*.stl
+*.zip
+
+# Python
+__pycache__/
+*.pyc

@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_a1vub"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v19_lamparina.glb" id="2_k0dib"]
+
+[node name="v19_lamparina" type="Node3D" unique_id=1516834805]
+script = ExtResource("1_a1vub")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=998238699 instance=ExtResource("2_k0dib")]

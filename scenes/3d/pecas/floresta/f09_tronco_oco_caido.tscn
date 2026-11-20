@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_32x35"]
+[ext_resource type="PackedScene" path="res://assets/diorge/floresta/f09_tronco_oco_caido.glb" id="2_f4kxb"]
+
+[node name="f09_tronco_oco_caido" type="Node3D" unique_id=271779980]
+script = ExtResource("1_32x35")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1165212258 instance=ExtResource("2_f4kxb")]

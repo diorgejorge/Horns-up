@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_0wj6t"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m07_deque_estacas.glb" id="2_5jdea"]
+
+[node name="m07_deque_estacas" type="Node3D" unique_id=636510319]
+script = ExtResource("1_0wj6t")
+altura_topo = 0.26
+
+[node name="Modelo" parent="." unique_id=1764518438 instance=ExtResource("2_5jdea")]

@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_2jjwh"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m02_deque_tabuas.glb" id="2_bd2f7"]
+
+[node name="m02_deque_tabuas" type="Node3D" unique_id=193816731]
+script = ExtResource("1_2jjwh")
+altura_topo = 0.25
+
+[node name="Modelo" parent="." unique_id=645053330 instance=ExtResource("2_bd2f7")]

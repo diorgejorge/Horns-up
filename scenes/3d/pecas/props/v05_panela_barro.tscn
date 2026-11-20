@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_u7onn"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v05_panela_barro.glb" id="2_xbnps"]
+
+[node name="v05_panela_barro" type="Node3D" unique_id=1573714309]
+script = ExtResource("1_u7onn")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1646244866 instance=ExtResource("2_xbnps")]

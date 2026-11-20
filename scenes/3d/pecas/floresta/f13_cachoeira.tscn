@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_nsuij"]
+[ext_resource type="PackedScene" path="res://assets/diorge/floresta/f13_cachoeira.glb" id="2_6pw1j"]
+
+[node name="f13_cachoeira" type="Node3D" unique_id=2087275425]
+script = ExtResource("1_nsuij")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=938067069 instance=ExtResource("2_6pw1j")]

@@ -1,0 +1,183 @@
+# Joint landmarks in pixel coords of the 512px front render (px, py); side-render coords marked "side" as (px, py).
+# Character faces -Y. ".L" = character's left = +X = image right in the front render.
+COMMON_SPINE = ("hips", "spine", "chest", "neck", "head")
+
+MODELS = {
+    "buffalo": {
+        "style": "melee", "robe": False,
+        "spine": [(256, 310), (256, 255), (256, 200), (256, 135), (256, 100)], "head_top": (256, 30),
+        "arm.L": [(330, 165), (390, 205), (420, 250)], "hand_tip.L": (425, 275),
+        "arm.R": [(182, 165), (120, 205), (95, 250)], "hand_tip.R": (88, 275),
+        "leg.L": [(290, 350), (300, 410), (300, 465)], "leg.R": [(220, 350), (212, 410), (210, 465)],
+        # rigid regions: (bone, x_px range, z_py range, side y_px range or None)
+        # sword floats in front of the body (separate part) -> follows the left hand; fur cape -> spine
+        "rigid": [("spine", (100, 412), (200, 445), (305, 380))],
+        # textured OBJ: the sword is a loose part ~20 cm in front of the hand -> prep_obj.py snaps it into hand.L
+        "snap_weapon": {"bone": "hand.L", "box_min": (0.15, -0.35, 0.15), "box_max": (0.40, -0.15, 0.65),
+                        "hand_px": (420, 255), "grip_above_guard": 0.07},
+    },
+    "onca": {
+        "style": "melee2", "robe": False,
+        "spine": [(256, 300), (256, 245), (256, 190), (256, 125), (256, 85)], "head_top": (256, 28),
+        "arm.L": [(318, 135), (365, 210), (395, 265)], "hand_tip.L": (402, 285),
+        "arm.R": [(194, 135), (148, 210), (118, 265)], "hand_tip.R": (110, 285),
+        "leg.L": [(290, 320), (296, 400), (296, 455)], "leg.R": [(222, 320), (215, 400), (215, 455)],
+        "tail_side": [(272, 268), (298, 330), (300, 390), (322, 435), (395, 430)],
+        "rigid": [("hand.L", (405, 450), (265, 335), None), ("hand.R", (62, 108), (265, 335), None),
+                  ("chest", (150, 362), (60, 235), (272, 310))],
+    },
+    "boto": {
+        "style": "cast", "robe": True,
+        "spine": [(256, 285), (256, 240), (256, 200), (256, 150), (256, 110)], "head_top": (256, 40),
+        "arm.L": [(310, 165), (360, 210), (398, 235)], "hand_tip.L": (410, 245),
+        "arm.R": [(200, 165), (150, 215), (95, 258)], "hand_tip.R": (65, 275),
+        "leg.L": [(282, 300), (282, 390), (282, 450)], "leg.R": [(230, 300), (230, 390), (230, 450)],
+        "tail_side": [(298, 425), (330, 452), (358, 468)],
+        "rigid": [("hand.L", (362, 432), (40, 172), None), ("hand.L", (362, 432), (258, 495), None)],
+    },
+    "coruja": {
+        "style": "cast", "robe": True,
+        "spine": [(256, 320), (256, 275), (256, 235), (256, 185), (256, 125)], "head_top": (256, 50),
+        "arm.L": [(330, 205), (380, 240), (428, 262)], "hand_tip.L": (440, 275),
+        "arm.R": [(190, 200), (140, 250), (82, 290)], "hand_tip.R": (30, 315),
+        "leg.L": [(290, 370), (290, 420), (290, 460)], "leg.R": [(230, 370), (230, 420), (230, 460)],
+        "rigid": [("hand.L", (378, 478), (20, 500), None)],  # one box: the split must keep the staff in one piece
+    },
+    # ---- minions (minions1.zip sheet, split by split_sheet.py; landmarks from <name>_prep_front/side.png) ----
+    "acaizeiro": {  # aÃ§aÃ­-palm warrior, club in the RIGHT hand
+        "style": "melee", "robe": False, "weapon_side": "R",
+        "spine": [(256, 300), (256, 250), (256, 200), (256, 150), (256, 120)], "head_top": (256, 20),
+        "arm.L": [(345, 190), (385, 270), (385, 335)], "hand_tip.L": (385, 355),
+        "arm.R": [(168, 190), (172, 250), (198, 300)], "hand_tip.R": (192, 330),
+        "leg.L": [(290, 330), (300, 400), (305, 470)], "leg.R": [(222, 330), (212, 400), (205, 470)],
+        "rigid": [("hand.R", (95, 190), (340, 462), None), ("hand.R", (158, 220), (282, 375), None)],
+    },
+    "vitoria_regia": {  # water-lily frog, lily-pad shield on the left arm, root legs
+        "style": "melee", "robe": False, "weapon_side": "R",
+        "spine": [(256, 330), (256, 280), (256, 220), (256, 175), (256, 150)], "head_top": (256, 25),
+        "arm.L": [(330, 250), (355, 290), (365, 320)], "hand_tip.L": (370, 335),
+        "arm.R": [(150, 250), (115, 290), (105, 350)], "hand_tip.R": (100, 375),
+        "leg.L": [(300, 380), (320, 430), (340, 482)], "leg.R": [(205, 380), (190, 430), (170, 482)],
+        "rigid": [("hand.L", (265, 445), (165, 390), (95, 235))],
+    },
+    "carnivora": {  # carnivorous-plant brute, vine arms, trap mouth for a head
+        "style": "melee2", "robe": False,
+        "spine": [(256, 400), (256, 330), (256, 250), (256, 170), (256, 110)], "head_top": (256, 40),
+        "arm.L": [(330, 175), (385, 280), (395, 400)], "hand_tip.L": (400, 450),
+        "arm.R": [(182, 175), (128, 280), (118, 400)], "hand_tip.R": (112, 450),
+        "leg.L": [(300, 420), (305, 455), (305, 490)], "leg.R": [(210, 420), (205, 455), (205, 490)],
+    },
+    "cogumelo": {  # mushroom imp, root claws
+        "style": "melee2", "robe": False,
+        "spine": [(256, 360), (256, 320), (256, 270), (256, 225), (256, 170)], "head_top": (256, 25),
+        "arm.L": [(308, 255), (345, 320), (355, 390)], "hand_tip.L": (360, 420),
+        "arm.R": [(204, 255), (165, 330), (150, 400)], "hand_tip.R": (155, 420),
+        "leg.L": [(285, 380), (290, 430), (295, 480)], "leg.R": [(225, 380), (220, 430), (215, 480)],
+    },
+    # ---- minions2.zip sheet ----
+    "golem_toco": {  # tree-stump golem, big fists (sheet copy is yawed ~35Â°: split with rot -35)
+        "style": "melee2", "robe": False,
+        "spine": [(256, 340), (256, 290), (256, 230), (256, 160), (256, 130)], "head_top": (256, 40),
+        "arm.L": [(345, 170), (390, 260), (400, 350)], "hand_tip.L": (400, 385),
+        "arm.R": [(165, 170), (120, 260), (115, 350)], "hand_tip.R": (115, 385),
+        "leg.L": [(295, 380), (300, 425), (305, 475)], "leg.R": [(215, 380), (210, 425), (205, 475)],
+    },
+    "bromelia": {  # bromeliad archer, modelled mid-draw: bow in the left hand, right hand at the string
+        "style": "shoot", "robe": False,
+        "spine": [(225, 300), (225, 260), (220, 215), (215, 180), (210, 150)], "head_top": (205, 45),
+        "arm.L": [(255, 175), (300, 172), (345, 170)], "hand_tip.L": (360, 170),
+        "arm.R": [(195, 185), (160, 185), (190, 172)], "hand_tip.R": (205, 170),
+        "leg.L": [(240, 310), (255, 390), (275, 460)], "leg.R": [(200, 310), (175, 390), (145, 460)],
+        "rigid": [("hand.L", (265, 440), (15, 335), (160, 228)), ("chest", (85, 210), (70, 215), (268, 340))],
+    },
+    "aninga": {  # aninga (reed) spearman, spear in the left hand
+        "style": "melee", "robe": False,
+        "spine": [(215, 330), (215, 285), (215, 240), (220, 200), (225, 160)], "head_top": (215, 70),
+        "arm.L": [(255, 215), (285, 245), (318, 255)], "hand_tip.L": (325, 265),
+        "arm.R": [(180, 215), (160, 270), (150, 320)], "hand_tip.R": (148, 345),
+        "leg.L": [(240, 350), (245, 410), (250, 465)], "leg.R": [(190, 350), (180, 410), (172, 465)],
+        "rigid": [("hand.L", (268, 378), (18, 512), None)],
+    },
+    "buriti": {  # buriti-fruit scout, small, unarmed
+        "style": "melee", "robe": False,
+        "spine": [(256, 370), (256, 330), (256, 290), (256, 240), (256, 200)], "head_top": (256, 30),
+        "arm.L": [(300, 270), (330, 310), (350, 345)], "hand_tip.L": (352, 360),
+        "arm.R": [(215, 270), (180, 310), (160, 345)], "hand_tip.R": (158, 360),
+        "leg.L": [(280, 400), (285, 440), (290, 480)], "leg.R": [(232, 400), (228, 440), (222, 480)],
+    },
+    # ---- mobs1.zip / mobs2.zip (split with yaw: sapo -45, tartaruga 35, teiu -55, coral -38) ----
+    "sapo_dardo": {  # poison-dart frog, blowgun held at the mouth with both hands
+        "style": "blow", "robe": False,
+        "spine": [(256, 290), (256, 240), (256, 190), (256, 140), (256, 95)], "head_top": (256, 25),
+        "arm.L": [(300, 150), (330, 190), (310, 135)], "hand_tip.L": (300, 120),
+        "arm.R": [(210, 150), (195, 190), (225, 140)], "hand_tip.R": (240, 125),
+        "leg.L": [(280, 300), (285, 360), (300, 440)], "leg.R": [(230, 300), (215, 370), (195, 440)],
+    },
+    "tartaruga": {  # turtle cleric, water staff in the right hand
+        "style": "cast", "robe": True, "weapon_side": "R",
+        "spine": [(270, 320), (270, 270), (265, 220), (260, 150), (255, 100)], "head_top": (255, 65),
+        "arm.L": [(340, 185), (370, 260), (375, 330)], "hand_tip.L": (375, 350),
+        "arm.R": [(212, 185), (190, 245), (165, 228)], "hand_tip.R": (150, 225),
+        "leg.L": [(300, 340), (300, 410), (300, 465)], "leg.R": [(240, 340), (240, 410), (240, 465)],
+        "rigid": [("hand.R", (115, 190), (15, 488), None)],
+    },
+    "jabuti": {  # tortoise guardian -> HERO "tartaruga_paladina": mace right hand, stone shield left arm
+        "style": "melee", "robe": False, "weapon_side": "R",
+        "spine": [(256, 330), (256, 290), (256, 240), (265, 190), (265, 140)], "head_top": (265, 95),
+        "arm.L": [(355, 240), (390, 290), (400, 340)], "hand_tip.L": (400, 360),
+        "arm.R": [(150, 235), (85, 300), (105, 330)], "hand_tip.R": (100, 350),
+        "leg.L": [(300, 370), (318, 405), (320, 460)], "leg.R": [(200, 370), (182, 405), (175, 460)],
+        "rigid": [("hand.R", (115, 205), (262, 318), None), ("hand.L", (330, 478), (165, 448), (40, 300))],
+    },
+    "iguana": {  # iguana ranger, bow held low across the body in the left hand, quiver on the back
+        "style": "shoot", "robe": False,
+        "spine": [(210, 330), (210, 280), (205, 220), (210, 150), (225, 80)], "head_top": (215, 30),
+        "arm.L": [(255, 175), (270, 250), (275, 295)], "hand_tip.L": (285, 300),
+        "arm.R": [(160, 175), (140, 250), (130, 310)], "hand_tip.R": (130, 330),
+        "leg.L": [(240, 350), (245, 420), (245, 470)], "leg.R": [(180, 350), (170, 420), (170, 470)],
+        "rigid": [("hand.L", (40, 125), (240, 300), None), ("hand.L", (300, 385), (190, 240), None),
+                  ("chest", (240, 320), (60, 220), None), ("hips", (300, 500), (335, 480), None)],
+    },
+    "teiu": {  # tegu brawler, fists up
+        "style": "melee2", "robe": False,
+        "spine": [(256, 320), (256, 270), (256, 200), (256, 120), (256, 80)], "head_top": (256, 35),
+        "arm.L": [(320, 150), (355, 210), (310, 150)], "hand_tip.L": (305, 140),
+        "arm.R": [(195, 150), (165, 210), (215, 150)], "hand_tip.R": (220, 140),
+        "leg.L": [(300, 330), (330, 390), (360, 455)], "leg.R": [(210, 330), (180, 390), (160, 455)],
+    },
+    "naga": {  # robed snake mage: coiled snake body instead of legs, staff in the right hand
+        "style": "cast", "robe": True, "weapon_side": "R", "walk_amp": 0.15,
+        "spine": [(256, 330), (256, 280), (256, 220), (260, 150), (270, 100)], "head_top": (275, 40),
+        "arm.L": [(325, 185), (352, 215), (335, 240)], "hand_tip.L": (330, 250),
+        "arm.R": [(228, 185), (218, 230), (207, 195)], "hand_tip.R": (200, 185),
+        "leg.L": [(285, 360), (290, 420), (295, 475)], "leg.R": [(225, 360), (220, 420), (215, 475)],
+        "rigid": [("hand.R", (165, 236), (20, 440), None), ("hand.R", (210, 242), (440, 485), None)],
+    },
+    "coral": {  # coral-snake assassin, a curved blade in each hand
+        "style": "melee2", "robe": False,
+        "spine": [(256, 290), (256, 245), (256, 185), (256, 120), (256, 60)], "head_top": (256, 20),
+        "arm.L": [(305, 120), (340, 200), (350, 250)], "hand_tip.L": (352, 275),
+        "arm.R": [(205, 120), (175, 200), (160, 250)], "hand_tip.R": (158, 275),
+        "leg.L": [(285, 310), (300, 380), (300, 460)], "leg.R": [(225, 310), (205, 380), (185, 455)],
+        "rigid": [("hand.R", (140, 182), (238, 300), None), ("hand.L", (328, 372), (238, 300), None)],
+    },
+    "cobra_cavaleira": {  # cobra knight: spear in the right hand, round shield on the left arm
+        "style": "thrust", "robe": False, "weapon_side": "R",
+        "spine": [(256, 330), (256, 285), (256, 220), (250, 150), (250, 95)], "head_top": (250, 60),
+        "arm.L": [(310, 185), (330, 235), (330, 270)], "hand_tip.L": (330, 285),
+        "arm.R": [(200, 180), (175, 225), (155, 250)], "hand_tip.R": (150, 265),
+        "leg.L": [(285, 350), (290, 410), (290, 465)], "leg.R": [(225, 350), (220, 410), (215, 465)],
+        "rigid": [("hand.R", (118, 182), (20, 488), None), ("hand.L", (285, 388), (200, 345), None)],
+    },
+    "guara": {
+        "style": "cast", "robe": False, "split_quiver": False,  # splitting its quiver broke bone heat
+        "spine": [(256, 290), (256, 245), (256, 200), (256, 150), (250, 62)], "head_top": (246, 30),
+        "neck_mid": (252, 105),
+        "beak": [(262, 68), (300, 105), (325, 152)],
+        "arm.L": [(305, 185), (360, 215), (420, 235)], "hand_tip.L": (432, 240),
+        "arm.R": [(210, 185), (150, 215), (75, 250)], "hand_tip.R": (55, 262),
+        "leg.L": [(285, 320), (292, 395), (300, 455)], "leg.R": [(232, 320), (222, 395), (212, 455)],
+        "rigid": [("hand.L", (400, 472), (12, 212), None), ("hand.L", (358, 472), (262, 440), None),
+                  ("chest", (150, 215), (40, 215), (268, 335))],
+    },
+}

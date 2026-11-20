@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_ner2s"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno2/t13_laje_rachada.glb" id="2_bouq7"]
+
+[node name="t13_laje_rachada" type="Node3D" unique_id=1825503361]
+script = ExtResource("1_ner2s")
+altura_topo = 0.29
+
+[node name="Modelo" parent="." unique_id=1574407115 instance=ExtResource("2_bouq7")]

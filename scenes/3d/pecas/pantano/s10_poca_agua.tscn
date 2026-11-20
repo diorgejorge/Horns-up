@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_3xtog"]
+[ext_resource type="PackedScene" path="res://assets/diorge/pantano/s10_poca_agua.glb" id="2_n26cx"]
+
+[node name="s10_poca_agua" type="Node3D" unique_id=180254783]
+script = ExtResource("1_3xtog")
+altura_topo = 0.12
+
+[node name="Modelo" parent="." unique_id=1293453209 instance=ExtResource("2_n26cx")]

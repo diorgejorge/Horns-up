@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_r25ki"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m09_brejo_capim.glb" id="2_we8yt"]
+
+[node name="m09_brejo_capim" type="Node3D" unique_id=1494887709]
+script = ExtResource("1_r25ki")
+altura_topo = 0.32
+
+[node name="Modelo" parent="." unique_id=291904948 instance=ExtResource("2_we8yt")]

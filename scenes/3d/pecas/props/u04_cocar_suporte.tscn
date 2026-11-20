@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_ov1an"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/u04_cocar_suporte.glb" id="2_bqiq1"]
+
+[node name="u04_cocar_suporte" type="Node3D" unique_id=1064193137]
+script = ExtResource("1_ov1an")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1282502643 instance=ExtResource("2_bqiq1")]

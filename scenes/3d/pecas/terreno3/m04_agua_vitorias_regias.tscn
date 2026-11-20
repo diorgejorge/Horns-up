@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_flcdo"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m04_agua_vitorias_regias.glb" id="2_auihl"]
+
+[node name="m04_agua_vitorias_regias" type="Node3D" unique_id=478250252]
+script = ExtResource("1_flcdo")
+andavel = false
+altura_topo = 0.23
+
+[node name="Modelo" parent="." unique_id=95798500 instance=ExtResource("2_auihl")]

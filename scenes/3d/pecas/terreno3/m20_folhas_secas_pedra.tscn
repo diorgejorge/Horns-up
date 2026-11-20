@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_yxafv"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m20_folhas_secas_pedra.glb" id="2_wae52"]
+
+[node name="m20_folhas_secas_pedra" type="Node3D" unique_id=46201717]
+script = ExtResource("1_yxafv")
+altura_topo = 0.36
+
+[node name="Modelo" parent="." unique_id=769958602 instance=ExtResource("2_wae52")]

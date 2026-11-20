@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_miok6"]
+[ext_resource type="Material" path="res://scenes/3d/pecas/rocha_cinza.tres" id="2_e2ae1"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno/p37_arvore_retorcida.glb" id="3_5bwbh"]
+
+[node name="p37_arvore_retorcida" type="Node3D" unique_id=116792170]
+script = ExtResource("1_miok6")
+piso = false
+andavel = false
+material_sobrepor = ExtResource("2_e2ae1")
+
+[node name="Modelo" parent="." unique_id=73005476 instance=ExtResource("3_5bwbh")]

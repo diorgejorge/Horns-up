@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_vodvn"]
+[ext_resource type="PackedScene" path="res://assets/diorge/castelo/c03_piso_entalhado_2x2.glb" id="2_4ny12"]
+
+[node name="c03_piso_entalhado_2x2" type="Node3D" unique_id=1353438526]
+script = ExtResource("1_vodvn")
+altura_topo = 0.17
+tamanho = Vector2i(2, 2)
+
+[node name="Modelo" parent="." unique_id=1477880615 instance=ExtResource("2_4ny12")]

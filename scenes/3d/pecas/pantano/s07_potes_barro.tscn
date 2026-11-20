@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_uokjb"]
+[ext_resource type="PackedScene" path="res://assets/diorge/pantano/s07_potes_barro.glb" id="2_0fsk5"]
+
+[node name="s07_potes_barro" type="Node3D" unique_id=753563974]
+script = ExtResource("1_uokjb")
+andavel = false
+altura_topo = 0.22
+
+[node name="Modelo" parent="." unique_id=2146309830 instance=ExtResource("2_0fsk5")]

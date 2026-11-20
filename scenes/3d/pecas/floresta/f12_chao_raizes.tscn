@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_pbmje"]
+[ext_resource type="PackedScene" path="res://assets/diorge/floresta/f12_chao_raizes.glb" id="2_i3gy4"]
+
+[node name="f12_chao_raizes" type="Node3D" unique_id=2044939027]
+script = ExtResource("1_pbmje")
+altura_topo = 0.13
+
+[node name="Modelo" parent="." unique_id=1278473663 instance=ExtResource("2_i3gy4")]

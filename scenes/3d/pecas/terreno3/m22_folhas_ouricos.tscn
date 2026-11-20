@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_wxrw7"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m22_folhas_ouricos.glb" id="2_cqa42"]
+
+[node name="m22_folhas_ouricos" type="Node3D" unique_id=1531932146]
+script = ExtResource("1_wxrw7")
+altura_topo = 0.52
+
+[node name="Modelo" parent="." unique_id=398000498 instance=ExtResource("2_cqa42")]

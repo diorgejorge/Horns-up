@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_nos40"]
+[ext_resource type="PackedScene" path="res://assets/diorge/pantano/s14_monte_lama.glb" id="2_auofl"]
+
+[node name="s14_monte_lama" type="Node3D" unique_id=155164708]
+script = ExtResource("1_nos40")
+altura_topo = 0.39
+
+[node name="Modelo" parent="." unique_id=1448425659 instance=ExtResource("2_auofl")]

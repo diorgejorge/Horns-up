@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_5awts"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/u03_pedra_runas.glb" id="2_0112t"]
+
+[node name="u03_pedra_runas" type="Node3D" unique_id=1859770665]
+script = ExtResource("1_5awts")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1510429236 instance=ExtResource("2_0112t")]

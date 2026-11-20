@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_hqq5g"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/r04_altar_cristal.glb" id="2_l74l5"]
+
+[node name="r04_altar_cristal" type="Node3D" unique_id=87251739]
+script = ExtResource("1_hqq5g")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=706657588 instance=ExtResource("2_l74l5")]

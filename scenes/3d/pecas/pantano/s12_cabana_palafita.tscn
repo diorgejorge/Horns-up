@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_5wgrh"]
+[ext_resource type="PackedScene" path="res://assets/diorge/pantano/s12_cabana_palafita.glb" id="2_val4q"]
+
+[node name="s12_cabana_palafita" type="Node3D" unique_id=753774619]
+script = ExtResource("1_5wgrh")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1599648199 instance=ExtResource("2_val4q")]

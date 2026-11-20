@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_tk2oy"]
+[ext_resource type="PackedScene" path="res://assets/diorge/floresta/f08_palmeira_jovem.glb" id="2_l2vj1"]
+
+[node name="f08_palmeira_jovem" type="Node3D" unique_id=101291390]
+script = ExtResource("1_tk2oy")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1310027723 instance=ExtResource("2_l2vj1")]

@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_wwpv7"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m21_tronco_caido_grama.glb" id="2_87n55"]
+
+[node name="m21_tronco_caido_grama" type="Node3D" unique_id=468986842]
+script = ExtResource("1_wwpv7")
+altura_topo = 0.46
+
+[node name="Modelo" parent="." unique_id=101715358 instance=ExtResource("2_87n55")]

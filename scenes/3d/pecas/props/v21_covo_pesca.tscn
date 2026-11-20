@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_0pxky"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v21_covo_pesca.glb" id="2_vjmr7"]
+
+[node name="v21_covo_pesca" type="Node3D" unique_id=2096766877]
+script = ExtResource("1_0pxky")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1648323174 instance=ExtResource("2_vjmr7")]

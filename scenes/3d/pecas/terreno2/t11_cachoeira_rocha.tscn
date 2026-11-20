@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_0lcfs"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno2/t11_cachoeira_rocha.glb" id="2_kbfkq"]
+
+[node name="t11_cachoeira_rocha" type="Node3D" unique_id=68017773]
+script = ExtResource("1_0lcfs")
+andavel = false
+altura_topo = 0.47
+
+[node name="Modelo" parent="." unique_id=1997192888 instance=ExtResource("2_kbfkq")]

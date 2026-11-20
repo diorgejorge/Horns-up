@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_7wxks"]
+[ext_resource type="PackedScene" path="res://assets/diorge/castelo/c02_palicada_canto.glb" id="2_i515x"]
+
+[node name="c02_palicada_canto" type="Node3D" unique_id=1675458556]
+script = ExtResource("1_7wxks")
+piso = false
+andavel = false
+tamanho = Vector2i(3, 3)
+
+[node name="Modelo" parent="." unique_id=293677371 instance=ExtResource("2_i515x")]

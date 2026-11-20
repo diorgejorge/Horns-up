@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_bthf6"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v25_cobertura_palha.glb" id="2_o2l4o"]
+
+[node name="v25_cobertura_palha" type="Node3D" unique_id=614606229]
+script = ExtResource("1_bthf6")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=52357400 instance=ExtResource("2_o2l4o")]

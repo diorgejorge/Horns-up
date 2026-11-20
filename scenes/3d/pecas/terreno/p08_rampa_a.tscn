@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_g0dfp"]
+[ext_resource type="Material" path="res://scenes/3d/pecas/rocha_cinza.tres" id="2_glw4f"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno/p08_rampa_a.glb" id="3_0ihng"]
+
+[node name="p08_rampa_a" type="Node3D" unique_id=488914299]
+script = ExtResource("1_g0dfp")
+piso = false
+andavel = false
+material_sobrepor = ExtResource("2_glw4f")
+
+[node name="Modelo" parent="." unique_id=1400123375 instance=ExtResource("3_0ihng")]

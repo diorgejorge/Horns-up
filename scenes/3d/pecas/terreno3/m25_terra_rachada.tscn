@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_uo6vh"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m25_terra_rachada.glb" id="2_dmixc"]
+
+[node name="m25_terra_rachada" type="Node3D" unique_id=724864052]
+script = ExtResource("1_uo6vh")
+altura_topo = 0.34
+
+[node name="Modelo" parent="." unique_id=1606656033 instance=ExtResource("2_dmixc")]

@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_px5u3"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v16_caixa_frutas.glb" id="2_3l2b5"]
+
+[node name="v16_caixa_frutas" type="Node3D" unique_id=414283972]
+script = ExtResource("1_px5u3")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=85694578 instance=ExtResource("2_3l2b5")]

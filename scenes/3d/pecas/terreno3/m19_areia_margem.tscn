@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_pv8f3"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m19_areia_margem.glb" id="2_myhlj"]
+
+[node name="m19_areia_margem" type="Node3D" unique_id=448093349]
+script = ExtResource("1_pv8f3")
+altura_topo = 0.21
+
+[node name="Modelo" parent="." unique_id=556477183 instance=ExtResource("2_myhlj")]

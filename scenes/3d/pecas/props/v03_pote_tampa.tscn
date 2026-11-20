@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_iqouy"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v03_pote_tampa.glb" id="2_lcs1e"]
+
+[node name="v03_pote_tampa" type="Node3D" unique_id=719797619]
+script = ExtResource("1_iqouy")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1443362133 instance=ExtResource("2_lcs1e")]

@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_5vmg6"]
+[ext_resource type="PackedScene" path="res://assets/diorge/floresta/f01_samauma.glb" id="2_e2sv4"]
+
+[node name="f01_samauma" type="Node3D" unique_id=1212929759]
+script = ExtResource("1_5vmg6")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1037707048 instance=ExtResource("2_e2sv4")]

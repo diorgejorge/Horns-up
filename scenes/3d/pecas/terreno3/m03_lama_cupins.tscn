@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_3qboy"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m03_lama_cupins.glb" id="2_lxips"]
+
+[node name="m03_lama_cupins" type="Node3D" unique_id=905673709]
+script = ExtResource("1_3qboy")
+altura_topo = 0.31
+
+[node name="Modelo" parent="." unique_id=1819377203 instance=ExtResource("2_lxips")]

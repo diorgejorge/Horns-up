@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_lvvqr"]
+[ext_resource type="PackedScene" path="res://assets/diorge/floresta/f05_pedra_musgo.glb" id="2_vaqly"]
+
+[node name="f05_pedra_musgo" type="Node3D" unique_id=507474559]
+script = ExtResource("1_lvvqr")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1564837399 instance=ExtResource("2_vaqly")]

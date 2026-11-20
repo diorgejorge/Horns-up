@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_bidob"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m12_lodo_ouricos.glb" id="2_ncwph"]
+
+[node name="m12_lodo_ouricos" type="Node3D" unique_id=987177384]
+script = ExtResource("1_bidob")
+altura_topo = 0.55
+
+[node name="Modelo" parent="." unique_id=325834188 instance=ExtResource("2_ncwph")]

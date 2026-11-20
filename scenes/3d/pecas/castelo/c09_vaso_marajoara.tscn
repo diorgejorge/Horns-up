@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_h3h0y"]
+[ext_resource type="PackedScene" path="res://assets/diorge/castelo/c09_vaso_marajoara.glb" id="2_ftdmo"]
+
+[node name="c09_vaso_marajoara" type="Node3D" unique_id=423609091]
+script = ExtResource("1_h3h0y")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=241018715 instance=ExtResource("2_ftdmo")]

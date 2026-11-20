@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_e0wr8"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno2/t10_lama_raizes.glb" id="2_ob2i7"]
+
+[node name="t10_lama_raizes" type="Node3D" unique_id=113954980]
+script = ExtResource("1_e0wr8")
+altura_topo = 0.44
+
+[node name="Modelo" parent="." unique_id=1525510878 instance=ExtResource("2_ob2i7")]

@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_axrq4"]
+[ext_resource type="PackedScene" path="res://assets/diorge/castelo/c04_muro_canto.glb" id="2_wioqc"]
+
+[node name="c04_muro_canto" type="Node3D" unique_id=1563364144]
+script = ExtResource("1_axrq4")
+piso = false
+andavel = false
+tamanho = Vector2i(2, 2)
+
+[node name="Modelo" parent="." unique_id=1890244630 instance=ExtResource("2_wioqc")]

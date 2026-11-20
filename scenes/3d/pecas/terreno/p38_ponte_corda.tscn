@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_vxl66"]
+[ext_resource type="Material" path="res://scenes/3d/pecas/rocha_cinza.tres" id="2_57u84"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno/p38_ponte_corda.glb" id="3_k2gcl"]
+
+[node name="p38_ponte_corda" type="Node3D" unique_id=1683097666]
+script = ExtResource("1_vxl66")
+piso = false
+andavel = false
+material_sobrepor = ExtResource("2_57u84")
+
+[node name="Modelo" parent="." unique_id=2053689578 instance=ExtResource("3_k2gcl")]

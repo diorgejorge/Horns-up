@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_egbnn"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m24_agua_funda.glb" id="2_o1w63"]
+
+[node name="m24_agua_funda" type="Node3D" unique_id=1422306907]
+script = ExtResource("1_egbnn")
+andavel = false
+altura_topo = 0.27
+
+[node name="Modelo" parent="." unique_id=1878737238 instance=ExtResource("2_o1w63")]

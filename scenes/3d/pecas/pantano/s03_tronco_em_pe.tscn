@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_1rerp"]
+[ext_resource type="PackedScene" path="res://assets/diorge/pantano/s03_tronco_em_pe.glb" id="2_qulry"]
+
+[node name="s03_tronco_em_pe" type="Node3D" unique_id=1254194816]
+script = ExtResource("1_1rerp")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=49866525 instance=ExtResource("2_qulry")]

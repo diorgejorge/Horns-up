@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_hqdgl"]
+[ext_resource type="PackedScene" path="res://assets/diorge/pantano/s01_vitorias_regias.glb" id="2_yyhnh"]
+
+[node name="s01_vitorias_regias" type="Node3D" unique_id=1699631898]
+script = ExtResource("1_hqdgl")
+andavel = false
+altura_topo = 0.28
+
+[node name="Modelo" parent="." unique_id=678538647 instance=ExtResource("2_yyhnh")]

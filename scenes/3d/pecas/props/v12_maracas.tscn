@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_0d1ve"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v12_maracas.glb" id="2_70qtw"]
+
+[node name="v12_maracas" type="Node3D" unique_id=288662475]
+script = ExtResource("1_0d1ve")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=2131246946 instance=ExtResource("2_70qtw")]

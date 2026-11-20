@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_851dj"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno2/t01_grama.glb" id="2_xpvfs"]
+
+[node name="t01_grama" type="Node3D" unique_id=849156141]
+script = ExtResource("1_851dj")
+altura_topo = 0.31
+
+[node name="Modelo" parent="." unique_id=1400071533 instance=ExtResource("2_xpvfs")]

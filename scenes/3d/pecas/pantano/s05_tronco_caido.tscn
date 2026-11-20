@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_p6sp6"]
+[ext_resource type="PackedScene" path="res://assets/diorge/pantano/s05_tronco_caido.glb" id="2_uey8w"]
+
+[node name="s05_tronco_caido" type="Node3D" unique_id=1428502884]
+script = ExtResource("1_p6sp6")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1567245074 instance=ExtResource("2_uey8w")]

@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_wbf6b"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m30_corredeira_pedras.glb" id="2_b651o"]
+
+[node name="m30_corredeira_pedras" type="Node3D" unique_id=567018546]
+script = ExtResource("1_wbf6b")
+andavel = false
+altura_topo = 0.26
+
+[node name="Modelo" parent="." unique_id=1139337975 instance=ExtResource("2_b651o")]

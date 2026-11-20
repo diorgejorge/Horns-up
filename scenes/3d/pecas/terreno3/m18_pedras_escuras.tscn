@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_6rwia"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m18_pedras_escuras.glb" id="2_d337p"]
+
+[node name="m18_pedras_escuras" type="Node3D" unique_id=562165969]
+script = ExtResource("1_6rwia")
+altura_topo = 0.28
+
+[node name="Modelo" parent="." unique_id=2077012949 instance=ExtResource("2_d337p")]

@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_u51yr"]
+[ext_resource type="PackedScene" path="res://assets/diorge/floresta/f07_cogumelos_brilhantes.glb" id="2_oavcn"]
+
+[node name="f07_cogumelos_brilhantes" type="Node3D" unique_id=1033674624]
+script = ExtResource("1_u51yr")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1654100918 instance=ExtResource("2_oavcn")]

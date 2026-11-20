@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_jeck1"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno3/m14_pedra_musgo_alta.glb" id="2_1i4e3"]
+
+[node name="m14_pedra_musgo_alta" type="Node3D" unique_id=1712639653]
+script = ExtResource("1_jeck1")
+altura_topo = 0.67
+
+[node name="Modelo" parent="." unique_id=147646222 instance=ExtResource("2_1i4e3")]

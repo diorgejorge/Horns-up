@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_syfhm"]
+[ext_resource type="Material" path="res://scenes/3d/pecas/rocha_cinza.tres" id="2_niggb"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno/p33_encosta_rochosa.glb" id="3_ers4g"]
+
+[node name="p33_encosta_rochosa" type="Node3D" unique_id=531728952]
+script = ExtResource("1_syfhm")
+piso = false
+andavel = false
+material_sobrepor = ExtResource("2_niggb")
+
+[node name="Modelo" parent="." unique_id=1971938674 instance=ExtResource("3_ers4g")]

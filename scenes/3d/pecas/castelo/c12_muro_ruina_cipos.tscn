@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_u2ypl"]
+[ext_resource type="PackedScene" path="res://assets/diorge/castelo/c12_muro_ruina_cipos.glb" id="2_2yygx"]
+
+[node name="c12_muro_ruina_cipos" type="Node3D" unique_id=1659720894]
+script = ExtResource("1_u2ypl")
+piso = false
+andavel = false
+tamanho = Vector2i(3, 2)
+
+[node name="Modelo" parent="." unique_id=370436444 instance=ExtResource("2_2yygx")]

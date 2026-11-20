@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_ogqng"]
+[ext_resource type="Material" path="res://scenes/3d/pecas/rocha_cinza.tres" id="2_korf7"]
+[ext_resource type="PackedScene" path="res://assets/diorge/terreno/p26_penhasco_a.glb" id="3_64gnu"]
+
+[node name="p26_penhasco_a" type="Node3D" unique_id=2002337422]
+script = ExtResource("1_ogqng")
+piso = false
+andavel = false
+material_sobrepor = ExtResource("2_korf7")
+
+[node name="Modelo" parent="." unique_id=52578911 instance=ExtResource("3_64gnu")]

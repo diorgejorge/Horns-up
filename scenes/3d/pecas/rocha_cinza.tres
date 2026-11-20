@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/Rock030_1K-JPG_Color.jpg" id="1_xntly"]
+[ext_resource type="Texture2D" path="res://assets/textures/Rock030_1K-JPG_NormalGL.jpg" id="2_2vyi5"]
+
+[resource]
+albedo_color = Color(0.62, 0.6, 0.55, 1)
+albedo_texture = ExtResource("1_xntly")
+roughness = 0.9
+normal_enabled = true
+normal_texture = ExtResource("2_2vyi5")
+uv1_scale = Vector3(0.8, 0.8, 0.8)
+uv1_triplanar = true

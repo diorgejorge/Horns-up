@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_8g0dh"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/u01_totem_penas.glb" id="2_77oau"]
+
+[node name="u01_totem_penas" type="Node3D" unique_id=1549015939]
+script = ExtResource("1_8g0dh")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=2139618090 instance=ExtResource("2_77oau")]

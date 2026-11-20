@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/components/peca_3d.gd" id="1_7mbf2"]
+[ext_resource type="PackedScene" path="res://assets/diorge/props/v02_mao_pilao.glb" id="2_a3arq"]
+
+[node name="v02_mao_pilao" type="Node3D" unique_id=1907857511]
+script = ExtResource("1_7mbf2")
+piso = false
+andavel = false
+
+[node name="Modelo" parent="." unique_id=1446394762 instance=ExtResource("2_a3arq")]
