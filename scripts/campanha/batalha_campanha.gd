@@ -47,6 +47,7 @@ var _cursor: MeshInstance3D
 var _alcance_mov := {}   # casa -> pai (caminho)
 var _alvos := []         # unidades que podem ser alvo agora
 var _iniciativa := {}    # Unidade3D -> d20 + Destreza (rolado no início)
+var _cobertura := {}     # casa -> true: objeto do Cenário que bloqueia ataque à distância
 
 
 func _ready() -> void:
@@ -56,6 +57,7 @@ func _ready() -> void:
 	_criar_grupo()
 	_units = find_children("*", "Unidade3D", true, false)
 	_ler_terreno()
+	_ler_cobertura()
 	_overlays = Node3D.new()
 	_overlays.name = "Destaques"
 	add_child(_overlays)
@@ -139,8 +141,9 @@ func _estado_inicial(u: Unidade3D) -> Dictionary:
 		e["arma"] = campanha.ataque_bonus(id)
 		e["defesa"] = campanha.defesa_bonus(id)
 	else:
-		var fator := Regras.FATOR_CHEFE if u.papel == "chefe" else (1.5 if u.papel == "lider" else 1.0)
+		var fator := Regras.FATOR_CHEFE if u.papel == "chefe" else (Regras.FATOR_LIDER if u.papel == "lider" else Regras.FATOR_COMUM)
 		e["hpmax"] = Regras.hp_max(attrs, u.nivel, fator)
+		e["defesa"] = Regras.armadura_natural(u.classe)
 		e["mpmax"] = Regras.mp_max(attrs, u.nivel, u.classe)
 		e["hp"] = e["hpmax"]
 		e["mp"] = e["mpmax"]
@@ -227,6 +230,10 @@ func info_casa(c: Vector2i) -> String:
 	if not _pisos.has(c):
 		return ""
 	var t := "Casa %d,%d · altura %.2f" % [c.x, c.y, _pisos[c]]
+	if _cobertura.has(c):
+		return t + " · cobertura (bloqueia flechas e magias)"
+	if _atual and not _atual.enemy and _protegida(_atual, c):
+		t += " · protegida de ataques à distância"
 	return t + (" · não andável" if _bloqueio.has(c) else "")
 
 
@@ -329,7 +336,8 @@ func _entrar_modo(m: String) -> void:
 	if m == "mover" and pode_mover():
 		_alcance_mov = _bfs(_atual, movimento(_atual))
 		for c in _alcance_mov:
-			_add_overlay(c, Color(0.3, 0.6, 1.0), 0.4)
+			# verde-água = casa protegida dos atiradores adversários (atrás de árvore, muro...)
+			_add_overlay(c, Color(0.2, 0.95, 0.75) if _protegida(_atual, c) else Color(0.3, 0.6, 1.0), 0.4)
 	if pode_agir():
 		_alvos = alvos_de(_atual, _atual.grid(), acao)
 	for t in _alvos:
@@ -463,8 +471,9 @@ func alvos_de(u: Unidade3D, de: Vector2i, acao: String) -> Array:
 	var out := []
 	match i["tipo"]:
 		"dano", "area":
+			var longe := _a_distancia(i)
 			for o in _units:
-				if o.enemy != u.enemy and _dist(de, o.grid()) <= i["alc"]:
+				if o.enemy != u.enemy and _dist(de, o.grid()) <= i["alc"] and (not longe or linha_livre(de, o.grid())):
 					out.append(o)
 		"cura":
 			for o in _units:
@@ -578,12 +587,14 @@ func _ferir(u: Unidade3D, t: Unidade3D, mult: float, efeito: String) -> void:
 	var a: Dictionary = _st[u]
 	var b: Dictionary = _st[t]
 	var dif: float = _pisos.get(u.grid(), 0.0) - _pisos.get(t.grid(), 0.0)
-	var d := Regras.dano(a["attrs"], a["classe"], a["nivel"], b["attrs"], a["arma"], _defesa_total(t), dif, _rng)
+	var d := Regras.dano(a["attrs"], a["classe"], a["nivel"], b["attrs"], a["arma"], dif, _rng)
 	if a["efeitos"].has("fraco"):
 		d += Regras.EFEITOS["fraco"]["dano_feito"]
 	d = maxi(1, roundi(d * mult))
+	var bruto := d
+	d = Regras.absorver(d, _defesa_total(t))  # armadura segura parte do golpe
 	b["hp"] = maxi(0, b["hp"] - d)
-	_numero(t, str(d), Color(1.0, 0.85, 0.4))
+	_numero(t, str(d) if d == bruto else "%d  (armadura -%d)" % [d, bruto - d], Color(1.0, 0.85, 0.4))
 	if b["hp"] > 0:
 		t.tocar("hurt")
 		_som_unidade(t, "dano")
@@ -686,6 +697,24 @@ func _ia(u: Unidade3D) -> void:
 			if not perto.is_empty() and not alvos_de(u, u.grid(), h).is_empty():
 				await _executar(u, u, h)
 				return
+	# 1b) só o grupo no modo --auto (faz o papel de um jogador cuidadoso): ferido,
+	#     recua para a casa menos ameaçada perto da aliada e bate em quem alcançar dali.
+	if not u.enemy and e["hp"] < e["hpmax"] * 0.5 and vivos(false).size() > 1:
+		var melhor := u.grid()
+		var nota := _ameaca(u, melhor) * 3.0
+		for c in casas:
+			var n := _ameaca(u, c) * 3.0 + 0.5 * _dist_aliado(u, c)
+			if n < nota:
+				nota = n
+				melhor = c
+		if melhor != u.grid():
+			var alvos := alvos_de(u, melhor, "ataque")
+			alvos.sort_custom(func(x, y): return _st[x]["hp"] < _st[y]["hp"])
+			if alvos.is_empty():
+				await _andar(u, melhor, reach)
+			else:
+				await _ir_e_fazer(u, melhor, reach, alvos[0], "ataque")
+			return
 	# 2) atacar: escolhe casa e alvo (mais fraco; o Búfalo é o alvo preferido;
 	#    quem ataca de longe prefere ficar longe dos adversários)
 	var acao := "ataque"
@@ -693,6 +722,9 @@ func _ia(u: Unidade3D) -> void:
 		if info_acao(u, h)["tipo"] in ["dano", "area"] and pode_usar(u, h):
 			acao = h
 	var longe: bool = info_acao(u, "ataque")["alc"] >= 3
+	var expo := {}  # casa -> atiradores adversários com mira livre nela
+	for c in casas:
+		expo[c] = _exposicao(u, c)
 	var melhor_c := Vector2i(-1, -1)
 	var melhor_t: Unidade3D = null
 	var melhor_a := ""
@@ -707,6 +739,7 @@ func _ia(u: Unidade3D) -> void:
 					s += 6.0
 				if longe:
 					s += 1.5 * _menor_dist(u, c)
+				s -= PESO_EXPOSTO * expo[c]
 				if s > melhor_s:
 					melhor_s = s
 					melhor_c = c
@@ -718,16 +751,99 @@ func _ia(u: Unidade3D) -> void:
 		await _ir_e_fazer(u, melhor_c, reach, melhor_t, melhor_a)
 		return
 	# 3) aproximar: casa alcançável mais perto (pelo chão) de algum adversário
+	# (ganha um pouco de chão a menos para terminar atrás de árvore/muro, longe da mira)
 	var perto := _distancias_ate(not u.enemy)
 	var dest := u.grid()
-	var dmin: int = perto.get(dest, 9999)
+	var smin: float = perto.get(dest, 9999) + PESO_EXPOSTO * _exposicao(u, dest)
 	for c in reach:
-		if perto.get(c, 9999) < dmin:
-			dmin = perto[c]
+		var sc: float = perto.get(c, 9999) + PESO_EXPOSTO * _exposicao(u, c)
+		if sc < smin:
+			smin = sc
 			dest = c
 	if dest != u.grid():
 		await _andar(u, dest, reach)
 	await _espera(0.15)
+
+
+# --- cobertura (ataques à distância precisam de linha de visão) -----------------------------------
+
+## Peso, na IA, de cada atirador adversário que teria mira livre na casa.
+const PESO_EXPOSTO := 2.5
+
+
+## Objetos do Cenário que não são piso e não deixam passar (árvore, muro, rocha, casa).
+## Água funda é piso: não bloqueia a mira.
+func _ler_cobertura() -> void:
+	_cobertura = {}
+	for p in find_children("*", "Peca3D", true, false):
+		if not p.piso and not p.andavel:
+			for c in p.casas():
+				_cobertura[c] = true
+
+
+## Ação à distância (flecha, magia, luz...): precisa de linha de visão.
+## Corpo a corpo e a lança (alcance 2, visual "corpo") não precisam.
+func _a_distancia(i: Dictionary) -> bool:
+	return i.get("alc", 1) >= 2 and i.get("visual", "corpo") != "corpo"
+
+
+## A linha entre os centros das casas `a` e `b` não passa por nenhuma casa de cobertura.
+func linha_livre(a: Vector2i, b: Vector2i) -> bool:
+	var va := Vector2(a) + Vector2(0.5, 0.5)
+	var vb := Vector2(b) + Vector2(0.5, 0.5)
+	var passos := maxi(2, ceili(va.distance_to(vb) * 6.0))
+	for k in range(1, passos):
+		var p := va.lerp(vb, float(k) / passos)
+		var c := Vector2i(floori(p.x), floori(p.y))
+		if c != a and c != b and _cobertura.has(c):
+			return false
+	return true
+
+
+## Atiradores adversários de `u` que alcançam a casa `c` (andando + alcance) e
+## teriam mira livre nela a partir de onde estão agora.
+func _atiradores(u: Unidade3D, c: Vector2i) -> Array:
+	var out := []
+	for o in _units:
+		if o.enemy == u.enemy or not _st.has(o):
+			continue
+		var i := info_acao(o, "ataque")
+		if not _a_distancia(i):
+			continue
+		if _dist(o.grid(), c) <= i["alc"] + movimento(o):
+			out.append(o)
+	return out
+
+
+## Adversários que conseguem bater na casa `c` no próximo turno (andando + alcance,
+## com mira livre quando o ataque é à distância).
+func _ameaca(u: Unidade3D, c: Vector2i) -> int:
+	var n := 0
+	for o in _units:
+		if o.enemy == u.enemy:
+			continue
+		var i := info_acao(o, "ataque")
+		if _dist(o.grid(), c) <= i["alc"] + movimento(o) and (not _a_distancia(i) or linha_livre(o.grid(), c)):
+			n += 1
+	return n
+
+
+func _dist_aliado(u: Unidade3D, c: Vector2i) -> int:
+	var m := 0
+	for o in _units:
+		if o != u and o.enemy == u.enemy:
+			m = _dist(o.grid(), c) if m == 0 else mini(m, _dist(o.grid(), c))
+	return m
+
+
+func _exposicao(u: Unidade3D, c: Vector2i) -> int:
+	return _atiradores(u, c).filter(func(o): return linha_livre(o.grid(), c)).size()
+
+
+## Casa protegida: há atirador adversário perto e nenhum tem mira livre nela.
+func _protegida(u: Unidade3D, c: Vector2i) -> bool:
+	var at := _atiradores(u, c)
+	return not at.is_empty() and at.all(func(o): return not linha_livre(o.grid(), c))
 
 
 func _ir_e_fazer(u: Unidade3D, c: Vector2i, reach: Dictionary, alvo: Unidade3D, acao: String) -> void:
@@ -823,7 +939,7 @@ func _resultado_auto(vitoria: bool, estado: Dictionary) -> void:
 	var hp := PackedStringArray()
 	for id in estado:
 		hp.append("%s=%d/%d nv%d" % [id, estado[id]["hp"], campanha.hp_max(id), campanha.herois[id]["nivel"]])
-	print("AUTO_RESULTADO batalha=%d %s rodadas=%d inimigos_vivos=%d %s" % [numero, "VITORIA" if vitoria else "DERROTA", _rodada, vivos(true).size(), " ".join(hp)])
+	print("AUTO_RESULTADO batalha=%d %s rodadas=%d inimigos_vivos=%d cobertura=%d %s" % [numero, "VITORIA" if vitoria else "DERROTA", _rodada, vivos(true).size(), _cobertura.size(), " ".join(hp)])
 	if not "--campanha" in OS.get_cmdline_user_args():
 		get_tree().quit()
 		return

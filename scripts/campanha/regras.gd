@@ -11,19 +11,20 @@ extends RefCounted
 ## - Magia (mago, clérigo, paladino) gasta MP. Guerreiro não usa MP.
 
 ## Por classe: movimento, alcance do ataque básico, atributo de ataque,
-## se usa MP e o tipo do ataque básico ("corpo", "flecha", "magia").
+## se usa MP, o tipo do ataque básico ("corpo", "flecha", "magia") e a armadura
+## natural ("arm", só para adversários: heróis usam a armadura do equipamento).
 const CLASSES := {
-	"guerreiro": {"nome": "Guerreiro", "mov": 4, "alc": 1, "atk": "forca", "mp": false, "tipo": "corpo"},
-	"paladino": {"nome": "Paladino", "mov": 3, "alc": 1, "atk": "forca", "mp": true, "tipo": "corpo"},
-	"mago": {"nome": "Mago", "mov": 3, "alc": 4, "atk": "inteligencia", "mp": true, "tipo": "magia"},
-	"ranger": {"nome": "Ranger", "mov": 4, "alc": 5, "atk": "destreza", "mp": false, "tipo": "flecha"},
-	"clerigo": {"nome": "Clérigo", "mov": 3, "alc": 3, "atk": "sabedoria", "mp": true, "tipo": "magia"},
-	"assassino": {"nome": "Assassino", "mov": 5, "alc": 1, "atk": "destreza", "mp": false, "tipo": "corpo"},
-	"tanque": {"nome": "Tanque", "mov": 3, "alc": 1, "atk": "forca", "mp": false, "tipo": "corpo"},
-	"batedor": {"nome": "Batedor", "mov": 6, "alc": 1, "atk": "destreza", "mp": false, "tipo": "corpo"},
-	"lanceiro": {"nome": "Lanceiro", "mov": 4, "alc": 2, "atk": "forca", "mp": false, "tipo": "corpo"},
-	"lutador": {"nome": "Lutador", "mov": 4, "alc": 1, "atk": "forca", "mp": false, "tipo": "corpo"},
-	"chefe": {"nome": "Guardião", "mov": 3, "alc": 1, "atk": "forca", "mp": false, "tipo": "corpo"},
+	"guerreiro": {"nome": "Guerreiro", "mov": 4, "alc": 1, "atk": "forca", "mp": false, "tipo": "corpo", "arm": 1},
+	"paladino": {"nome": "Paladino", "mov": 3, "alc": 1, "atk": "forca", "mp": true, "tipo": "corpo", "arm": 2},
+	"mago": {"nome": "Mago", "mov": 3, "alc": 4, "atk": "inteligencia", "mp": true, "tipo": "magia", "arm": 0},
+	"ranger": {"nome": "Ranger", "mov": 4, "alc": 5, "atk": "destreza", "mp": false, "tipo": "flecha", "arm": 0},
+	"clerigo": {"nome": "Clérigo", "mov": 3, "alc": 3, "atk": "sabedoria", "mp": true, "tipo": "magia", "arm": 0},
+	"assassino": {"nome": "Assassino", "mov": 5, "alc": 1, "atk": "destreza", "mp": false, "tipo": "corpo", "arm": 0},
+	"tanque": {"nome": "Tanque", "mov": 3, "alc": 1, "atk": "forca", "mp": false, "tipo": "corpo", "arm": 3},
+	"batedor": {"nome": "Batedor", "mov": 6, "alc": 1, "atk": "destreza", "mp": false, "tipo": "corpo", "arm": 0},
+	"lanceiro": {"nome": "Lanceiro", "mov": 4, "alc": 2, "atk": "forca", "mp": false, "tipo": "corpo", "arm": 1},
+	"lutador": {"nome": "Lutador", "mov": 4, "alc": 1, "atk": "forca", "mp": false, "tipo": "corpo", "arm": 1},
+	"chefe": {"nome": "Guardião", "mov": 3, "alc": 1, "atk": "forca", "mp": false, "tipo": "corpo", "arm": 3},
 }
 
 ## Ataques e habilidades usados na batalha vêm de scripts/combate/ (API Combate).
@@ -58,8 +59,23 @@ const EFEITOS := {
 }
 
 const XP_POR_NIVEL := 100
-const FATOR_HEROI := 2.5
-const FATOR_CHEFE := 4.0
+## Balanceamento (2026-11-21, "heróis com HP demais"): 2,5 -> 2,2.
+const FATOR_HEROI := 2.2
+## Chefe 4 -> 5 (o Mapinguari caía em 6 rodadas).
+const FATOR_CHEFE := 5.0
+## Adversário comum e líder (sem mudança).
+const FATOR_COMUM := 1.0
+const FATOR_LIDER := 1.5
+
+## Armadura (regra do Diorge, 2026-11-21: armadura reduz o dano recebido).
+## Cada ponto de armadura tira 12% do dano, até 60%. Ex.: placas de bronze (2) = -24%;
+## Tartaruga com escudo (3) = -36%, e com Casco Firme (+3) chega ao máximo, -60%.
+## Adversários têm armadura natural pela classe ("arm" em CLASSES).
+const REDUCAO_POR_ARMADURA := 0.12
+const REDUCAO_MAX := 0.6
+
+## Cobertura: ataque à distância (flecha, magia, luz...) precisa de linha de visão.
+## Árvore, muro, rocha e outros objetos do Cenário no meio do caminho bloqueiam.
 
 
 static func classe(id: String) -> Dictionary:
@@ -93,16 +109,31 @@ static func mp_max(attrs: Dictionary, nivel: int, classe_id: String) -> int:
 	return 4 + maxi(attrs.get("inteligencia", 10), attrs.get("sabedoria", 10)) / 2 + nivel * 2
 
 
-## Dano de um ataque: atributo de ataque + bônus de arma - defesa do alvo,
-## mais bônus de altura (atacar de cima).
-static func dano(atk_attrs: Dictionary, classe_id: String, nivel: int, def_attrs: Dictionary, bonus_arma: int, def_armadura: int, dif_altura: float, rng: RandomNumberGenerator) -> int:
+## Dano de um ataque ANTES da armadura: atributo de ataque + bônus de arma
+## - modificador de Constituição do alvo, mais bônus de altura (atacar de cima).
+## A armadura (equipamento, natural ou Casco Firme) entra depois, em absorver().
+static func dano(atk_attrs: Dictionary, classe_id: String, nivel: int, def_attrs: Dictionary, bonus_arma: int, dif_altura: float, rng: RandomNumberGenerator) -> int:
 	var a: int = atk_attrs.get(classe(classe_id)["atk"], 10)
 	var base := 2 + mod(a) * 2 + nivel / 2 + bonus_arma
-	var defesa := mod(def_attrs.get("constituicao", 10)) + def_armadura
-	var d := base - defesa + rng.randi_range(-1, 2)
+	var d := base - mod(def_attrs.get("constituicao", 10)) + rng.randi_range(-1, 2)
 	if dif_altura > 0.2:
 		d += 2
 	return maxi(1, d)
+
+
+## Fração do dano que a armadura segura (0 a REDUCAO_MAX).
+static func reducao(armadura: int) -> float:
+	return clampf(armadura * REDUCAO_POR_ARMADURA, 0.0, REDUCAO_MAX)
+
+
+## Dano depois da armadura (mínimo 1).
+static func absorver(d: int, armadura: int) -> int:
+	return maxi(1, roundi(d * (1.0 - reducao(armadura))))
+
+
+## Armadura natural de um adversário da classe.
+static func armadura_natural(classe_id: String) -> int:
+	return classe(classe_id).get("arm", 0)
 
 
 static func cura(attrs: Dictionary, nivel: int, poder := 1.0) -> int:
