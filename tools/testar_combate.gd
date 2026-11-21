@@ -64,6 +64,19 @@ func _conferir() -> void:
 		for k in ["tipo", "alc", "mp", "recarga", "mult", "poder", "raio", "bonus", "turnos"]:
 			if velho.has(k) and str(velho[k]) != str(novo[k]):
 				_erros.append("%s.%s: Regras %s ≠ Combate %s" % [id, k, velho[k], novo[k]])
+	# dano das habilidades cresce com nível e atributo; ataque corpo a corpo/flecha não
+	var fraco := {"attrs": {"forca": 10}, "nivel": 1, "classe": "guerreiro"}
+	var forte := {"attrs": {"forca": 16}, "nivel": 4, "classe": "guerreiro"}
+	var g1: float = Combate.info("bufalo", "golpe", 0, fraco)["mult"]
+	var g2: float = Combate.info("bufalo", "golpe", 0, forte)["mult"]
+	if not is_equal_approx(g1, Combate.hab("golpe").mult) or g2 <= g1:
+		_erros.append("escala do Golpe Pesado: nível 1 %.2f, nível 4 %.2f" % [g1, g2])
+	if Combate.info("bufalo", "ataque", 0, forte)["mult"] != 1.0:
+		_erros.append("ataque corpo a corpo não deveria escalar aqui (já escala em Regras.dano)")
+	var mago := {"attrs": {"inteligencia": 16}, "nivel": 5, "classe": "mago"}
+	if Combate.info("naga", "ataque", 9, mago)["mult"] <= 1.0:
+		_erros.append("magia básica do mago deveria escalar")
+	print("ESCALA golpe nv1/FOR10 %.2f · nv4/FOR16 %.2f" % [g1, g2])
 	if _erros.is_empty():
 		print("COMBATE_OK %d espécies" % todos.size())
 	else:

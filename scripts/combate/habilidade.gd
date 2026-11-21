@@ -33,6 +33,10 @@ extends Resource
 ## Estado que o golpe deixa no alvo: vazio, veneno, lento ou fraco (Regras.EFEITOS).
 @export var efeito := ""
 
+## Atributo que faz o dano crescer (forca, destreza, inteligencia, sabedoria...).
+## Vazio = o atributo de ataque da classe (Regras.CLASSES "atk").
+@export var atributo := ""
+
 @export_group("Visual")
 ## Como a ação viaja até o alvo (ver VfxCombate):
 ## corpo (sem projétil), flecha, magia (orbe), luz (raio), penas, esporos,

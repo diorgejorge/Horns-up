@@ -63,7 +63,10 @@ static func habilidades(especie: String) -> Array[Habilidade]:
 ## (nome, tipo, alc, mp, recarga, mult, poder, raio, bonus, turnos, efeito, visual, cor).
 ## `acao` = "ataque" ou id de habilidade. Com `mp_atual` abaixo do custo do
 ## ataque mágico, devolve o Golpe de cajado.
-static func info(especie: String, acao: String, mp_atual := 999) -> Dictionary:
+## `quem` (opcional) = estado da unidade na batalha, com "attrs", "nivel" e
+## "classe": com ele, o "mult" das habilidades de dano cresce com o nível e o
+## atributo (regra do Diorge, 2026-11-21) e "mult_base" guarda o valor do .tres.
+static func info(especie: String, acao: String, mp_atual := 999, quem := {}) -> Dictionary:
 	var h: Habilidade = ataque(especie) if acao == "ataque" else hab(acao)
 	if h == null:
 		push_error("Combate: habilidade desconhecida '%s'" % acao)
@@ -72,7 +75,31 @@ static func info(especie: String, acao: String, mp_atual := 999) -> Dictionary:
 		h = hab(SEM_MP)
 	var d := h.como_dict()
 	d["id"] = acao
+	d["mult_base"] = h.mult
+	if not quem.is_empty() and escala(h, acao):
+		var attr: String = h.atributo if h.atributo != "" else Regras.classe(quem.get("classe", ""))["atk"]
+		d["mult"] = h.mult * fator(quem.get("attrs", {}).get(attr, 10), quem.get("nivel", 1))
+		d["atributo"] = attr
 	return d
+
+
+## Quais ações crescem com nível e atributo: habilidades de dano e as magias
+## básicas. Golpe corpo a corpo e flecha básicos já crescem em Regras.dano().
+static func escala(h: Habilidade, acao: String) -> bool:
+	if h.tipo not in ["dano", "area"]:
+		return false
+	return acao != "ataque" or h.visual not in ["corpo", "flecha"]
+
+
+## Multiplicador extra por nível e atributo. Nível 1 com atributo 10 = 1,0.
+## Ex.: Búfalo nível 4, Força 16 → 1 + 0,03×3 + 0,04×3 = 1,21 (Golpe Pesado 1,6 → 1,94).
+## TODO(human): ajuste o quanto cada nível e cada ponto de modificador pesam.
+static func fator(valor_atributo: int, nivel: int) -> float:
+	return 1.0 + POR_NIVEL * (nivel - 1) + POR_MOD * maxi(0, Regras.mod(valor_atributo))
+
+
+const POR_NIVEL := 0.03
+const POR_MOD := 0.04
 
 
 static func custo_mp(especie: String, acao: String) -> int:
