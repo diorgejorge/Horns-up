@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Habilidade" format=3]
+
+[ext_resource type="Script" path="res://scripts/combate/habilidade.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "perereca"
+nome = "Chicote de Cipó"
+desc = "Ataque corpo a corpo. Deixa lento."
+tipo = "dano"
+alcance = 1
+mp = 0
+efeito = "lento"
+visual = "corpo"
+cor = Color(0.5, 1, 0.5, 1)

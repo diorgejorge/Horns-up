@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Habilidade" format=3]
+
+[ext_resource type="Script" path="res://scripts/combate/habilidade.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "casco_firme"
+nome = "Casco Firme"
+desc = "+3 de defesa para ela e aliados vizinhos por 2 turnos."
+tipo = "defesa"
+alcance = 0
+raio = 1
+bonus = 3
+turnos = 2
+mp = 4
+visual = "escudo"
+cor = Color(1, 0.85, 0.35, 1)

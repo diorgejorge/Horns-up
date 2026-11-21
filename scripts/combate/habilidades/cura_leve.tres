@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Habilidade" format=3]
+
+[ext_resource type="Script" path="res://scripts/combate/habilidade.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "cura_leve"
+nome = "Cura Leve"
+desc = "Cura pouco um aliado vizinho (ou ela mesma)."
+tipo = "cura"
+alcance = 1
+poder = 0.6
+mp = 3
+visual = "cura"
+cor = Color(0.5, 1, 0.6, 1)

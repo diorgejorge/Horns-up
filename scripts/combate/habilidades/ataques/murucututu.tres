@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Habilidade" format=3]
+
+[ext_resource type="Script" path="res://scripts/combate/habilidade.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "murucututu"
+nome = "Pio Sombrio"
+desc = "Magia a até 4 casas. Gasta 2 MP. Enfraquece."
+tipo = "dano"
+alcance = 4
+mp = 2
+efeito = "fraco"
+visual = "penas"
+cor = Color(0.6, 0.4, 1, 1)

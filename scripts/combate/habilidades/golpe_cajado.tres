@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Habilidade" format=3]
+
+[ext_resource type="Script" path="res://scripts/combate/habilidade.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "golpe_cajado"
+nome = "Golpe de cajado"
+desc = "Sem MP: bate com o cajado, de perto e sem efeito."
+tipo = "dano"
+alcance = 1
+mult = 0.7
+visual = "corpo"
+cor = Color(1, 1, 1, 1)

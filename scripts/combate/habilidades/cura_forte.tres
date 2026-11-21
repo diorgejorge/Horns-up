@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Habilidade" format=3]
+
+[ext_resource type="Script" path="res://scripts/combate/habilidade.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "cura_forte"
+nome = "Bênção das Águas"
+desc = "Cura forte num aliado a até 3 casas."
+tipo = "cura"
+alcance = 3
+poder = 1.6
+mp = 4
+visual = "cura"
+cor = Color(0.6, 1, 0.85, 1)

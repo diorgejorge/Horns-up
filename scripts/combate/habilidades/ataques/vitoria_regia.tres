@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Habilidade" format=3]
+
+[ext_resource type="Script" path="res://scripts/combate/habilidade.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "vitoria_regia"
+nome = "Escudo de Folha"
+desc = "Ataque corpo a corpo."
+tipo = "dano"
+alcance = 1
+mp = 0
+visual = "corpo"
+cor = Color(0.5, 0.9, 0.5, 1)

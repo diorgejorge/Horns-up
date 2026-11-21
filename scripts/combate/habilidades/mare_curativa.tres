@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Habilidade" format=3]
+
+[ext_resource type="Script" path="res://scripts/combate/habilidade.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "mare_curativa"
+nome = "Maré Curativa"
+desc = "Cura todos os aliados em volta de um ponto a até 3 casas."
+tipo = "cura_area"
+alcance = 3
+raio = 1
+poder = 0.9
+mp = 6
+visual = "mare"
+cor = Color(0.45, 0.85, 1, 1)

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Habilidade" format=3]
+
+[ext_resource type="Script" path="res://scripts/combate/habilidade.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "boto"
+nome = "Raio de Luz Rosada"
+desc = "Raio de luz a até 3 casas. Gasta 2 MP."
+tipo = "dano"
+alcance = 3
+mp = 2
+visual = "luz"
+cor = Color(1, 0.6, 0.85, 1)

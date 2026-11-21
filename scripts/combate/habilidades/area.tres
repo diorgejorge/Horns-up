@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Habilidade" format=3]
+
+[ext_resource type="Script" path="res://scripts/combate/habilidade.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "area"
+nome = "Pancada no chão"
+desc = "Atinge todos os adversários vizinhos."
+tipo = "area"
+alcance = 1
+mult = 0.85
+visual = "corpo"
+cor = Color(0.8, 0.3, 0.9, 1)
