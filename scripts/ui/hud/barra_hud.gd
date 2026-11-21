@@ -8,16 +8,18 @@ var cor := TemaUI.HP
 var maximo := 1
 var valor := 0
 var texto := true
+var icone := ""      # "hp" (coração), "mp" (gota), "xp" (estrela) ou "" (sem ícone)
 var _rastro := 0.0   # valor mostrado pelo rastro (anima até `valor`)
 
 
-static func criar(c: Color, v: int, m: int, largura := 160.0, altura := 14.0, com_texto := true) -> BarraHud:
+static func criar(c: Color, v: int, m: int, largura := 160.0, altura := 14.0, com_texto := true, ic := "") -> BarraHud:
 	var b := BarraHud.new()
 	b.cor = c
 	b.maximo = maxi(m, 1)
 	b.valor = clampi(v, 0, b.maximo)
 	b._rastro = b.valor
 	b.texto = com_texto
+	b.icone = ic
 	b.custom_minimum_size = Vector2(largura, altura)
 	b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -41,12 +43,17 @@ func definir(v: int, m := -1) -> void:
 
 func _draw() -> void:
 	var r := Rect2(Vector2.ZERO, size)
+	if icone != "":
+		var lado := size.y * 1.25
+		_desenhar_icone(Vector2(lado * 0.5, size.y * 0.5), size.y * 0.62)
+		r = Rect2(Vector2(lado + 2.0, 0), Vector2(size.x - lado - 2.0, size.y))
 	var raio := size.y * 0.5
 	# fundo afundado (sombra em cima, luz embaixo)
 	_caixa(r, TemaUI.PRETO, raio)
 	_caixa(r.grow(-1.0), Color(0.16, 0.1, 0.07), raio)
 	draw_rect(Rect2(r.position + Vector2(raio, 1), Vector2(r.size.x - raio * 2, 1.5)), Color(0, 0, 0, 0.5))
 	var dentro := r.grow(-2.0)
+	var base_x := r.position.x
 	var f := float(valor) / maximo
 	var fr := float(_rastro) / maximo
 	if fr > f:
@@ -67,7 +74,7 @@ func _draw() -> void:
 		var fs := int(size.y * 0.82)
 		var t := "%d/%d" % [valor, maximo]
 		var tw := fonte.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-		var p := Vector2(size.x - tw - raio * 0.8, size.y * 0.5 + fs * 0.36)
+		var p := Vector2(maxf(size.x - tw - raio * 0.8, base_x + 2.0), size.y * 0.5 + fs * 0.36)
 		draw_string_outline(fonte, p, t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 3, TemaUI.PRETO)
 		draw_string(fonte, p, t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, TemaUI.CREME)
 
@@ -81,3 +88,31 @@ func _caixa(r: Rect2, c: Color, raio: float) -> void:
 	draw_rect(Rect2(r.position + Vector2(raio, 0), Vector2(r.size.x - raio * 2, r.size.y)), c)
 	draw_circle(r.position + Vector2(raio, r.size.y * 0.5), raio, c)
 	draw_circle(Vector2(r.end.x - raio, r.position.y + r.size.y * 0.5), raio, c)
+
+
+## Ícone da barra: coração (HP), gota (MP) ou estrela (XP), com contorno preto.
+func _desenhar_icone(c: Vector2, r: float) -> void:
+	var pts := PackedVector2Array()
+	match icone:
+		"hp":
+			for i in 32:
+				var t := TAU * i / 32.0
+				var x := 16.0 * pow(sin(t), 3)
+				var y := 13.0 * cos(t) - 5.0 * cos(2 * t) - 2.0 * cos(3 * t) - cos(4 * t)
+				pts.append(c + Vector2(x, -y - 2.0) * r / 17.0)
+		"mp":
+			for i in 24:
+				var t := TAU * i / 24.0
+				var k := sin(t * 0.5)
+				pts.append(c + Vector2(sin(t) * r * 0.62 * k, -cos(t) * r) + Vector2(0, r * 0.15))
+		_:
+			for i in 10:
+				var raio := r if i % 2 == 0 else r * 0.45
+				var t := TAU * i / 10.0
+				pts.append(c + Vector2(sin(t), -cos(t)) * raio)
+	var contorno := PackedVector2Array()
+	for p in pts:
+		contorno.append(c + (p - c) * 1.25)
+	draw_colored_polygon(contorno, TemaUI.PRETO)
+	draw_colored_polygon(pts, cor.lightened(0.1))
+	draw_circle(c + Vector2(-r * 0.25, -r * 0.25), r * 0.16, Color(1, 1, 1, 0.55))
