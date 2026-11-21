@@ -46,7 +46,9 @@ var _painel_hud: HudBatalha
 var _cursor: MeshInstance3D
 var _alcance_mov := {}   # casa -> pai (caminho)
 var _alvos := []         # unidades que podem ser alvo agora
-var _molhado := {}       # casa -> true (lama, brejo, água rasa: vantagem dos aquáticos)
+var _molhado := {}       # casa -> true (lama, brejo, água rasa)
+var _mata := {}          # casa -> true (chão de floresta, raízes, folhas)
+var _agua := {}          # casa -> true (água funda, vitórias-régias: só nadadores)
 var _custo := {}         # casa -> custo de movimento (2 = terreno difícil)
 var _especial := {}      # casa -> "salto" | "voo" (só quem salta/voa entra)
 var _iniciativa := {}    # Unidade3D -> d20 + Destreza (rolado no início)
@@ -275,7 +277,13 @@ func info_casa(c: Vector2i) -> String:
 	if _especial.has(c) and _bloqueio.has(c):
 		t += " · só quem " + ("voa" if _especial[c] == "voo" else "salta ou voa")
 	elif _custo.get(c, 1) > 1:
-		t += " · terreno difícil (custa 2)" + (" · molhado: aquáticos andam normal e batem +25%" if _molhado.has(c) else "")
+		t += " · terreno difícil (custa 2)"
+	if _molhado.has(c):
+		t += " · molhado"
+	elif _mata.has(c):
+		t += " · mata"
+	if _atual and no_terreno(_st[_atual]["especie"], c):
+		t += " · terreno de %s: %s" % [_atual.display_name, "+%d armadura" % Regras.BONUS_ARMADURA_TERRENO if Regras.defensivo(_st[_atual]["especie"]) else "+25% dano"]
 	if _cobertura.has(c):
 		return t + " · cobertura (bloqueia flechas e magias)"
 	if _atual and not _atual.enemy and _protegida(_atual, c):
@@ -483,7 +491,8 @@ func _bfs(u: Unidade3D, mov: int) -> Dictionary:
 		if o != u:
 			ocupado[o.grid()] = o.enemy != u.enemy
 	var mob := Regras.mobilidade(_st[u]["especie"])
-	var aquatico := Regras.aquatico(_st[u]["especie"])
+	var esp: String = _st[u]["especie"]
+	var nada := Regras.nadador(esp)
 	var ini := u.grid()
 	var dist := {ini: 0}
 	var pai := {ini: ini}
@@ -493,11 +502,11 @@ func _bfs(u: Unidade3D, mov: int) -> Dictionary:
 		var c: Vector2i = fila.pop_front()
 		for d in DIRS:
 			var n: Vector2i = c + d
-			if not _pisos.has(n) or not pode_entrar(mob, c, n):
+			if not _pisos.has(n) or not pode_entrar(mob, c, n, nada):
 				continue
 			if ocupado.get(n, false):
 				continue
-			var passo: int = 1 if mob == "voo" or (aquatico and _molhado.has(n)) else _custo.get(n, 1)
+			var passo: int = 1 if mob == "voo" or no_terreno(esp, n) else _custo.get(n, 1)
 			var custo: int = dist[c] + passo
 			if custo > mov or (dist.has(n) and dist[n] <= custo):
 				continue
@@ -529,6 +538,10 @@ func _ler_tipos_de_terreno() -> void:
 				_custo[c] = 2
 			if nome in Regras.TERRENO_MOLHADO:
 				_molhado[c] = true
+			if nome in Regras.TERRENO_MATA:
+				_mata[c] = true
+			if nome in Regras.TERRENO_AGUA:
+				_agua[c] = true
 			if Regras.TERRENO_ESPECIAL.has(nome):
 				_especial[c] = Regras.TERRENO_ESPECIAL[nome]
 	for c in objeto:
@@ -536,15 +549,28 @@ func _ler_tipos_de_terreno() -> void:
 
 
 ## Pode passar da casa `de` para a vizinha `para` com essa mobilidade?
-func pode_entrar(mob: String, de: Vector2i, para: Vector2i) -> bool:
+func pode_entrar(mob: String, de: Vector2i, para: Vector2i, nada := false) -> bool:
 	if _bloqueio.has(para):
 		var tipo: String = _especial.get(para, "")
-		if tipo == "" or mob == "" or (tipo == "voo" and mob != "voo"):
+		var nadando: bool = nada and _agua.has(para)
+		if not nadando and (tipo == "" or mob == "" or (tipo == "voo" and mob != "voo")):
 			return false
+		if nadando:
+			return absf(_pisos[para] - _pisos.get(de, _pisos[para])) <= salto
 	if mob == "voo":
 		return true
 	var degrau := Regras.DEGRAU_SALTO if mob == "salto" else salto
 	return absf(_pisos[para] - _pisos.get(de, _pisos[para])) <= degrau
+
+
+## A casa é do terreno do ambiente desse animal (molhado ou mata)?
+func no_terreno(especie: String, c: Vector2i) -> bool:
+	match Regras.afinidade(especie):
+		"molhado":
+			return _molhado.has(c) or (Regras.nadador(especie) and _agua.has(c))
+		"mata":
+			return _mata.has(c)
+	return false
 
 
 func _dist(a: Vector2i, b: Vector2i) -> int:
@@ -710,7 +736,10 @@ func _defesa_total(t: Unidade3D) -> int:
 	var d: int = _st[t]["defesa"]
 	if _st[t]["efeitos"].has("defesa"):
 		d += _st[t]["bonus_def"]
-	return maxi(0, d + Clima.efeito(_st[t]["especie"], clima)["arm"])
+	var esp: String = _st[t]["especie"]
+	if Regras.defensivo(esp) and no_terreno(esp, t.grid()):
+		d += Regras.BONUS_ARMADURA_TERRENO  # defensivo no próprio terreno
+	return maxi(0, d + Clima.efeito(esp, clima)["arm"])
 
 
 func _ferir(u: Unidade3D, t: Unidade3D, mult: float, efeito: String, visual := "") -> void:
@@ -728,8 +757,8 @@ func _ferir(u: Unidade3D, t: Unidade3D, mult: float, efeito: String, visual := "
 	var d := Regras.dano(a["attrs"], a["classe"], a["nivel"], b["attrs"], a["arma"], dif, _rng)
 	if a["efeitos"].has("fraco"):
 		d += Regras.EFEITOS["fraco"]["dano_feito"]
-	if Regras.aquatico(a["especie"]) and _molhado.has(u.grid()):
-		mult *= Regras.BONUS_DANO_AQUATICO  # búfalo forte na lama e na água rasa
+	if not Regras.defensivo(a["especie"]) and no_terreno(a["especie"], u.grid()):
+		mult *= Regras.BONUS_DANO_TERRENO  # ofensivo no próprio terreno (ex.: búfalo na lama)
 	mult *= Clima.efeito(a["especie"], clima)["dano"]  # noite e chuva (hábitat do animal)
 	var critico := _rng.randf() < Regras.chance_critico(a["classe"], a.get("peso_arma", ""))
 	if critico:
@@ -893,6 +922,8 @@ func _ia(u: Unidade3D) -> void:
 				if longe:
 					s += 1.5 * _menor_dist(u, c)
 				s -= PESO_EXPOSTO * expo[c]
+				if no_terreno(e["especie"], c):
+					s += 2.0  # prefere atacar (ou aguentar o golpe) do próprio terreno
 				if s > melhor_s:
 					melhor_s = s
 					melhor_c = c
@@ -907,9 +938,11 @@ func _ia(u: Unidade3D) -> void:
 	# (ganha um pouco de chão a menos para terminar atrás de árvore/muro, longe da mira)
 	var perto := _distancias_ate(not u.enemy)
 	var dest := u.grid()
-	var smin: float = perto.get(dest, 9999) + PESO_EXPOSTO * _exposicao(u, dest)
+	# Defensivo segura posição no próprio terreno (vira uma "parede" no caminho).
+	var bonus_terreno := 2.5 if Regras.defensivo(e["especie"]) else 1.0
+	var smin: float = perto.get(dest, 9999) + PESO_EXPOSTO * _exposicao(u, dest) - (bonus_terreno if no_terreno(e["especie"], dest) else 0.0)
 	for c in reach:
-		var sc: float = perto.get(c, 9999) + PESO_EXPOSTO * _exposicao(u, c)
+		var sc: float = perto.get(c, 9999) + PESO_EXPOSTO * _exposicao(u, c) - (bonus_terreno if no_terreno(e["especie"], c) else 0.0)
 		if sc < smin:
 			smin = sc
 			dest = c

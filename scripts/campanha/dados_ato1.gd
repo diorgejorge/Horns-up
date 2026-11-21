@@ -273,6 +273,20 @@ const BATALHAS := {
 }
 
 
+## Ícone 2D do item (render do modelo em assets/diorge/itens/icones/<id>.png), ou "".
+## Os modelos 3D dos equipamentos ficam em assets/diorge/itens/<id>.glb (de armas.glb).
+static func icone_item(id: String) -> String:
+	var p := "res://assets/diorge/itens/icones/%s.png" % id
+	return p if ResourceLoader.exists(p) else ""
+
+
+static func modelo_item(id: String) -> String:
+	var p := "res://assets/diorge/itens/%s.glb" % id
+	if id == "pocao":
+		p = MODELO_POCAO
+	return p if ResourceLoader.exists(p) else ""
+
+
 static func regiao(id: String) -> Dictionary:
 	for r in REGIOES:
 		if r["id"] == id:

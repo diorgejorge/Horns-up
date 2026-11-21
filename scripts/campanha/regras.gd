@@ -132,14 +132,41 @@ const TERRENO_MOLHADO := [
 	"m17_agua_rasa_pedras", "m23_riacho_pedras", "t04_agua_rasa_pedras", "s10_poca_agua",
 	"s04_lama_juncos", "s08_lama_fungos", "t06_pantano_raizes", "t10_lama_raizes",
 ]
-## Animais aquáticos (pedido do Diorge: o búfalo amazônico é forte e aquático):
-## no terreno molhado andam com custo 1 e causam mais dano.
-const AQUATICOS := ["bufalo"]
-const BONUS_DANO_AQUATICO := 1.25
+## Chão de mata (floresta, raízes, folhas): o terreno dos animais "da mata".
+const TERRENO_MATA := [
+	"m01_raizes_musgo", "m08_raizes_terra", "f11_chao_folhas", "f12_chao_raizes", "t12_chao_floresta",
+	"m20_folhas_secas_pedra", "m22_folhas_ouricos", "m26_arbustos_ouricos",
+]
+## Água funda e vitórias-régias: casas onde os nadadores entram.
+const TERRENO_AGUA := ["m24_agua_funda", "t05_agua_escura", "m04_agua_vitorias_regias", "t14_agua_vitorias_regias", "s01_vitorias_regias"]
+
+## Terreno do ambiente de cada animal (plano aprovado pelo Diorge, 2026-11-21).
+## No próprio terreno: anda com custo 1; ofensivo bate +25%; defensivo ganha +3 de armadura.
+const AFINIDADE := {
+	"bufalo": "molhado", "tartaruga_amazonia": "molhado", "jacare_acu": "molhado", "jacaretinga": "molhado",
+	"naga": "molhado", "cururu": "molhado", "aninga": "molhado", "buriti": "molhado", "vitoria_regia": "molhado",
+	"tartaruga": "mata", "tartaruga_paladina": "mata", "coral": "mata", "cobra_cavaleira": "mata",
+	"golem_toco": "mata", "acaizeiro": "mata", "carnivora": "mata", "cogumelo": "mata", "bromelia": "mata",
+	"mapinguari": "mata",
+}
+## Defensivos: no próprio terreno ganham armadura em vez de dano.
+const DEFENSIVOS := ["tartaruga", "tartaruga_paladina", "tartaruga_amazonia", "jacare_acu", "golem_toco", "vitoria_regia"]
+## Nadadores: também entram em água funda e vitórias-régias (a corredeira segue fechada).
+const NADADORES := ["jacare_acu", "jacaretinga", "naga", "tartaruga_amazonia", "vitoria_regia"]
+const BONUS_DANO_TERRENO := 1.25
+const BONUS_ARMADURA_TERRENO := 3
 
 
-static func aquatico(especie: String) -> bool:
-	return especie in AQUATICOS
+static func afinidade(especie: String) -> String:
+	return AFINIDADE.get(especie, "")
+
+
+static func defensivo(especie: String) -> bool:
+	return especie in DEFENSIVOS
+
+
+static func nadador(especie: String) -> bool:
+	return especie in NADADORES
 
 
 ## Casas que só quem salta ("salto") ou voa ("voo") acessa. "salto" também vale para quem voa.
@@ -150,7 +177,7 @@ const TERRENO_ESPECIAL := {
 	"m24_agua_funda": "voo", "t05_agua_escura": "voo", "m30_corredeira_pedras": "voo",
 }
 ## Mobilidade especial por espécie (as demais andam normal).
-const MOBILIDADE := {"perereca": "salto", "sapo_dardo": "salto", "cururu": "salto"}
+const MOBILIDADE := {"perereca": "salto", "sapo_dardo": "salto", "cururu": "salto", "iguana": "salto"}
 ## Maior degrau num passo para quem salta (quem voa ignora a altura).
 const DEGRAU_SALTO := 0.9
 
