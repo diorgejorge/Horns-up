@@ -2,19 +2,19 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://v3qsoux3yupq"
-path="res://.godot/imported/itensCura_texture_pbr_20250901.png-a544a52f98c47d0b31c118be9a1903f0.ctex"
+uid="uid://cknj32jm1g77q"
+path="res://.godot/imported/itensCura_texture_pbr_20250901_normal.png-5f1606f62ac9b9d84673e088debc7e9a.ctex"
 metadata={
 "vram_texture": false
 }
 generator_parameters={
-"md5": "25f280153a07fa03149b8e62df337e34"
+"md5": "d2c5bc9727cbd4541f547bae5144e412"
 }
 
 [deps]
 
-source_file="res://assets/diorge/itensCura_texture_pbr_20250901.png"
-dest_files=["res://.godot/imported/itensCura_texture_pbr_20250901.png-a544a52f98c47d0b31c118be9a1903f0.ctex"]
+source_file="res://assets/diorge/itens/itensCura_texture_pbr_20250901_normal.png"
+dest_files=["res://.godot/imported/itensCura_texture_pbr_20250901_normal.png-5f1606f62ac9b9d84673e088debc7e9a.ctex"]
 
 [params]
 

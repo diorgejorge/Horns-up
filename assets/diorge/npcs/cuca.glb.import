@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dgflmryar8yxq"
-path="res://.godot/imported/cuca.glb-7cc190c20619221330894c1b3b340cdc.scn"
+path="res://.godot/imported/cuca.glb-2be3600bed27b6539474029e248bbc18.scn"
 
 [deps]
 
-source_file="res://assets/diorge/cuca.glb"
-dest_files=["res://.godot/imported/cuca.glb-7cc190c20619221330894c1b3b340cdc.scn"]
+source_file="res://assets/diorge/npcs/cuca.glb"
+dest_files=["res://.godot/imported/cuca.glb-2be3600bed27b6539474029e248bbc18.scn"]
 
 [params]
 

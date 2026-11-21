@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://c3gvuevvalw52"
-path="res://.godot/imported/itensCura.glb-e60c03535e4a23c4d7be433482791d36.scn"
+path="res://.godot/imported/itensCura.glb-d885669560086647fcddc7b2690879ec.scn"
 
 [deps]
 
-source_file="res://assets/diorge/itensCura.glb"
-dest_files=["res://.godot/imported/itensCura.glb-e60c03535e4a23c4d7be433482791d36.scn"]
+source_file="res://assets/diorge/itens/itensCura.glb"
+dest_files=["res://.godot/imported/itensCura.glb-d885669560086647fcddc7b2690879ec.scn"]
 
 [params]
 

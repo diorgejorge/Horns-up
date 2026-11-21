@@ -2,19 +2,19 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dpbpj8bgptd86"
-path="res://.godot/imported/cuca_texture_pbr_20250901.png-a25c1f5f18301a0d3ed3d5405e578fbe.ctex"
+uid="uid://dmr3e0xc2x4dy"
+path="res://.godot/imported/cuca_texture_pbr_20250901_normal.png-f7fe3b542ca131d0ba0a616b72ac7156.ctex"
 metadata={
 "vram_texture": false
 }
 generator_parameters={
-"md5": "0b36f8293c9a869048cd687f17fe1aa1"
+"md5": "b96d43e702b2960e408417a1081cd6b6"
 }
 
 [deps]
 
-source_file="res://assets/diorge/cuca_texture_pbr_20250901.png"
-dest_files=["res://.godot/imported/cuca_texture_pbr_20250901.png-a25c1f5f18301a0d3ed3d5405e578fbe.ctex"]
+source_file="res://assets/diorge/npcs/cuca_texture_pbr_20250901_normal.png"
+dest_files=["res://.godot/imported/cuca_texture_pbr_20250901_normal.png-f7fe3b542ca131d0ba0a616b72ac7156.ctex"]
 
 [params]
 

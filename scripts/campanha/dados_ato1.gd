@@ -72,7 +72,7 @@ const FALANTES := {
 ## Morador e Voz distante não têm modelo: aparecem com o losango.
 ## A moradora da Vila de Aruã usa o modelo cuca.glb. No Ato I ninguém sabe que
 ## ela é a Cuca (pedido do Diorge): o jogo só a chama de "Moradora".
-const MODELO_MORADORA := "res://assets/diorge/cuca.glb"
+const MODELO_MORADORA := "res://assets/diorge/npcs/cuca.glb"
 
 const RETRATOS := {
 	"morador": MODELO_MORADORA,
@@ -108,7 +108,7 @@ const SLOTS := {"arma": "Arma", "armadura": "Armadura", "acessorio": "Acessório
 const INVENTARIO_INICIAL := {"pocao": 2, "pocao_mana": 1}
 
 ## Modelo 3D da poção de cura (aparece quando alguém bebe uma na batalha).
-const MODELO_POCAO := "res://assets/diorge/itensCura.glb"
+const MODELO_POCAO := "res://assets/diorge/itens/itensCura.glb"
 
 # --- ouro e lojas ------------------------------------------------------------------
 
