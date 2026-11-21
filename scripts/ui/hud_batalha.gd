@@ -182,6 +182,10 @@ func mostrar_objetivo() -> void:
 	var o := TemaUI.rotulo("Objetivo: " + b["objetivo"], 20)
 	o.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(o)
+	if batalha.clima != "dia":
+		var cl := TemaUI.rotulo("Clima: %s · muda o poder dos animais (veja a ficha de cada um)" % batalha.clima_nome(), 18, TemaUI.OURO)
+		cl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		v.add_child(cl)
 	_raiz.add_child(banner)
 	banner.entrar()
 	var tw := create_tween()
@@ -194,7 +198,7 @@ func atualizar() -> void:
 	if batalha == null:
 		return
 	var b: Dictionary = D.BATALHAS[batalha.numero]
-	_titulo.text = "%02d · %s" % [batalha.numero, b["nome"]]
+	_titulo.text = "%02d · %s · %s" % [batalha.numero, b["nome"], batalha.clima_nome()]
 	_objetivo.text = "Objetivo: " + b["objetivo"]
 	var atual: Unidade3D = batalha.atual()
 	_preencher_ordem(atual)
@@ -297,6 +301,9 @@ func _info_card(v: VBoxContainer, u: Unidade3D, vez: bool) -> void:
 	var ef: String = batalha.efeitos_texto(u)
 	if ef != "":
 		v.add_child(TemaUI.rotulo(ef, 12, TemaUI.OURO))
+	var cl: String = batalha.clima_texto(u)
+	if cl != "":
+		v.add_child(TemaUI.rotulo(cl, 12, Color(0.6, 0.8, 1.0)))
 
 
 # --- comandos e ajuda -------------------------------------------------------------------
@@ -455,8 +462,11 @@ func _ficha(parent: Control, u: Unidade3D) -> void:
 	var ef: String = batalha.efeitos_texto(u) if not e.is_empty() else ""
 	if ef != "":
 		col.add_child(TemaUI.rotulo(ef, 13, TemaUI.OURO))
+	var cl: String = batalha.clima_texto(u)
+	if cl != "":
+		col.add_child(TemaUI.rotulo(cl, 13, Color(0.6, 0.8, 1.0)))
 	var a: Dictionary = e.get("attrs", {})
-	parent.add_child(TemaUI.rotulo("FOR %d  DES %d  CON %d  INT %d  SAB %d  CAR %d" % [a.get("forca", 0), a.get("destreza", 0), a.get("constituicao", 0), a.get("inteligencia", 0), a.get("sabedoria", 0), a.get("carisma", 0)], 13, Color(TemaUI.CREME, 0.8)))
+	parent.add_child(TemaUI.rotulo("FOR %d  DES %d  CON %d  INT %d  SAB %d  CAR %d · Crítico %d%%" % [a.get("forca", 0), a.get("destreza", 0), a.get("constituicao", 0), a.get("inteligencia", 0), a.get("sabedoria", 0), a.get("carisma", 0), roundi(batalha.chance_critico(u) * 100.0)], 13, Color(TemaUI.CREME, 0.8)))
 
 
 # --- resultado --------------------------------------------------------------------------

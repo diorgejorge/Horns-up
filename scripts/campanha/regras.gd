@@ -74,6 +74,35 @@ const FATOR_LIDER := 1.5
 const REDUCAO_POR_ARMADURA := 0.12
 const REDUCAO_MAX := 0.6
 
+## Dano crítico (pedido do Diorge, 2026-11-21): cada golpe tem uma chance de
+## crítico. Base 5%; a classe e o tipo de arma aumentam a chance.
+## Arma leve (adaga, arco, presas, dardos): +3% de chance.
+## Arma pesada (espadão, maça, clava): a chance não sobe, mas o crítico bate mais forte.
+const CRITICO_BASE := 0.05
+const CRITICO_CLASSE := {"assassino": 0.05}
+const CRITICO_ARMA := {"leve": 0.03}
+const CRITICO_MULT := 1.5
+const CRITICO_MULT_PESADA := 1.75
+## Tipo de arma de quem não usa item (adversários), pela classe.
+## Heróis: campo "peso" da arma em DadosAto1.ITENS. Sem tipo = arma média.
+const ARMA_DA_CLASSE := {
+	"assassino": "leve", "batedor": "leve", "ranger": "leve",
+	"guerreiro": "pesada", "tanque": "pesada", "lutador": "pesada", "chefe": "pesada",
+}
+
+
+static func chance_critico(classe_id: String, peso_arma: String) -> float:
+	return CRITICO_BASE + CRITICO_CLASSE.get(classe_id, 0.0) + CRITICO_ARMA.get(peso_arma, 0.0)
+
+
+static func mult_critico(peso_arma: String) -> float:
+	return CRITICO_MULT_PESADA if peso_arma == "pesada" else CRITICO_MULT
+
+
+static func peso_arma_da_classe(classe_id: String) -> String:
+	return ARMA_DA_CLASSE.get(classe_id, "")
+
+
 ## Cobertura: ataque à distância (flecha, magia, luz...) precisa de linha de visão.
 ## Árvore, muro, rocha e outros objetos do Cenário no meio do caminho bloqueiam.
 

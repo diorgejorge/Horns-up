@@ -85,23 +85,24 @@ const RETRATOS := {
 
 ## Itens do jogo. Equipamentos só mudam números (o visual é o do modelo).
 ## `so`: classes que podem equipar (vazio = todas).
+## Armas: "peso" "leve" (+3% de crítico) ou "pesada" (crítico 1,75x); ver Regras.CRITICO_*.
 const ITENS := {
 	"pocao": {"nome": "Poção de cura", "tipo": "consumivel", "cura": 30,
 		"desc": "Recupera 30 HP de um herói. Na batalha, gasta a ação do turno (alcance 1)."},
 	"pocao_mana": {"nome": "Poção de mana", "tipo": "consumivel", "mana": 12,
 		"desc": "Recupera 12 MP de um herói que usa magia. Na batalha, gasta a ação do turno (alcance 1)."},
 	# Equipamento aprovado pelo Diorge (2026-11-21). Búfalo (Tauá) e Tartaruga (Ituaçu).
-	"espada_bronze": {"nome": "Espada de bronze", "tipo": "arma", "ataque": 2, "so": ["guerreiro"],
+	"espada_bronze": {"nome": "Espada de bronze", "tipo": "arma", "peso": "leve", "ataque": 2, "so": ["guerreiro"],
 		"desc": "Espada leve de bronze. +2 de ataque."},
-	"espadao_marajoara": {"nome": "Espadão marajoara", "tipo": "arma", "ataque": 5, "so": ["guerreiro"], "exige": {"forca": 16},
+	"espadao_marajoara": {"nome": "Espadão marajoara", "tipo": "arma", "peso": "pesada", "ataque": 5, "so": ["guerreiro"], "exige": {"forca": 16},
 		"desc": "Espadão de duas mãos com grafismo marajoara. +5 de ataque. Exige Força 16."},
 	"couro_bufalo": {"nome": "Couro de búfalo", "tipo": "armadura", "defesa": 2, "so": ["guerreiro"],
 		"desc": "Gibão de couro curtido. +2 de armadura."},
 	"peitoral_marajoara": {"nome": "Peitoral de placas marajoara", "tipo": "armadura", "defesa": 4, "so": ["guerreiro"],
 		"desc": "Placas de bronze pintadas em vermelho e preto. +4 de armadura."},
-	"maca_pedra": {"nome": "Maça de pedra", "tipo": "arma", "ataque": 2, "so": ["paladino"],
+	"maca_pedra": {"nome": "Maça de pedra", "tipo": "arma", "peso": "pesada", "ataque": 2, "so": ["paladino"],
 		"desc": "Maça simples de pedra. +2 de ataque."},
-	"maca_marajoara": {"nome": "Maça de pedra marajoara", "tipo": "arma", "ataque": 4, "so": ["paladino"],
+	"maca_marajoara": {"nome": "Maça de pedra marajoara", "tipo": "arma", "peso": "pesada", "ataque": 4, "so": ["paladino"],
 		"contra": ["naga", "coral", "cobra_cavaleira", "acaizeiro", "vitoria_regia", "carnivora", "cogumelo", "golem_toco", "bromelia", "aninga", "buriti"],
 		"desc": "Maça entalhada pelos Ceramistas. +4 de ataque e +50% de dano contra cobras e plantas."},
 	"escudo_madeira": {"nome": "Escudo de madeira", "tipo": "armadura", "defesa": 2, "so": ["paladino"],
@@ -168,6 +169,7 @@ const IGARAPE := {"nome": "Igarapé dos Ossos", "pos": Vector2i(19, 14), "aparec
 ## Cada batalha: cenário (região), nome, objetivo, tipo de vitória, ambiente (luz),
 ## inimigos [espécie, x, z, nível, (líder/chefe)], casas de início do grupo,
 ## e recompensas (diálogos no JSON do Dialogo).
+## "clima" (opcional): fixa "dia", "noite", "chuva" ou "noite_chuva"; sem ele, sorteia (ver Clima).
 ## "trilha": música da batalha em assets/diorge/audio/trilhas/<trilha>.wav
 ## (geradas por audio/trilhas_batalha.py; a do chefe por audio/gerar_audio.py).
 ## Os mapas (casas) ficam em tools/gerar_ato1.gd; as cenas geradas são editáveis.

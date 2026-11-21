@@ -51,17 +51,21 @@ var _custo := {}         # casa -> custo de movimento (2 = terreno difícil)
 var _especial := {}      # casa -> "salto" | "voo" (só quem salta/voa entra)
 var _iniciativa := {}    # Unidade3D -> d20 + Destreza (rolado no início)
 var _cobertura := {}     # casa -> true: objeto do Cenário que bloqueia ataque à distância
+## Clima da batalha ("dia", "noite", "chuva", "noite_chuva"): ver scripts/campanha/clima.gd.
+var clima := "dia"
 
 
 func _ready() -> void:
 	_auto = "--auto" in OS.get_cmdline_user_args()
 	_rng.seed = 4242 + numero + 97 * int(campanha.get_meta("tentativas", 0)) if _auto else Time.get_ticks_usec()
 	campanha.iniciar_batalha(numero)
+	clima = Clima.sortear(D.BATALHAS[numero], _rng)
 	_criar_grupo()
 	_units = find_children("*", "Unidade3D", true, false)
 	_ler_terreno()
 	_ler_tipos_de_terreno()
 	_ler_cobertura()
+	_aplicar_clima()
 	_overlays = Node3D.new()
 	_overlays.name = "Destaques"
 	add_child(_overlays)
@@ -143,6 +147,8 @@ func _estado_inicial(u: Unidade3D) -> Dictionary:
 		e["hp"] = campanha.herois[id]["hp"]
 		e["mp"] = campanha.herois[id]["mp"]
 		e["arma"] = campanha.ataque_bonus(id)
+		var arma: String = campanha.herois[id]["equipamento"].get("arma", "")
+		e["peso_arma"] = D.ITENS[arma].get("peso", "") if D.ITENS.has(arma) else ""
 		e["defesa"] = campanha.defesa_bonus(id)
 		e["contra"] = campanha.arma_contra(id)
 		e["bloqueio_flecha"] = campanha.bloqueio_flecha(id)
@@ -150,6 +156,7 @@ func _estado_inicial(u: Unidade3D) -> Dictionary:
 		var fator := Regras.FATOR_CHEFE if u.papel == "chefe" else (Regras.FATOR_LIDER if u.papel == "lider" else Regras.FATOR_COMUM)
 		e["hpmax"] = Regras.hp_max(attrs, u.nivel, fator)
 		e["defesa"] = Regras.armadura_natural(u.classe)
+		e["peso_arma"] = Regras.peso_arma_da_classe(u.classe)
 		e["mpmax"] = Regras.mp_max(attrs, u.nivel, u.classe)
 		e["hp"] = e["hpmax"]
 		e["mp"] = e["mpmax"]
@@ -203,7 +210,23 @@ func movimento(u: Unidade3D) -> int:
 	var m: int = Regras.movimento(_st[u]["classe"], _st[u]["attrs"].get("destreza", 10))
 	if _st[u]["efeitos"].has("lento"):
 		m += Regras.EFEITOS["lento"]["mov"]
+	m += Clima.efeito(_st[u]["especie"], clima)["mov"]
 	return maxi(1, m)
+
+
+## Clima da batalha para o HUD, ex.: "Noite com chuva".
+func clima_nome() -> String:
+	return Clima.nome(clima)
+
+
+## Como o clima muda esta unidade (vazio se nada muda), ex.: "Chuva: dano +20%".
+func clima_texto(u: Unidade3D) -> String:
+	return Clima.texto(_st[u]["especie"], clima) if _st.has(u) else ""
+
+
+## Chance de crítico da unidade (0 a 1).
+func chance_critico(u: Unidade3D) -> float:
+	return Regras.chance_critico(_st[u]["classe"], _st[u].get("peso_arma", "")) if _st.has(u) else 0.0
 
 
 ## Dados de uma ação ("ataque" ou id de habilidade) para esta unidade (API Combate).
@@ -687,7 +710,7 @@ func _defesa_total(t: Unidade3D) -> int:
 	var d: int = _st[t]["defesa"]
 	if _st[t]["efeitos"].has("defesa"):
 		d += _st[t]["bonus_def"]
-	return d
+	return maxi(0, d + Clima.efeito(_st[t]["especie"], clima)["arm"])
 
 
 func _ferir(u: Unidade3D, t: Unidade3D, mult: float, efeito: String, visual := "") -> void:
@@ -707,11 +730,20 @@ func _ferir(u: Unidade3D, t: Unidade3D, mult: float, efeito: String, visual := "
 		d += Regras.EFEITOS["fraco"]["dano_feito"]
 	if Regras.aquatico(a["especie"]) and _molhado.has(u.grid()):
 		mult *= Regras.BONUS_DANO_AQUATICO  # búfalo forte na lama e na água rasa
+	mult *= Clima.efeito(a["especie"], clima)["dano"]  # noite e chuva (hábitat do animal)
+	var critico := _rng.randf() < Regras.chance_critico(a["classe"], a.get("peso_arma", ""))
+	if critico:
+		mult *= Regras.mult_critico(a.get("peso_arma", ""))
 	d = maxi(1, roundi(d * mult))
 	var bruto := d
 	d = Regras.absorver(d, _defesa_total(t))  # armadura segura parte do golpe
 	b["hp"] = maxi(0, b["hp"] - d)
-	_numero(t, str(d) if d == bruto else "%d  (armadura -%d)" % [d, bruto - d], Color(1.0, 0.85, 0.4))
+	var txt := str(d) if d == bruto else "%d  (armadura -%d)" % [d, bruto - d]
+	if critico:
+		_numero(t, "CRÍTICO! " + txt, Color(1.0, 0.35, 0.2), 46)
+		VfxCombate.impacto(self, _peito(t), Color(1.0, 0.45, 0.2), true)
+	else:
+		_numero(t, txt, Color(1.0, 0.85, 0.4))
 	if b["hp"] > 0:
 		t.tocar("hurt")
 		_som_unidade(t, "dano")
@@ -738,14 +770,14 @@ func _derrubar(t: Unidade3D) -> void:
 			get_tree().create_timer(1.6).timeout.connect(t.hide)
 
 
-func _numero(t: Unidade3D, texto: String, cor: Color) -> void:
+func _numero(t: Unidade3D, texto: String, cor: Color, tamanho := 34) -> void:
 	var l := Label3D.new()
 	l.text = texto
 	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	l.no_depth_test = true
 	l.fixed_size = true
 	l.pixel_size = 0.0012
-	l.font_size = 34
+	l.font_size = tamanho
 	l.outline_size = 10
 	l.modulate = cor
 	l.position = t.position + Vector3(0, 1.2 * t.escala, 0)
@@ -884,6 +916,26 @@ func _ia(u: Unidade3D) -> void:
 	if dest != u.grid():
 		await _andar(u, dest, reach)
 	await _espera(0.15)
+
+
+# --- clima (noite e chuva) ---------------------------------------------------------------------
+
+## Luz de luar/chuva e gotas sobre o mapa; à noite cada unidade leva uma luz fraca.
+func _aplicar_clima() -> void:
+	if _pisos.is_empty():
+		return
+	var mn := Vector2(INF, INF)
+	var mx := Vector2(-INF, -INF)
+	for c in _pisos:
+		mn = mn.min(Vector2(c.x, c.y))
+		mx = mx.max(Vector2(c.x + 1, c.y + 1))
+	var meio := (mn + mx) * 0.5
+	Clima.aplicar_visual(self, clima, Vector3(meio.x, 0, meio.y), mx - mn)
+	if Clima.tem(clima, "noite"):
+		for u in _units:
+			Clima.luz_da_unidade(u, u.enemy)
+	if _auto:
+		print("CLIMA batalha=%d %s" % [numero, clima])
 
 
 # --- cobertura (ataques à distância precisam de linha de visão) -----------------------------------
