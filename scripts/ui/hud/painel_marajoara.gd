@@ -15,6 +15,13 @@ var destaque := TemaUI.VERMELHO:
 		if _mat:
 			_mat.set_shader_parameter("destaque", v)
 
+## Brilho pulsante na moldura (painel selecionado / unidade da vez).
+var pulso := false:
+	set(v):
+		pulso = v
+		if _mat:
+			_mat.set_shader_parameter("pulso", 1.0 if v else 0.0)
+
 var _mat: ShaderMaterial
 
 
@@ -43,3 +50,13 @@ func _init(borda_px := 12.0, cor := TemaUI.VERMELHO) -> void:
 
 func _ready() -> void:
 	_mat.set_shader_parameter("tamanho", size)
+
+
+## Entrada animada: aparece e "assenta" com um leve zoom (escala no centro).
+func entrar(atraso := 0.0) -> void:
+	modulate.a = 0.0
+	scale = Vector2(0.96, 0.96)
+	var tw := create_tween().set_parallel().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.tween_callback(func(): pivot_offset = size / 2.0).set_delay(atraso)
+	tw.tween_property(self, "modulate:a", 1.0, 0.22).set_delay(atraso)
+	tw.tween_property(self, "scale", Vector2.ONE, 0.32).set_delay(atraso)

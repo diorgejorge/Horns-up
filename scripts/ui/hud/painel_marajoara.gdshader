@@ -13,6 +13,7 @@ uniform vec4 preto : source_color = vec4(0.08, 0.05, 0.04, 1.0);
 uniform vec4 creme : source_color = vec4(0.94, 0.87, 0.70, 1.0);
 uniform vec4 destaque : source_color = vec4(0.66, 0.18, 0.10, 1.0); // cor da faixa (vermelho ou ouro)
 uniform float semente = 0.0;
+uniform float pulso = 0.0;          // 0..1: brilho pulsante (painel selecionado)
 
 float hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -50,6 +51,10 @@ void fragment() {
 	float d = min(min(px.x, tamanho.x - px.x), min(px.y, tamanho.y - px.y));
 	cor.rgb *= mix(0.72, 1.0, smoothstep(borda, borda + 18.0, d));
 
+	// brilho de verniz no alto do painel (luz vindo de cima, visual 3D moderno)
+	float topo = 1.0 - smoothstep(0.0, tamanho.y * 0.45, px.y - borda);
+	cor.rgb += vec3(1.0, 0.85, 0.6) * topo * 0.07;
+
 	// --- moldura
 	if (d < borda) {
 		float s = d / borda;                    // 0 na borda externa, 1 na interna
@@ -68,6 +73,20 @@ void fragment() {
 			vec2 q = abs(c - vec2(borda * 0.5));
 			cor = (q.x + q.y < borda * 0.32) ? creme : preto;
 		}
+		// relevo: a moldura é um bisel, iluminado em cima/esquerda e sombreado
+		// embaixo/direita, como uma peça de cerâmica em alto-relevo.
+		vec2 lado = vec2(px.x < tamanho.x * 0.5 ? -1.0 : 1.0, px.y < tamanho.y * 0.5 ? -1.0 : 1.0);
+		bool perto_x = min(px.x, tamanho.x - px.x) < min(px.y, tamanho.y - px.y);
+		float face = perto_x ? -lado.x : -lado.y;          // +1 voltado para a luz
+		float curva = sin(s * 3.14159);                    // arredondado no meio da faixa
+		cor.rgb *= 1.0 + face * 0.22 * (1.0 - curva * 0.5);
+		cor.rgb += vec3(1.0, 0.9, 0.7) * pow(curva, 6.0) * 0.12 * max(face, 0.0);
+		// pulso dourado no painel selecionado
+		cor.rgb += destaque.rgb * pulso * (0.18 + 0.12 * sin(TIME * 3.0));
+	} else {
+		// fio de luz logo dentro da moldura (sombra interna no lado de baixo)
+		float dentro = d - borda;
+		cor.rgb += vec3(1.0, 0.8, 0.5) * (1.0 - smoothstep(0.0, 2.0, dentro)) * 0.12 * pulso;
 	}
 	COLOR = cor;
 }

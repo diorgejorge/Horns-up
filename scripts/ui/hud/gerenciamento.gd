@@ -22,8 +22,7 @@ var _ordem_inv: Array = []  # ordem de exibição do inventário (Organizar orde
 var _regiao: Label
 var _etapa: Label
 var _lista: VBoxContainer
-var _retrato: RetratoModelo
-var _moldura_retrato: PainelMarajoara
+var _vitrine: VitrineModelo
 var _info: VBoxContainer
 var _abas_bar: HBoxContainer
 var _conteudo: VBoxContainer
@@ -109,13 +108,10 @@ func _montar() -> void:
 	var cv := VBoxContainer.new()
 	cv.add_theme_constant_override("separation", 8)
 	centro.add_child(cv)
-	_moldura_retrato = PainelMarajoara.new(8.0, TemaUI.OURO)
-	_moldura_retrato.margem = 2.0
-	_moldura_retrato.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	cv.add_child(_moldura_retrato)
-	_retrato = RetratoModelo.new()
-	_retrato.custom_minimum_size = Vector2(250, 250)
-	_moldura_retrato.add_child(_retrato)
+	_vitrine = VitrineModelo.new()
+	_vitrine.custom_minimum_size = Vector2(0, 330)
+	_vitrine.tooltip_text = "Arraste para girar"
+	cv.add_child(_vitrine)
 	_info = VBoxContainer.new()
 	_info.add_theme_constant_override("separation", 4)
 	cv.add_child(_info)
@@ -145,6 +141,12 @@ func _montar() -> void:
 	raiz.add_child(baixo)
 	_missao = VBoxContainer.new()
 	baixo.add_child(_missao)
+
+	# Entrada em cascata dos painéis.
+	var atraso := 0.0
+	for p in [topo, esq, centro, dir, baixo]:
+		p.entrar(atraso)
+		atraso += 0.06
 
 	_confirmar = ConfirmationDialog.new()
 	_confirmar.ok_button_text = "Descartar"
@@ -189,6 +191,7 @@ func _preencher_lista() -> void:
 		var sel: bool = id == _sel
 		var card := PainelMarajoara.new(6.0, TemaUI.OURO if sel else (TemaUI.VERMELHO if prota else TemaUI.PRETO))
 		card.margem = 6.0
+		card.pulso = sel
 		card.mouse_filter = Control.MOUSE_FILTER_STOP
 		card.gui_input.connect(func(e): if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT: _selecionar(id))
 		_lista.add_child(card)
@@ -224,11 +227,8 @@ func _barra(rot: String, cor: Color, v: int, m: int, larg := 170.0) -> Control:
 	var h := HBoxContainer.new()
 	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	h.add_child(TemaUI.rotulo(rot, 13))
-	var b := TemaUI.barra(cor, v, m, larg, 12.0)
-	b.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	h.add_child(b)
-	h.add_child(TemaUI.rotulo("%d/%d" % [v, m], 13))
+	h.add_theme_constant_override("separation", 6)
+	h.add_child(BarraHud.criar(cor, v, m, larg, 15.0))
 	return h
 
 
@@ -239,8 +239,7 @@ func _preencher_personagem() -> void:
 	var h: Dictionary = campanha.herois[id]
 	var dados: Dictionary = D.HEROIS[id]
 	var prota: bool = dados.get("protagonista", false)
-	_moldura_retrato.destaque = TemaUI.OURO if prota else TemaUI.CREME
-	_retrato.mostrar(dados["modelo"])
+	_vitrine.mostrar(dados["modelo"], TemaUI.OURO if prota else TemaUI.ALIADO)
 	_limpar(_info)
 	var nome := TemaUI.rotulo(dados["nome"], 30, TemaUI.OURO if prota else TemaUI.CREME)
 	nome.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -288,7 +287,7 @@ func _preencher_abas() -> void:
 	for i in ABAS.size():
 		var a: String = ABAS[i]
 		var bt := Button.new()
-		bt.text = "%s [%d]" % [a, i + 1]
+		bt.text = ("▶ " if a == _aba else "") + "%s [%d]" % [a, i + 1]
 		bt.focus_mode = Control.FOCUS_NONE
 		if a == _aba:
 			bt.add_theme_color_override("font_color", TemaUI.OURO)

@@ -110,6 +110,10 @@ func _ready() -> void:
 	_detalhe.add_theme_constant_override("separation", 8)
 	_detalhe.custom_minimum_size.x = 420
 	dir.add_child(_detalhe)
+	var atraso := 0.0
+	for p in [topo, esq, gp, dir]:
+		p.entrar(atraso)
+		atraso += 0.07
 
 
 func _limpar(n: Node) -> void:
@@ -178,11 +182,11 @@ func _preencher_grupo() -> void:
 		var barras := HBoxContainer.new()
 		barras.add_theme_constant_override("separation", 4)
 		col.add_child(barras)
-		var bh := TemaUI.barra(TemaUI.HP, h["hp"], campanha.hp_max(id), 110.0, 8.0)
+		var bh := BarraHud.criar(TemaUI.HP, h["hp"], campanha.hp_max(id), 120.0, 12.0)
 		bh.tooltip_text = "HP %d/%d" % [h["hp"], campanha.hp_max(id)]
 		barras.add_child(bh)
 		if campanha.mp_max(id) > 0:
-			var bm := TemaUI.barra(TemaUI.MP, h["mp"], campanha.mp_max(id), 70.0, 8.0)
+			var bm := BarraHud.criar(TemaUI.MP, h["mp"], campanha.mp_max(id), 80.0, 12.0)
 			bm.tooltip_text = "MP %d/%d" % [h["mp"], campanha.mp_max(id)]
 			barras.add_child(bm)
 
