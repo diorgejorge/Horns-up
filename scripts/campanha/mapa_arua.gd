@@ -5,6 +5,8 @@ extends Node3D
 ##   Grupo               o Búfalo representa o grupo
 ## Mostra só regiões já alcançadas; a próxima batalha ganha o marcador de missão.
 ## Setas/clique escolhem a região, Enter viaja ou luta, G abre o Grupo.
+## O grupo avança sozinho pela rota conforme a campanha: depois de cada vitória,
+## ao voltar ao mapa, ele anda do local da última batalha até o da próxima.
 
 const D := preload("res://scripts/campanha/dados_ato1.gd")
 const GERENCIAMENTO := "res://scenes/ui/hud/gerenciamento.tscn"
@@ -26,7 +28,7 @@ func _ready() -> void:
 	_sel = maxi(0, D.indice_regiao(campanha.regiao_atual))
 	var g := _grupo()
 	if g:
-		g.position = _pos_regiao(campanha.regiao_atual)
+		g.position = _pos_rota(campanha.posicao_rota)
 		g.rotation_degrees.y = 180.0
 	_atualizar_locais()
 	_progressao_visual()
@@ -41,8 +43,25 @@ func _ready() -> void:
 	if campanha.vencidas.is_empty() and campanha.proxima_batalha() == 1:
 		_dialogo = CaixaDialogo.new()
 		add_child(_dialogo)
-		_dialogo.mostrar([["", "Arquipélago de Aruã. A cheia chegou fora de época: os peixes sumiram dos igarapés e a água ficou turva."],
+		await _dialogo.mostrar([["", "Arquipélago de Aruã. A cheia chegou fora de época: os peixes sumiram dos igarapés e a água ficou turva."],
 			["", "Nos campos de Marajó, a comunidade do Búfalo Guerreiro é atacada por criaturas que antes eram vizinhas."]])
+	_avancar_na_campanha()
+
+
+## Leva o grupo até o local da próxima batalha, se ele ainda não está lá
+## (só para a frente: voltar a regiões antigas é escolha do jogador).
+func _avancar_na_campanha() -> void:
+	var prox = campanha.proxima_batalha()
+	if prox == 0:
+		return
+	var alvo := D.indice_rota_batalha(prox)
+	if alvo <= campanha.posicao_rota:
+		return
+	_sel = maxi(0, D.indice_regiao(D.BATALHAS[prox]["regiao"]))
+	await _andar_rota(campanha.posicao_rota, alvo)
+	campanha.regiao_atual = D.BATALHAS[prox]["regiao"]
+	campanha.salvar()
+	_hud.atualizar(_sel, _andando)
 
 
 ## Trilha do mapa-múndi (carimbó, em loop).
@@ -68,6 +87,11 @@ func _local(id: String) -> Node3D:
 		if l.get_meta("regiao", "") == id:
 			return l
 	return null
+
+
+func _pos_rota(i: int) -> Vector3:
+	var c: Vector2i = D.ROTA[clampi(i, 0, D.ROTA.size() - 1)]
+	return Vector3(c.x + 0.5, _altura(c), c.y + 0.5)
 
 
 func _pos_regiao(id: String) -> Vector3:
@@ -97,7 +121,7 @@ func _atualizar_locais() -> void:
 	var prox = campanha.proxima_batalha()
 	_marcador.visible = prox > 0
 	if prox > 0:
-		_marcador.position = _pos_regiao(D.BATALHAS[prox]["regiao"]) + Vector3(0, 3.0, 0)
+		_marcador.position = _pos_rota(D.indice_rota_batalha(prox)) + Vector3(0, 3.0, 0)
 
 
 ## Água turva, luz mais baixa e energia no covil conforme a campanha avança.
@@ -168,35 +192,43 @@ func _mover_sel(d: int) -> void:
 	_hud.atualizar(_sel, _andando)
 
 
-## Anda pela rota (casas de DadosAto1.ROTA) até a região escolhida.
+## Viaja até uma região já alcançada. Se a próxima batalha é nessa região,
+## vai direto ao local dela (ex.: o Igarapé dos Ossos, na várzea).
 func _viajar(id: String) -> void:
 	if _andando or not campanha.regiao_desbloqueada(id) or id == campanha.regiao_atual:
 		return
-	var rota: Array = D.ROTA
-	var a: int = rota.find(D.regiao(campanha.regiao_atual)["pos"])
-	var b := rota.find(D.regiao(id)["pos"])
-	var g := _grupo()
-	_andando = true
-	_hud.atualizar(_sel, _andando)
-	if g and a >= 0 and b >= 0:
-		g.tocar("walk")
-		var passo := 1 if b > a else -1
-		var i: int = a
-		while i != b:
-			i += passo
-			var c: Vector2i = rota[i]
-			var alvo := Vector3(c.x + 0.5, 0.0, c.y + 0.5)
-			alvo.y = _altura(c)
-			var d := alvo - g.position
-			g.rotation.y = atan2(d.x, d.z)
-			var tw := create_tween()
-			tw.tween_property(g, "position", alvo, 0.12 * d.length())
-			await tw.finished
-		g.tocar("idle")
+	var prox = campanha.proxima_batalha()
+	var b: int = D.ROTA.find(D.regiao(id)["pos"])
+	if prox > 0 and D.BATALHAS[prox]["regiao"] == id:
+		b = D.indice_rota_batalha(prox)
+	await _andar_rota(campanha.posicao_rota, b)
 	campanha.regiao_atual = id
 	campanha.salvar()
-	_andando = false
 	_hud.atualizar(_sel, _andando)
+
+
+## Anda casa a casa pela ROTA, do índice a ao b, e grava a posição do grupo.
+func _andar_rota(a: int, b: int) -> void:
+	var g := _grupo()
+	if g == null or a < 0 or b < 0 or a == b:
+		campanha.posicao_rota = maxi(b, 0)
+		return
+	_andando = true
+	_hud.atualizar(_sel, _andando)
+	g.tocar("walk")
+	var passo := 1 if b > a else -1
+	var i := a
+	while i != b:
+		i += passo
+		var alvo := _pos_rota(i)
+		var d := alvo - g.position
+		g.rotation.y = atan2(d.x, d.z)
+		var tw := create_tween()
+		tw.tween_property(g, "position", alvo, 0.12 * d.length())
+		await tw.finished
+		campanha.posicao_rota = i
+	g.tocar("idle")
+	_andando = false
 
 
 func _altura(c: Vector2i) -> float:

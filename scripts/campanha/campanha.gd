@@ -13,6 +13,7 @@ var herois := {}          # id -> {nivel, xp, hp, mp, atributos{}, equipamento{}
 var inventario := {}      # id do item -> quantidade
 var vencidas: Array = []  # números das batalhas vencidas
 var regiao_atual := "vila"
+var posicao_rota := 0     # casa da DadosAto1.ROTA onde o grupo está no mapa-múndi
 var batalha_atual := 0    # batalha em andamento (0 = nenhuma)
 
 
@@ -41,6 +42,7 @@ func novo_jogo() -> void:
 	inventario = D.INVENTARIO_INICIAL.duplicate()
 	vencidas = []
 	regiao_atual = "vila"
+	posicao_rota = 0
 	batalha_atual = 0
 	mudou.emit()
 
@@ -256,9 +258,8 @@ func concluir_batalha(n: int, estado: Dictionary) -> Dictionary:
 	if not n in vencidas:
 		vencidas.append(n)
 	batalha_atual = 0
-	var prox := proxima_batalha()
-	if prox > 0:
-		regiao_atual = D.BATALHAS[prox]["regiao"]
+	# O grupo fica onde lutou; o mapa-múndi o leva andando até a próxima batalha.
+	posicao_rota = D.indice_rota_batalha(n)
 	salvar()
 	mudou.emit()
 	return resumo
@@ -278,7 +279,7 @@ func salvar() -> void:
 	var f := FileAccess.open(ARQUIVO, FileAccess.WRITE)
 	if f == null:
 		return
-	f.store_string(JSON.stringify({"herois": herois, "inventario": inventario, "vencidas": vencidas, "regiao": regiao_atual}, "\t"))
+	f.store_string(JSON.stringify({"herois": herois, "inventario": inventario, "vencidas": vencidas, "regiao": regiao_atual, "posicao": posicao_rota}, "\t"))
 
 
 func tem_jogo_salvo() -> bool:
@@ -306,5 +307,6 @@ func carregar() -> bool:
 	for n in dados.get("vencidas", []):
 		vencidas.append(int(n))
 	regiao_atual = dados.get("regiao", "vila")
+	posicao_rota = int(dados.get("posicao", D.ROTA.find(D.regiao(regiao_atual).get("pos", D.ROTA[0]))))
 	mudou.emit()
 	return true

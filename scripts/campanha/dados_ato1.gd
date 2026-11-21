@@ -241,6 +241,14 @@ static func regiao(id: String) -> Dictionary:
 	return {}
 
 
+## Casa da ROTA (índice) onde acontece a batalha n: o local da região dela,
+## e o Igarapé dos Ossos para a batalha 05 (sub-área entre a várzea e a floresta).
+static func indice_rota_batalha(n: int) -> int:
+	if n == 5:
+		return ROTA.find(IGARAPE["pos"])
+	return ROTA.find(regiao(BATALHAS[n]["regiao"])["pos"])
+
+
 static func indice_regiao(id: String) -> int:
 	for i in REGIOES.size():
 		if REGIOES[i]["id"] == id:
