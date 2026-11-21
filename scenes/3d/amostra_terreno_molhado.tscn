@@ -1,0 +1,236 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m05_lama_furos.tscn" id="2_lama"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m27_terra_marrom.tscn" id="3_terra"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/efeitos/terreno_molhado.tscn" id="4_molh"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ceu_mat"]
+sky_top_color = Color(0.32, 0.55, 0.8, 1)
+sky_horizon_color = Color(0.85, 0.82, 0.72, 1)
+ground_bottom_color = Color(0.2, 0.25, 0.18, 1)
+ground_horizon_color = Color(0.5, 0.55, 0.45, 1)
+
+[sub_resource type="Sky" id="ceu"]
+sky_material = SubResource("ceu_mat")
+
+[sub_resource type="Environment" id="amb"]
+background_mode = 1
+background_color = Color(0.12, 0.2, 0.14, 1)
+sky = SubResource("ceu")
+ambient_light_source = 3
+ambient_light_energy = 0.45
+reflected_light_source = 2
+tonemap_mode = 3
+tonemap_exposure = 1.15
+ssao_enabled = true
+ssao_radius = 0.6
+ssao_intensity = 1.6
+glow_enabled = true
+
+[node name="AmostraTerrenoMolhado" type="Node3D"]
+
+[node name="LEIA" type="Node" parent="."]
+editor_description = "Amostra de terreno molhado. Cada coluna é o MESMO tile com um nó TerrenoMolhado dentro (filho da peça). Para voltar ao seco, apague o nó TerrenoMolhado. Os GLBs não foram alterados."
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("amb")
+
+[node name="Sol" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.9848077, 0.14224426, -0.09960051, 0, 0.57357645, 0.81915206, 0.17364818, -0.80670726, 0.56486255, 0, 0, 0)
+light_color = Color(0.95, 0.95, 0.75, 1)
+light_energy = 1.2
+shadow_enabled = true
+shadow_blur = 1.5
+
+[node name="LuzDoCeu" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.9396926, -0.19617474, 0.28016657, 0, 0.81915206, 0.57357645, -0.3420202, 0.53898555, -0.76975113, 0, 0, 0)
+light_color = Color(0.55, 0.7, 1, 1)
+light_energy = 0.35
+
+[node name="Rotulo0" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.75, -0.55)
+billboard = 1
+text = "SECO (original)"
+font_size = 40
+outline_size = 10
+
+[node name="m05_lama_furos_0" parent="." instance=ExtResource("2_lama")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0, 0.0)
+encaixar = false
+
+[node name="m27_terra_marrom_0" parent="." instance=ExtResource("3_terra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0, 1.6)
+encaixar = false
+
+[node name="Rotulo1" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0.75, -0.55)
+billboard = 1
+text = "MOLHADO"
+font_size = 40
+outline_size = 10
+
+[node name="m05_lama_furos_1" parent="." instance=ExtResource("2_lama")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 0.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m05_lama_furos_1" instance=ExtResource("4_molh")]
+estado = 0
+
+[node name="m27_terra_marrom_1" parent="." instance=ExtResource("3_terra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 1.6)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m27_terra_marrom_1" instance=ExtResource("4_molh")]
+estado = 0
+
+[node name="Rotulo2" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0.75, -0.55)
+billboard = 1
+text = "POÇAS"
+font_size = 40
+outline_size = 10
+
+[node name="m05_lama_furos_2" parent="." instance=ExtResource("2_lama")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0, 0.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m05_lama_furos_2" instance=ExtResource("4_molh")]
+estado = 1
+
+[node name="m27_terra_marrom_2" parent="." instance=ExtResource("3_terra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0, 1.6)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m27_terra_marrom_2" instance=ExtResource("4_molh")]
+estado = 1
+
+[node name="Rotulo3" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.800000000000001, 0.75, -0.55)
+billboard = 1
+text = "ALAGADO"
+font_size = 40
+outline_size = 10
+
+[node name="m05_lama_furos_3" parent="." instance=ExtResource("2_lama")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.800000000000001, 0, 0.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m05_lama_furos_3" instance=ExtResource("4_molh")]
+estado = 2
+
+[node name="m27_terra_marrom_3" parent="." instance=ExtResource("3_terra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.800000000000001, 0, 1.6)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m27_terra_marrom_3" instance=ExtResource("4_molh")]
+estado = 2
+
+[node name="Rotulo4" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 0.75, -0.55)
+billboard = 1
+text = "LAMA LÍQUIDA"
+font_size = 40
+outline_size = 10
+
+[node name="m05_lama_furos_4" parent="." instance=ExtResource("2_lama")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 0, 0.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m05_lama_furos_4" instance=ExtResource("4_molh")]
+estado = 2
+liquido = 2
+
+[node name="m27_terra_marrom_4" parent="." instance=ExtResource("3_terra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 0, 1.6)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m27_terra_marrom_4" instance=ExtResource("4_molh")]
+estado = 2
+liquido = 2
+
+[node name="Alagado_0_0" parent="." instance=ExtResource("2_lama")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 4.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="Alagado_0_0" instance=ExtResource("4_molh")]
+estado = 1
+chuva = 0.8
+
+[node name="Alagado_0_1" parent="." instance=ExtResource("3_terra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 5.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="Alagado_0_1" instance=ExtResource("4_molh")]
+estado = 2
+chuva = 0.8
+
+[node name="Alagado_0_2" parent="." instance=ExtResource("2_lama")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 6.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="Alagado_0_2" instance=ExtResource("4_molh")]
+estado = 2
+chuva = 0.8
+
+[node name="Alagado_1_0" parent="." instance=ExtResource("3_terra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0, 4.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="Alagado_1_0" instance=ExtResource("4_molh")]
+estado = 2
+chuva = 0.8
+
+[node name="Alagado_1_1" parent="." instance=ExtResource("2_lama")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0, 5.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="Alagado_1_1" instance=ExtResource("4_molh")]
+estado = 2
+chuva = 0.8
+
+[node name="Alagado_1_2" parent="." instance=ExtResource("3_terra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0, 6.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="Alagado_1_2" instance=ExtResource("4_molh")]
+estado = 2
+chuva = 0.8
+
+[node name="Alagado_2_0" parent="." instance=ExtResource("2_lama")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 0, 4.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="Alagado_2_0" instance=ExtResource("4_molh")]
+estado = 2
+chuva = 0.8
+
+[node name="Alagado_2_1" parent="." instance=ExtResource("3_terra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 0, 5.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="Alagado_2_1" instance=ExtResource("4_molh")]
+estado = 2
+chuva = 0.8
+
+[node name="Alagado_2_2" parent="." instance=ExtResource("2_lama")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 0, 6.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="Alagado_2_2" instance=ExtResource("4_molh")]
+estado = 2
+chuva = 0.8
+
+[node name="Rotulo3x3" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 0.9, 5.0)
+billboard = 1
+text = "3x3 alagado + chuva"
+font_size = 40
+outline_size = 10
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(0.70710677, -0.35355338, 0.6123724, 0, 0.8660254, 0.5, -0.70710677, -0.35355338, 0.6123724, 13.0, 9.6, 12.6)
+projection = 1
+current = true
+size = 8.5
+near = 0.1
+far = 100.0
