@@ -17,7 +17,8 @@ signal turno_acabou
 const D := preload("res://scripts/campanha/dados_ato1.gd")
 const MAPA := "res://scenes/3d/ato1/mapa_arua.tscn"
 const SONS := "res://assets/diorge/audio/acoes/"
-const TRILHA_CHEFE := "res://assets/diorge/audio/trilhas/chefe_mapinguari.wav"
+## Música de cada batalha: campo "trilha" em DadosAto1.BATALHAS (uma por cenário; a 12 é a do chefe).
+const TRILHAS := "res://assets/diorge/audio/trilhas/"
 const DIRS := [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
 
 ## Autoload Campanha (por get_node: o script compila também no gerador headless).
@@ -73,8 +74,9 @@ func _ready() -> void:
 
 
 func _iniciar() -> void:
-	if numero == 12:
-		_musica(TRILHA_CHEFE)
+	var trilha: String = D.BATALHAS[numero].get("trilha", "")
+	if trilha != "":
+		_musica(TRILHAS + trilha + ".wav")
 	await _dialogo("b%02d_antes" % numero)
 	# Só depois que as falas saem da tela: iniciativa (d20 + Destreza) define a ordem.
 	var tela: TelaIniciativa = preload("res://scripts/campanha/tela_iniciativa.gd").new()
@@ -870,7 +872,14 @@ func _musica(caminho: String) -> void:
 		return
 	var p := AudioStreamPlayer.new()
 	p.name = "Musica"
-	p.stream = load(caminho)
+	var fluxo: AudioStream = load(caminho)
+	var wav := fluxo as AudioStreamWAV
+	if wav and wav.loop_mode == AudioStreamWAV.LOOP_DISABLED:
+		# Garantia caso o .import perca o loop (edit/loop_mode=2).
+		wav.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		wav.loop_begin = 0
+		wav.loop_end = int(wav.get_length() * wav.mix_rate)
+	p.stream = fluxo
 	p.volume_db = -8.0
 	p.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(p)

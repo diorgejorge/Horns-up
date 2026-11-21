@@ -131,10 +131,13 @@ const IGARAPE := {"nome": "Igarapé dos Ossos", "pos": Vector2i(19, 14), "aparec
 ## Cada batalha: cenário (região), nome, objetivo, tipo de vitória, ambiente (luz),
 ## inimigos [espécie, x, z, nível, (líder/chefe)], casas de início do grupo,
 ## e recompensas (diálogos no JSON do Dialogo).
+## "trilha": música da batalha em assets/diorge/audio/trilhas/<trilha>.wav
+## (geradas por audio/trilhas_batalha.py; a do chefe por audio/gerar_audio.py).
 ## Os mapas (casas) ficam em tools/gerar_ato1.gd; as cenas geradas são editáveis.
 const BATALHAS := {
 	1: {
 		"regiao": "vila", "nome": "O ataque aos campos", "ambiente": "vila",
+		"trilha": "batalha_vila",
 		"objetivo": "Derrotar as criaturas que invadiram a área habitada.", "vitoria": "todos",
 		"inicio": [Vector2i(7, 11), Vector2i(6, 11), Vector2i(5, 12)],
 		"inimigos": [["teiu", 7, 3, 1], ["jacaretinga", 8, 2, 1], ["iguana", 11, 3, 1], ["perereca", 4, 3, 1], ["jacare_acu", 9, 3, 1]],
@@ -142,6 +145,7 @@ const BATALHAS := {
 	},
 	2: {
 		"regiao": "vila", "nome": "Rastros na margem", "ambiente": "vila",
+		"trilha": "batalha_vila",
 		"objetivo": "Derrotar o grupo que protege a trilha de saída da vila.", "vitoria": "todos",
 		"inicio": [Vector2i(8, 13), Vector2i(9, 13), Vector2i(7, 14)],
 		"inimigos": [["naga", 14, 1, 1], ["iguana", 15, 3, 1], ["tartaruga_amazonia", 10, 1, 2], ["coral", 9, 4, 1], ["sapo_dardo", 5, 3, 1]],
@@ -149,6 +153,7 @@ const BATALHAS := {
 	},
 	3: {
 		"regiao": "varzea", "nome": "A guardiã da passagem", "ambiente": "varzea",
+		"trilha": "batalha_varzea",
 		"objetivo": "Vencer a Tartaruga Paladina sem eliminá-la: deixe-a sem forças para lutar.", "vitoria": "lider",
 		"inicio": [Vector2i(7, 11), Vector2i(8, 11), Vector2i(6, 12)],
 		"inimigos": [["tartaruga_paladina", 8, 1, 3, "lider"], ["tartaruga_amazonia", 9, 2, 2], ["iguana", 4, 2, 2], ["teiu", 11, 2, 2]],
@@ -156,6 +161,7 @@ const BATALHAS := {
 	},
 	4: {
 		"regiao": "varzea", "nome": "A passarela rompida", "ambiente": "varzea",
+		"trilha": "batalha_varzea",
 		"objetivo": "Derrotar os inimigos que controlam as passarelas.", "vitoria": "todos",
 		"inicio": [Vector2i(6, 13), Vector2i(8, 13), Vector2i(7, 14), Vector2i(9, 14)],
 		"inimigos": [["acaizeiro", 5, 4, 3], ["vitoria_regia", 8, 4, 3], ["aninga", 5, 1, 3], ["buriti", 13, 4, 3], ["sapo_dardo", 2, 0, 3], ["jacaretinga", 10, 4, 3]],
@@ -163,6 +169,7 @@ const BATALHAS := {
 	},
 	5: {
 		"regiao": "varzea", "nome": "O igarapé dos ossos", "ambiente": "igarape",
+		"trilha": "batalha_igarape",
 		"objetivo": "Derrotar a força que bloqueia a travessia.", "vitoria": "todos",
 		"inicio": [Vector2i(4, 12), Vector2i(10, 12), Vector2i(3, 12), Vector2i(11, 12)],
 		"inimigos": [["jacare_acu", 7, 1, 3], ["jacaretinga", 4, 2, 3], ["naga", 12, 2, 3], ["coral", 9, 4, 3], ["cururu", 3, 0, 3], ["perereca", 11, 4, 3]],
@@ -170,6 +177,7 @@ const BATALHAS := {
 	},
 	6: {
 		"regiao": "floresta", "nome": "A mata desperta", "ambiente": "floresta",
+		"trilha": "batalha_floresta",
 		"objetivo": "Derrotar as criaturas vegetais que defendem o caminho.", "vitoria": "todos",
 		"inicio": [Vector2i(7, 12), Vector2i(8, 12), Vector2i(6, 13), Vector2i(9, 13)],
 		"inimigos": [["golem_toco", 7, 2, 4], ["carnivora", 9, 3, 4], ["acaizeiro", 5, 3, 4], ["bromelia", 12, 2, 4], ["cogumelo", 8, 1, 4], ["buriti", 3, 2, 4]],
@@ -177,6 +185,7 @@ const BATALHAS := {
 	},
 	7: {
 		"regiao": "floresta", "nome": "O círculo de raízes", "ambiente": "floresta",
+		"trilha": "batalha_floresta",
 		"objetivo": "Derrotar os defensores de uma área ritual antiga.", "vitoria": "todos",
 		"inicio": [Vector2i(7, 14), Vector2i(8, 14), Vector2i(7, 15), Vector2i(8, 15)],
 		"inimigos": [["vitoria_regia", 7, 9, 5], ["aninga", 8, 9, 5], ["cogumelo", 8, 6, 5], ["golem_toco", 5, 7, 5], ["naga", 10, 6, 5], ["cururu", 7, 5, 5]],
@@ -184,6 +193,7 @@ const BATALHAS := {
 	},
 	8: {
 		"regiao": "ruinas", "nome": "Guardiões das ruínas", "ambiente": "ruinas",
+		"trilha": "batalha_ruinas",
 		"objetivo": "Derrotar os defensores que ocupam o acesso ao complexo.", "vitoria": "todos",
 		"inicio": [Vector2i(7, 13), Vector2i(8, 13), Vector2i(6, 14), Vector2i(9, 14)],
 		"inimigos": [["jacare_acu", 7, 5, 5], ["cururu", 4, 2, 5], ["bromelia", 11, 1, 5], ["coral", 9, 6, 5], ["tartaruga_amazonia", 8, 3, 5], ["cobra_cavaleira", 6, 3, 5]],
@@ -191,6 +201,7 @@ const BATALHAS := {
 	},
 	9: {
 		"regiao": "ruinas", "nome": "A câmara das urnas", "ambiente": "ruinas",
+		"trilha": "batalha_ruinas",
 		"objetivo": "Derrotar as unidades que guardam a passagem para o altar.", "vitoria": "todos",
 		"inicio": [Vector2i(7, 13), Vector2i(8, 13), Vector2i(6, 14), Vector2i(9, 14)],
 		"inimigos": [["naga", 7, 2, 5], ["coral", 9, 5, 5], ["cururu", 6, 1, 5], ["jacare_acu", 7, 7, 5], ["cogumelo", 5, 3, 5], ["tartaruga_amazonia", 10, 3, 5]],
@@ -198,6 +209,7 @@ const BATALHAS := {
 	},
 	10: {
 		"regiao": "ruinas", "nome": "O altar rompido", "ambiente": "ruinas",
+		"trilha": "batalha_ruinas",
 		"objetivo": "Derrotar a última defesa antes do caminho para o covil.", "vitoria": "todos",
 		"inicio": [Vector2i(7, 13), Vector2i(8, 13), Vector2i(6, 14), Vector2i(9, 14)],
 		"inimigos": [["golem_toco", 7, 9, 5], ["carnivora", 9, 9, 5], ["bromelia", 6, 5, 5], ["cogumelo", 8, 4, 5], ["jacare_acu", 5, 8, 5], ["naga", 10, 5, 5], ["sapo_dardo", 12, 8, 5]],
@@ -205,6 +217,7 @@ const BATALHAS := {
 	},
 	11: {
 		"regiao": "covil", "nome": "A trilha do guardião", "ambiente": "covil",
+		"trilha": "batalha_covil",
 		"objetivo": "Derrotar os defensores que protegem a aproximação ao covil.", "vitoria": "todos",
 		"inicio": [Vector2i(7, 13), Vector2i(8, 13), Vector2i(6, 13), Vector2i(9, 13)],
 		"inimigos": [["golem_toco", 7, 4, 6], ["acaizeiro", 5, 6, 6], ["vitoria_regia", 9, 6, 6], ["carnivora", 8, 5, 6], ["buriti", 3, 3, 6], ["jacare_acu", 8, 1, 6], ["perereca", 12, 3, 6]],
@@ -212,6 +225,7 @@ const BATALHAS := {
 	},
 	12: {
 		"regiao": "covil", "nome": "O despertar do Mapinguari", "ambiente": "covil",
+		"trilha": "chefe_mapinguari",
 		"objetivo": "Enfrentar o Mapinguari e restaurar o selo.", "vitoria": "chefe",
 		"inicio": [Vector2i(6, 12), Vector2i(9, 12), Vector2i(7, 13), Vector2i(8, 13)],
 		"inimigos": [["mapinguari", 7, 4, 7, "chefe"]],

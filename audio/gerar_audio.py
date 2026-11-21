@@ -9,7 +9,8 @@ Melodias e riffs originais.
 
 Uso:   python audio/gerar_audio.py            (gera tudo)
        python audio/gerar_audio.py acoes      (só os efeitos)
-       python audio/gerar_audio.py trilhas    (só as músicas)
+       python audio/gerar_audio.py trilhas    (só exploração e chefe)
+       python audio/gerar_audio.py batalhas   (só as 6 de batalha: audio/trilhas_batalha.py)
 
 Saída: assets/diorge/audio/acoes/*.wav (mono) e assets/diorge/audio/trilhas/*.wav
 (estéreo). Cada som tem semente própria: gerar só uma parte dá o mesmo resultado.
@@ -1096,3 +1097,7 @@ if __name__ == "__main__":
         gerar_acoes()
     if qual in ("tudo", "trilhas"):
         gerar_trilhas()
+    if qual in ("tudo", "batalhas"):
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import trilhas_batalha
+        trilhas_batalha.gerar()
