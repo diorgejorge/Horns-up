@@ -224,9 +224,9 @@ func _andar_rota(a: int, b: int) -> void:
 		i += passo
 		var alvo := _pos_rota(i)
 		var d := alvo - g.position
-		g.rotation.y = atan2(d.x, d.z)
+		g.virar_para(alvo)
 		var tw := create_tween()
-		tw.tween_property(g, "position", alvo, 0.12 * d.length())
+		tw.tween_property(g, "position", alvo, 0.3 * d.length())
 		await tw.finished
 		campanha.posicao_rota = i
 	g.tocar("idle")

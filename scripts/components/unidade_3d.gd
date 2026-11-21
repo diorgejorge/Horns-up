@@ -49,13 +49,23 @@ extends Node3D
 
 var _pending := false
 var _anim: AnimationPlayer
+var _giro: Tween
+
+## Velocidade do ciclo de andar: um passo por casa no tempo que a batalha leva para atravessar a casa.
+const RITMO_ANDAR := 1.6
+## Cada criatura respira no seu próprio ritmo, para o grupo não parecer peças sincronizadas.
+var _ritmo := 1.0
 
 
 func _ready() -> void:
 	set_notify_transform(true)
 	_rebuild()
 	if not Engine.is_editor_hint():
+		var rng := RandomNumberGenerator.new()  # gerador próprio: não mexe no sorteio do combate
+		_ritmo = rng.randf_range(0.9, 1.1)
 		tocar(animacao)
+		if _anim and _anim.is_playing() and animacao == "idle":
+			_anim.seek(rng.randf() * _anim.current_animation_length, true)  # cada um começa num ponto da respiração
 
 
 func _notification(what: int) -> void:
@@ -75,9 +85,25 @@ func stats_text() -> String:
 func tocar(nome: String) -> void:
 	if _anim == null or not _anim.has_animation(nome):
 		return
-	_anim.play(nome)
+	var vel := {"idle": _ritmo, "walk": RITMO_ANDAR}.get(nome, 1.0) as float
+	_anim.play(nome, -1, vel)
 	if nome in ["attack", "hurt"]:
 		_anim.queue("idle")
+
+
+## Vira de frente para `alvo` girando aos poucos (o giro mais curto), em vez de trocar de direção num estalo.
+func virar_para(alvo: Vector3, tempo := 0.15) -> void:
+	var d := alvo - position
+	if Vector2(d.x, d.z).length() <= 0.01:
+		return
+	var para := rotation.y + angle_difference(rotation.y, atan2(d.x, d.z))
+	if _giro:
+		_giro.kill()
+	if tempo <= 0.0:
+		rotation.y = para
+		return
+	_giro = create_tween()
+	_giro.tween_property(self, "rotation:y", para, tempo).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 
 ## Altura do piso (Peca3D) mais alto na casa desta unidade, procurando na cena.

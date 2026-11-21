@@ -564,9 +564,7 @@ func _feridos_em_volta(centro: Unidade3D, raio := 1) -> Array:
 
 
 func _virar(u: Unidade3D, para: Vector3) -> void:
-	var d := para - u.position
-	if Vector2(d.x, d.z).length() > 0.01:
-		u.rotation.y = atan2(d.x, d.z)
+	u.virar_para(para, 0.04 if _auto else 0.15)
 
 
 func _andar(u: Unidade3D, destino: Vector2i, pai: Dictionary) -> void:
@@ -580,7 +578,7 @@ func _andar(u: Unidade3D, destino: Vector2i, pai: Dictionary) -> void:
 		var alvo := Vector3(p.x + 0.5, _pisos[p], p.y + 0.5)
 		_virar(u, alvo)
 		var tw := create_tween()
-		tw.tween_property(u, "position", alvo, 0.05 if _auto else 0.16)
+		tw.tween_property(u, "position", alvo, 0.05 if _auto else 0.3)  # um passo do ciclo de andar por casa
 		await tw.finished
 	u.tocar("idle")
 
