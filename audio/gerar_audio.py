@@ -706,6 +706,12 @@ def musica(partitura, voltas, chefe=False):
             tocar_melodia(x, partitura["melodia"], ini, semi, "viola", 0, 0.8)
         else:
             tocar_melodia(x, partitura["melodia"], ini, semi, "acordeom", 0, 0.5)
+    # notas que soam depois do último compasso voltam para o começo: o arquivo
+    # fica com o número exato de compassos e o loop não atrasa o ritmo
+    n = n_am(total * comp_seg)
+    for i, v in enumerate(x[n:]):
+        x[i % n] += v
+    del x[n:]
     return reverb(x, 0.6 if chefe else 0.4, 0.3, circular=True)
 
 
