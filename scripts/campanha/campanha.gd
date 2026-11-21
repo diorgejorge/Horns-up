@@ -195,7 +195,29 @@ func pode_equipar(item: String, heroi: String) -> bool:
 	if not D.SLOTS.has(it["tipo"]):
 		return false
 	var so: Array = it.get("so", [])
-	return so.is_empty() or classe(heroi) in so
+	if not (so.is_empty() or classe(heroi) in so):
+		return false
+	var base: Dictionary = herois[heroi]["atributos"]
+	for k in it.get("exige", {}):
+		if base.get(k, 0) < it["exige"][k]:
+			return false
+	return true
+
+
+## Espécies contra as quais a arma do herói causa +50% ({} se nenhuma).
+func arma_contra(id: String) -> Array:
+	var arma: String = herois[id]["equipamento"].get("arma", "")
+	return D.ITENS[arma].get("contra", []) if arma != "" else []
+
+
+## Chance de a armadura/escudo do herói bloquear uma flecha.
+func bloqueio_flecha(id: String) -> float:
+	var t := 0.0
+	for slot in herois[id]["equipamento"]:
+		var item: String = herois[id]["equipamento"][slot]
+		if item != "":
+			t += D.ITENS[item].get("bloqueio_flecha", 0.0)
+	return t
 
 
 ## Troca o item do slot pelo item do inventário (o antigo volta ao inventário).
@@ -355,7 +377,13 @@ func carregar() -> bool:
 				herois[id]["atributos"][k] = int(herois[id]["atributos"][k])
 	inventario = {}
 	for k in dados.get("inventario", {}):
-		inventario[k] = int(dados["inventario"][k])
+		var novo: String = D.ITENS_RENOMEADOS.get(k, k)
+		if D.ITENS.has(novo):
+			inventario[novo] = inventario.get(novo, 0) + int(dados["inventario"][k])
+	for id in herois:
+		for slot in herois[id]["equipamento"]:
+			var it: String = herois[id]["equipamento"][slot]
+			herois[id]["equipamento"][slot] = D.ITENS_RENOMEADOS.get(it, it) if D.ITENS.has(D.ITENS_RENOMEADOS.get(it, it)) else ""
 	vencidas = []
 	for n in dados.get("vencidas", []):
 		vencidas.append(int(n))

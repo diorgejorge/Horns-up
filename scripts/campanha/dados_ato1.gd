@@ -16,14 +16,14 @@ const HEROIS := {
 		"modelo": RIG + "buffalo.glb", "escala": 1.0, "protagonista": true, "entra_apos": 0,
 		"nivel": 4,
 		"atributos": {"forca": 16, "destreza": 12, "constituicao": 15, "inteligencia": 9, "sabedoria": 11, "carisma": 13},
-		"equipamento": {"arma": "espadao_bronze", "armadura": "placas_bronze", "acessorio": ""},
+		"equipamento": {"arma": "espada_bronze", "armadura": "couro_bufalo", "acessorio": ""},
 	},
 	"tartaruga": {
 		"nome": "Tartaruga Paladina", "curto": "Tartaruga", "classe": "paladino",
 		"modelo": RIG + "herois/tartaruga_paladina.glb", "escala": 1.0, "protagonista": false, "entra_apos": 3,
 		"nivel": 4,
 		"atributos": {"forca": 13, "destreza": 8, "constituicao": 17, "inteligencia": 10, "sabedoria": 14, "carisma": 12},
-		"equipamento": {"arma": "maca_pedra", "armadura": "escudo_pedra", "acessorio": ""},
+		"equipamento": {"arma": "maca_pedra", "armadura": "escudo_madeira", "acessorio": ""},
 	},
 }
 
@@ -90,17 +90,30 @@ const ITENS := {
 		"desc": "Recupera 30 HP de um herói. Na batalha, gasta a ação do turno (alcance 1)."},
 	"pocao_mana": {"nome": "Poção de mana", "tipo": "consumivel", "mana": 12,
 		"desc": "Recupera 12 MP de um herói que usa magia. Na batalha, gasta a ação do turno (alcance 1)."},
-	"espadao_bronze": {"nome": "Espadão de bronze", "tipo": "arma", "ataque": 3, "so": ["guerreiro"],
-		"desc": "O espadão que o Búfalo carrega. +3 de ataque."},
+	# Equipamento aprovado pelo Diorge (2026-11-21). Búfalo (Tauá) e Tartaruga (Ituaçu).
+	"espada_bronze": {"nome": "Espada de bronze", "tipo": "arma", "ataque": 2, "so": ["guerreiro"],
+		"desc": "Espada leve de bronze. +2 de ataque."},
+	"espadao_marajoara": {"nome": "Espadão marajoara", "tipo": "arma", "ataque": 5, "so": ["guerreiro"], "exige": {"forca": 16},
+		"desc": "Espadão de duas mãos com grafismo marajoara. +5 de ataque. Exige Força 16."},
+	"couro_bufalo": {"nome": "Couro de búfalo", "tipo": "armadura", "defesa": 2, "so": ["guerreiro"],
+		"desc": "Gibão de couro curtido. +2 de armadura."},
+	"peitoral_marajoara": {"nome": "Peitoral de placas marajoara", "tipo": "armadura", "defesa": 4, "so": ["guerreiro"],
+		"desc": "Placas de bronze pintadas em vermelho e preto. +4 de armadura."},
 	"maca_pedra": {"nome": "Maça de pedra", "tipo": "arma", "ataque": 2, "so": ["paladino"],
-		"desc": "A maça da Tartaruga. +2 de ataque."},
-	"placas_bronze": {"nome": "Armadura de placas", "tipo": "armadura", "defesa": 2, "so": [],
-		"desc": "Placas de bronze e couro. +2 de defesa."},
-	"escudo_pedra": {"nome": "Escudo de pedra", "tipo": "armadura", "defesa": 3, "so": ["paladino"],
-		"desc": "O escudo e o casco da Tartaruga. +3 de defesa."},
+		"desc": "Maça simples de pedra. +2 de ataque."},
+	"maca_marajoara": {"nome": "Maça de pedra marajoara", "tipo": "arma", "ataque": 4, "so": ["paladino"],
+		"contra": ["naga", "coral", "cobra_cavaleira", "acaizeiro", "vitoria_regia", "carnivora", "cogumelo", "golem_toco", "bromelia", "aninga", "buriti"],
+		"desc": "Maça entalhada pelos Ceramistas. +4 de ataque e +50% de dano contra cobras e plantas."},
+	"escudo_madeira": {"nome": "Escudo de madeira", "tipo": "armadura", "defesa": 2, "so": ["paladino"],
+		"desc": "Escudo de madeira de lei. +2 de armadura."},
+	"escudo_marajoara": {"nome": "Escudo de pedra marajoara", "tipo": "armadura", "defesa": 4, "so": ["paladino"], "bloqueio_flecha": 0.3,
+		"desc": "Escudo de pedra com grafismo. +4 de armadura e 30% de chance de bloquear flechas."},
 	"muiraquita": {"nome": "Muiraquitã", "tipo": "acessorio", "bonus": {"sabedoria": 2, "constituicao": 1}, "so": [],
 		"desc": "Amuleto de pedra verde encontrado no círculo de raízes. +2 SAB, +1 CON."},
 }
+
+## Itens que mudaram de id (saves antigos são convertidos ao carregar).
+const ITENS_RENOMEADOS := {"espadao_bronze": "espada_bronze", "placas_bronze": "couro_bufalo", "escudo_pedra": "escudo_madeira"}
 
 ## Slots que o sistema de equipamento suporta.
 const SLOTS := {"arma": "Arma", "armadura": "Armadura", "acessorio": "Acessório"}
@@ -119,7 +132,9 @@ const OURO_POR_NIVEL := 3
 
 ## Lojas das cidades: região -> {item: preço}. No Ato I só a Vila de Aruã é cidade.
 const LOJAS := {
-	"vila": {"pocao": 25, "pocao_mana": 35},
+	"vila": {"pocao": 25, "pocao_mana": 35,
+		"espada_bronze": 60, "espadao_marajoara": 150, "couro_bufalo": 80, "peitoral_marajoara": 220,
+		"maca_pedra": 60, "maca_marajoara": 160, "escudo_madeira": 70, "escudo_marajoara": 200},
 }
 
 # --- mapa-múndi ----------------------------------------------------------------------

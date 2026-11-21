@@ -144,6 +144,8 @@ func _estado_inicial(u: Unidade3D) -> Dictionary:
 		e["mp"] = campanha.herois[id]["mp"]
 		e["arma"] = campanha.ataque_bonus(id)
 		e["defesa"] = campanha.defesa_bonus(id)
+		e["contra"] = campanha.arma_contra(id)
+		e["bloqueio_flecha"] = campanha.bloqueio_flecha(id)
 	else:
 		var fator := Regras.FATOR_CHEFE if u.papel == "chefe" else (Regras.FATOR_LIDER if u.papel == "lider" else Regras.FATOR_COMUM)
 		e["hpmax"] = Regras.hp_max(attrs, u.nivel, fator)
@@ -636,7 +638,7 @@ func _executar(u: Unidade3D, alvo: Unidade3D, acao: String) -> void:
 				alvos = _units.filter(func(o): return o.enemy != u.enemy and _dist(o.grid(), u.grid()) <= 1)
 			for t in alvos:
 				VfxCombate.acertar(self, i, _peito(t))
-				_ferir(u, t, i["mult"], i["efeito"])
+				_ferir(u, t, i["mult"], i["efeito"], i.get("visual", ""))
 	await _espera(0.5)
 	_painel_hud.atualizar()
 	await _checar_fim()
@@ -688,9 +690,17 @@ func _defesa_total(t: Unidade3D) -> int:
 	return d
 
 
-func _ferir(u: Unidade3D, t: Unidade3D, mult: float, efeito: String) -> void:
+func _ferir(u: Unidade3D, t: Unidade3D, mult: float, efeito: String, visual := "") -> void:
 	var a: Dictionary = _st[u]
 	var b: Dictionary = _st[t]
+	# Escudo de pedra marajoara: chance de bloquear flechas.
+	if visual == "flecha" and _rng.randf() < b.get("bloqueio_flecha", 0.0):
+		_numero(t, "Bloqueou!", Color(0.9, 0.9, 1.0))
+		VfxCombate.escudo(self, t.global_position)
+		return
+	# Maça marajoara: +50% contra cobras e plantas.
+	if b["especie"] in a.get("contra", []):
+		mult *= 1.5
 	var dif: float = _pisos.get(u.grid(), 0.0) - _pisos.get(t.grid(), 0.0)
 	var d := Regras.dano(a["attrs"], a["classe"], a["nivel"], b["attrs"], a["arma"], dif, _rng)
 	if a["efeitos"].has("fraco"):
