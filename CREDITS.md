@@ -20,3 +20,8 @@ para trocar pela arte oficial, edite aquele arquivo.
 
 ## Personagens 2D
 - `assets/sprites/`: gerados por `tools/make_placeholder_sprites.gd` (sem licença externa).
+
+## Texturas da HUD — Poly Haven (CC0 1.0, sem exigência de atribuição), em `assets/diorge/ui/texturas/` (1K, JPG)
+- Dark Wood (`dark_wood_diff_1k`, `dark_wood_nor_gl_1k`) — Dimitrios Savva, Dario Barresi, Rico Cilliers — https://polyhaven.com/a/dark_wood
+- Clay Plaster (`clay_plaster_diff_1k`, `clay_plaster_nor_gl_1k`) — Amal Kumar — https://polyhaven.com/a/clay_plaster
+- Usadas no shader dos painéis (`scripts/ui/hud/painel_marajoara.gdshader`) e no pedestal da vitrine 3D.

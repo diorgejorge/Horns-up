@@ -6,6 +6,10 @@ extends PanelContainer
 ## (vermelho por padrão; ouro para o protagonista ou o elemento ativo).
 
 const SHADER := preload("res://scripts/ui/hud/painel_marajoara.gdshader")
+const MADEIRA := preload("res://assets/diorge/ui/texturas/dark_wood_diff_1k.jpg")
+const MADEIRA_NOR := preload("res://assets/diorge/ui/texturas/dark_wood_nor_gl_1k.jpg")
+const ARGILA := preload("res://assets/diorge/ui/texturas/clay_plaster_diff_1k.jpg")
+const ARGILA_NOR := preload("res://assets/diorge/ui/texturas/clay_plaster_nor_gl_1k.jpg")
 
 var borda := 12.0
 var margem := 10.0
@@ -33,6 +37,10 @@ func _init(borda_px := 12.0, cor := TemaUI.VERMELHO) -> void:
 	_mat.set_shader_parameter("borda", borda)
 	_mat.set_shader_parameter("destaque", destaque)
 	_mat.set_shader_parameter("semente", randf() * 50.0)
+	_mat.set_shader_parameter("madeira_tex", MADEIRA)
+	_mat.set_shader_parameter("madeira_nor", MADEIRA_NOR)
+	_mat.set_shader_parameter("argila_tex", ARGILA)
+	_mat.set_shader_parameter("argila_nor", ARGILA_NOR)
 	material = _mat
 	# StyleBoxTexture com textura branca: o shader recebe UV de 0 a 1 no painel inteiro.
 	var tex := GradientTexture2D.new()

@@ -62,8 +62,12 @@ func _pedestal() -> void:
 	cil.height = 0.16
 	base.mesh = cil
 	var m := StandardMaterial3D.new()
-	m.albedo_color = Color(0.42, 0.2, 0.12)  # terracota
-	m.roughness = 0.55
+	m.albedo_color = Color(0.95, 0.5, 0.32)  # terracota sobre a argila (textura CC0, ver CREDITS.md)
+	m.albedo_texture = PainelMarajoara.ARGILA
+	m.normal_enabled = true
+	m.normal_texture = PainelMarajoara.ARGILA_NOR
+	m.uv1_scale = Vector3(2, 1, 1)
+	m.roughness = 0.7
 	base.material_override = m
 	base.position.y = -0.08
 	_vp.add_child(base)
