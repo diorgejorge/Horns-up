@@ -118,6 +118,9 @@ func _rebuild() -> void:
 		m.scale = Vector3.ONE * escala
 		_add(m)
 		_anim = m.find_child("AnimationPlayer", true, false)
+		if _anim:
+			# mistura uma animação na outra (parado -> andar -> atacar) em vez de pular de pose
+			_anim.playback_default_blend_time = 0.12
 	var anel := MeshInstance3D.new()
 	var cyl := CylinderMesh.new()
 	cyl.top_radius = 0.38
