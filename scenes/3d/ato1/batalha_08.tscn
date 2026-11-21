@@ -1,60 +1,59 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://scripts/campanha/batalha_campanha.gd" id="1_vprxl"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m06_terra_vermelha.tscn" id="2_rqex0"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno2/t07_rocha_musgo_alta.tscn" id="3_8njsn"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno2/t13_laje_rachada.tscn" id="4_8tj3i"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m29_piso_marajoara.tscn" id="5_xq3e5"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m25_terra_rachada.tscn" id="6_386av"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m20_folhas_secas_pedra.tscn" id="7_xotsa"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno2/t12_chao_floresta.tscn" id="8_qfisj"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m01_raizes_musgo.tscn" id="9_g6ame"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/castelo/c09_vaso_marajoara.tscn" id="10_pywxj"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/castelo/c10_totem.tscn" id="11_x54un"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/castelo/c13_braseiro.tscn" id="12_cu5g0"]
-[ext_resource type="Script" path="res://scripts/components/flicker_light.gd" id="13_u2g5y"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/floresta/f04_arvore_copa_densa.tscn" id="14_2j7tv"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/floresta/f06_planta_folhas_largas.tscn" id="15_d3keb"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/floresta/f02_acaizeiros.tscn" id="16_7l4gf"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/floresta/f10_toco.tscn" id="17_lr2t0"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/floresta/f01_samauma.tscn" id="18_bree0"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/castelo/c12_muro_ruina_cipos.tscn" id="19_vppff"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/castelo/c08_torre_vigia.tscn" id="20_hs5ot"]
-[ext_resource type="PackedScene" path="res://scenes/3d/pecas/castelo/c11_portao_entalhado.tscn" id="21_3x3re"]
-[ext_resource type="Script" path="res://scripts/components/unidade_3d.gd" id="22_jy7my"]
-[ext_resource type="PackedScene" path="res://assets/diorge/rigged/mobs/jacare_acu.glb" id="23_r5t3d"]
-[ext_resource type="PackedScene" path="res://assets/diorge/rigged/mobs/cururu.glb" id="24_3at13"]
-[ext_resource type="PackedScene" path="res://assets/diorge/rigged/minions/bromelia.glb" id="25_rmysa"]
-[ext_resource type="PackedScene" path="res://assets/diorge/rigged/mobs/coral.glb" id="26_sdjqo"]
-[ext_resource type="PackedScene" path="res://assets/diorge/rigged/mobs/tartaruga.glb" id="27_afrdr"]
-[ext_resource type="PackedScene" path="res://assets/diorge/rigged/mobs/cobra_cavaleira.glb" id="28_j5tf8"]
-[ext_resource type="Shader" path="res://shaders/outline_post.gdshader" id="29_17nhg"]
+[ext_resource type="Script" path="res://scripts/campanha/batalha_campanha.gd" id="1_e0ofh"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m06_terra_vermelha.tscn" id="2_vprxl"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno2/t07_rocha_musgo_alta.tscn" id="3_rqex0"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno2/t13_laje_rachada.tscn" id="4_8njsn"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m29_piso_marajoara.tscn" id="5_8tj3i"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m25_terra_rachada.tscn" id="6_xq3e5"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m20_folhas_secas_pedra.tscn" id="7_386av"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno2/t12_chao_floresta.tscn" id="8_xotsa"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m01_raizes_musgo.tscn" id="9_qfisj"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/castelo/c09_vaso_marajoara.tscn" id="10_g6ame"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/castelo/c10_totem.tscn" id="11_pywxj"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/castelo/c13_braseiro.tscn" id="12_x54un"]
+[ext_resource type="Script" path="res://scripts/components/flicker_light.gd" id="13_cu5g0"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/floresta/f04_arvore_copa_densa.tscn" id="14_u2g5y"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/floresta/f06_planta_folhas_largas.tscn" id="15_2j7tv"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/floresta/f02_acaizeiros.tscn" id="16_d3keb"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/floresta/f10_toco.tscn" id="17_7l4gf"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/floresta/f01_samauma.tscn" id="18_lr2t0"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/castelo/c12_muro_ruina_cipos.tscn" id="19_bree0"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/castelo/c08_torre_vigia.tscn" id="20_vppff"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/castelo/c11_portao_entalhado.tscn" id="21_hs5ot"]
+[ext_resource type="Script" path="res://scripts/components/unidade_3d.gd" id="22_3x3re"]
+[ext_resource type="PackedScene" path="res://assets/diorge/rigged/mobs/jacare_acu.glb" id="23_jy7my"]
+[ext_resource type="PackedScene" path="res://assets/diorge/rigged/mobs/cururu.glb" id="24_r5t3d"]
+[ext_resource type="PackedScene" path="res://assets/diorge/rigged/mobs/coral.glb" id="25_3at13"]
+[ext_resource type="PackedScene" path="res://assets/diorge/rigged/mobs/tartaruga.glb" id="26_rmysa"]
+[ext_resource type="PackedScene" path="res://assets/diorge/rigged/mobs/cobra_cavaleira.glb" id="27_sdjqo"]
+[ext_resource type="Shader" path="res://shaders/outline_post.gdshader" id="28_afrdr"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_s5i63"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j5tf8"]
 render_priority = -128
-shader = ExtResource("29_17nhg")
+shader = ExtResource("28_afrdr")
 shader_parameter/line_color = null
 shader_parameter/thickness = null
 shader_parameter/depth_threshold = null
 shader_parameter/normal_threshold = null
 shader_parameter/strength = 0.6
 
-[sub_resource type="QuadMesh" id="QuadMesh_d7i65"]
+[sub_resource type="QuadMesh" id="QuadMesh_17nhg"]
 size = Vector2(2, 2)
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e1wni"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_s5i63"]
 sky_top_color = Color(0.32, 0.55, 0.8, 1)
 sky_horizon_color = Color(0.85, 0.82, 0.72, 1)
 ground_bottom_color = Color(0.2, 0.25, 0.18, 1)
 ground_horizon_color = Color(0.5, 0.55, 0.45, 1)
 
-[sub_resource type="Sky" id="Sky_t2dxx"]
-sky_material = SubResource("ProceduralSkyMaterial_e1wni")
+[sub_resource type="Sky" id="Sky_d7i65"]
+sky_material = SubResource("ProceduralSkyMaterial_s5i63")
 
-[sub_resource type="Environment" id="Environment_btehr"]
+[sub_resource type="Environment" id="Environment_e1wni"]
 background_mode = 1
 background_color = Color(0.35, 0.28, 0.22, 1)
-sky = SubResource("Sky_t2dxx")
+sky = SubResource("Sky_d7i65")
 ambient_light_source = 3
 ambient_light_energy = 0.5
 reflected_light_source = 2
@@ -74,1151 +73,1151 @@ adjustment_enabled = true
 adjustment_contrast = 1.05
 adjustment_saturation = 1.15
 
-[node name="Batalha08" type="Node3D" unique_id=57447144]
-script = ExtResource("1_vprxl")
+[node name="Batalha08" type="Node3D" unique_id=479961406]
+script = ExtResource("1_e0ofh")
 numero = 8
 
-[node name="Terreno" type="Node3D" parent="." unique_id=450179234]
+[node name="Terreno" type="Node3D" parent="." unique_id=1044004185]
 
-[node name="m06_terra_vermelha" parent="Terreno" unique_id=315664906 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha" parent="Terreno" unique_id=315664906 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0.5)
 
-[node name="t07_rocha_musgo_alta" parent="Terreno" unique_id=350225043 instance=ExtResource("3_8njsn")]
+[node name="t07_rocha_musgo_alta" parent="Terreno" unique_id=350225043 instance=ExtResource("3_rqex0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha2" parent="Terreno" unique_id=26266054 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha2" parent="Terreno" unique_id=712740572 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 0.5)
 
-[node name="t07_rocha_musgo_alta2" parent="Terreno" unique_id=1352309006 instance=ExtResource("3_8njsn")]
+[node name="t07_rocha_musgo_alta2" parent="Terreno" unique_id=709311469 instance=ExtResource("3_rqex0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha3" parent="Terreno" unique_id=398695138 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha3" parent="Terreno" unique_id=1893328275 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 0.5)
 
-[node name="t13_laje_rachada" parent="Terreno" unique_id=1825503361 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada" parent="Terreno" unique_id=1825503361 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha4" parent="Terreno" unique_id=1081846435 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha4" parent="Terreno" unique_id=187699253 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 0.5)
 
-[node name="t13_laje_rachada2" parent="Terreno" unique_id=937778793 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada2" parent="Terreno" unique_id=897817470 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 3.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha5" parent="Terreno" unique_id=1722924037 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha5" parent="Terreno" unique_id=489132257 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 0.5)
 
-[node name="t13_laje_rachada3" parent="Terreno" unique_id=763336640 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada3" parent="Terreno" unique_id=1825357038 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha6" parent="Terreno" unique_id=430778976 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha6" parent="Terreno" unique_id=463767821 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 0.5)
 
-[node name="t13_laje_rachada4" parent="Terreno" unique_id=1364343123 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada4" parent="Terreno" unique_id=113794130 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha7" parent="Terreno" unique_id=2117090483 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha7" parent="Terreno" unique_id=989172885 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 0.5)
 
-[node name="m29_piso_marajoara" parent="Terreno" unique_id=1413533153 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara" parent="Terreno" unique_id=1413533153 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha8" parent="Terreno" unique_id=10317414 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha8" parent="Terreno" unique_id=1120393400 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 0.5)
 
-[node name="m29_piso_marajoara2" parent="Terreno" unique_id=1064576807 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara2" parent="Terreno" unique_id=434655737 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 7.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha9" parent="Terreno" unique_id=1269165773 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha9" parent="Terreno" unique_id=722180010 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 0.5)
 
-[node name="m29_piso_marajoara3" parent="Terreno" unique_id=770990879 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara3" parent="Terreno" unique_id=485754691 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha10" parent="Terreno" unique_id=1581031318 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha10" parent="Terreno" unique_id=691771478 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 0.5)
 
-[node name="m29_piso_marajoara4" parent="Terreno" unique_id=1025024255 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara4" parent="Terreno" unique_id=1709949246 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha11" parent="Terreno" unique_id=2119896019 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha11" parent="Terreno" unique_id=43166722 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 0.5)
 
-[node name="t13_laje_rachada5" parent="Terreno" unique_id=1277477750 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada5" parent="Terreno" unique_id=518650381 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha12" parent="Terreno" unique_id=348427036 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha12" parent="Terreno" unique_id=446930128 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 0.5)
 
-[node name="t13_laje_rachada6" parent="Terreno" unique_id=813678374 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada6" parent="Terreno" unique_id=817381947 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha13" parent="Terreno" unique_id=756229583 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha13" parent="Terreno" unique_id=495867600 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 0.5)
 
-[node name="t13_laje_rachada7" parent="Terreno" unique_id=2055832124 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada7" parent="Terreno" unique_id=551763183 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 12.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha14" parent="Terreno" unique_id=336584162 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha14" parent="Terreno" unique_id=1428010852 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 0.5)
 
-[node name="t13_laje_rachada8" parent="Terreno" unique_id=2878727 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada8" parent="Terreno" unique_id=867776406 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 13.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha15" parent="Terreno" unique_id=185847473 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha15" parent="Terreno" unique_id=221396580 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 0.5)
 
-[node name="t07_rocha_musgo_alta3" parent="Terreno" unique_id=693307392 instance=ExtResource("3_8njsn")]
+[node name="t07_rocha_musgo_alta3" parent="Terreno" unique_id=708771181 instance=ExtResource("3_rqex0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha16" parent="Terreno" unique_id=1779638057 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha16" parent="Terreno" unique_id=1643931862 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 0.5)
 
-[node name="t07_rocha_musgo_alta4" parent="Terreno" unique_id=961424675 instance=ExtResource("3_8njsn")]
+[node name="t07_rocha_musgo_alta4" parent="Terreno" unique_id=1755393551 instance=ExtResource("3_rqex0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.3, 0.5)
 
-[node name="m06_terra_vermelha17" parent="Terreno" unique_id=953042678 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha17" parent="Terreno" unique_id=68323975 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 1.5)
 
-[node name="t07_rocha_musgo_alta5" parent="Terreno" unique_id=449672868 instance=ExtResource("3_8njsn")]
+[node name="t07_rocha_musgo_alta5" parent="Terreno" unique_id=2023801458 instance=ExtResource("3_rqex0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha18" parent="Terreno" unique_id=727860941 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha18" parent="Terreno" unique_id=1412559219 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 1.5)
 
-[node name="t13_laje_rachada9" parent="Terreno" unique_id=1784620475 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada9" parent="Terreno" unique_id=1090263932 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha19" parent="Terreno" unique_id=430400421 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha19" parent="Terreno" unique_id=1300446982 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 1.5)
 
-[node name="m29_piso_marajoara5" parent="Terreno" unique_id=1036486833 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara5" parent="Terreno" unique_id=562975899 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha20" parent="Terreno" unique_id=1411868837 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha20" parent="Terreno" unique_id=1676344848 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 1.5)
 
-[node name="t13_laje_rachada10" parent="Terreno" unique_id=568122289 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada10" parent="Terreno" unique_id=1676153098 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha21" parent="Terreno" unique_id=965697514 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha21" parent="Terreno" unique_id=1472905706 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 1.5)
 
-[node name="t13_laje_rachada11" parent="Terreno" unique_id=1578615408 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada11" parent="Terreno" unique_id=1176699240 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha22" parent="Terreno" unique_id=1277188084 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha22" parent="Terreno" unique_id=413062911 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 1.5)
 
-[node name="m29_piso_marajoara6" parent="Terreno" unique_id=1990581506 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara6" parent="Terreno" unique_id=88697546 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 5.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha23" parent="Terreno" unique_id=2126320791 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha23" parent="Terreno" unique_id=312658057 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 1.5)
 
-[node name="m29_piso_marajoara7" parent="Terreno" unique_id=289057829 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara7" parent="Terreno" unique_id=1226701816 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha24" parent="Terreno" unique_id=1770329060 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha24" parent="Terreno" unique_id=1489500222 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 1.5)
 
-[node name="m29_piso_marajoara8" parent="Terreno" unique_id=643052289 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara8" parent="Terreno" unique_id=1696874471 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 7.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha25" parent="Terreno" unique_id=1522626919 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha25" parent="Terreno" unique_id=1092182073 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 1.5)
 
-[node name="m29_piso_marajoara9" parent="Terreno" unique_id=1775088318 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara9" parent="Terreno" unique_id=1271623697 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha26" parent="Terreno" unique_id=2048633501 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha26" parent="Terreno" unique_id=1512220463 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 1.5)
 
-[node name="m29_piso_marajoara10" parent="Terreno" unique_id=634041318 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara10" parent="Terreno" unique_id=747983379 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha27" parent="Terreno" unique_id=1081414900 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha27" parent="Terreno" unique_id=578816370 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 1.5)
 
-[node name="m29_piso_marajoara11" parent="Terreno" unique_id=1161024144 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara11" parent="Terreno" unique_id=550791074 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha28" parent="Terreno" unique_id=195322766 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha28" parent="Terreno" unique_id=1214736920 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 1.5)
 
-[node name="t13_laje_rachada12" parent="Terreno" unique_id=306513479 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada12" parent="Terreno" unique_id=1142476594 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha29" parent="Terreno" unique_id=1712164591 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha29" parent="Terreno" unique_id=6439820 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 1.5)
 
-[node name="t13_laje_rachada13" parent="Terreno" unique_id=224973785 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada13" parent="Terreno" unique_id=1502346328 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha30" parent="Terreno" unique_id=1254408506 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha30" parent="Terreno" unique_id=258633549 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 1.5)
 
-[node name="m29_piso_marajoara12" parent="Terreno" unique_id=386143854 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara12" parent="Terreno" unique_id=40304293 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha31" parent="Terreno" unique_id=982079031 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha31" parent="Terreno" unique_id=1265553691 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 1.5)
 
-[node name="t13_laje_rachada14" parent="Terreno" unique_id=1521324689 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada14" parent="Terreno" unique_id=2127404218 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha32" parent="Terreno" unique_id=393400007 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha32" parent="Terreno" unique_id=1717233329 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 1.5)
 
-[node name="t07_rocha_musgo_alta6" parent="Terreno" unique_id=1048675859 instance=ExtResource("3_8njsn")]
+[node name="t07_rocha_musgo_alta6" parent="Terreno" unique_id=840014196 instance=ExtResource("3_rqex0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.3, 1.5)
 
-[node name="m06_terra_vermelha33" parent="Terreno" unique_id=1779505712 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha33" parent="Terreno" unique_id=1375722158 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 2.5)
 
-[node name="t13_laje_rachada15" parent="Terreno" unique_id=1448188559 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada15" parent="Terreno" unique_id=741007566 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha34" parent="Terreno" unique_id=1477063669 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha34" parent="Terreno" unique_id=489973848 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 2.5)
 
-[node name="t13_laje_rachada16" parent="Terreno" unique_id=1311221574 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada16" parent="Terreno" unique_id=940357402 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha35" parent="Terreno" unique_id=476813920 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha35" parent="Terreno" unique_id=98159929 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 2.5)
 
-[node name="t13_laje_rachada17" parent="Terreno" unique_id=358230099 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada17" parent="Terreno" unique_id=1354520250 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha36" parent="Terreno" unique_id=795636810 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha36" parent="Terreno" unique_id=713202170 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 2.5)
 
-[node name="t13_laje_rachada18" parent="Terreno" unique_id=1523467872 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada18" parent="Terreno" unique_id=1266643845 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha37" parent="Terreno" unique_id=1113347105 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha37" parent="Terreno" unique_id=1956058161 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 2.5)
 
-[node name="m29_piso_marajoara13" parent="Terreno" unique_id=2108662009 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara13" parent="Terreno" unique_id=1279137890 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 4.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha38" parent="Terreno" unique_id=1507604513 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha38" parent="Terreno" unique_id=2109378473 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 2.5)
 
-[node name="m29_piso_marajoara14" parent="Terreno" unique_id=1830581251 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara14" parent="Terreno" unique_id=1694373438 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha39" parent="Terreno" unique_id=669997920 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha39" parent="Terreno" unique_id=1342700898 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 2.5)
 
-[node name="m29_piso_marajoara15" parent="Terreno" unique_id=741520181 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara15" parent="Terreno" unique_id=862774285 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha40" parent="Terreno" unique_id=1985013768 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha40" parent="Terreno" unique_id=423098214 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 2.5)
 
-[node name="m29_piso_marajoara16" parent="Terreno" unique_id=2144152389 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara16" parent="Terreno" unique_id=149268778 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 7.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha41" parent="Terreno" unique_id=43709628 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha41" parent="Terreno" unique_id=1954210643 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 2.5)
 
-[node name="m29_piso_marajoara17" parent="Terreno" unique_id=307190793 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara17" parent="Terreno" unique_id=642777306 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 8.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha42" parent="Terreno" unique_id=768548052 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha42" parent="Terreno" unique_id=1606092117 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 2.5)
 
-[node name="m29_piso_marajoara18" parent="Terreno" unique_id=1630315162 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara18" parent="Terreno" unique_id=20130102 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha43" parent="Terreno" unique_id=277676893 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha43" parent="Terreno" unique_id=873864069 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 2.5)
 
-[node name="m29_piso_marajoara19" parent="Terreno" unique_id=888437267 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara19" parent="Terreno" unique_id=1302040012 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 10.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha44" parent="Terreno" unique_id=1182058861 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha44" parent="Terreno" unique_id=572010805 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 2.5)
 
-[node name="m29_piso_marajoara20" parent="Terreno" unique_id=1029161500 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara20" parent="Terreno" unique_id=1477117017 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 11.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha45" parent="Terreno" unique_id=1288327718 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha45" parent="Terreno" unique_id=1073213220 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 2.5)
 
-[node name="t13_laje_rachada19" parent="Terreno" unique_id=249036241 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada19" parent="Terreno" unique_id=1734298832 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha46" parent="Terreno" unique_id=1024760193 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha46" parent="Terreno" unique_id=415035185 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 2.5)
 
-[node name="t13_laje_rachada20" parent="Terreno" unique_id=491222566 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada20" parent="Terreno" unique_id=185587009 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 13.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha47" parent="Terreno" unique_id=314942417 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha47" parent="Terreno" unique_id=732861054 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 2.5)
 
-[node name="t13_laje_rachada21" parent="Terreno" unique_id=1347662396 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada21" parent="Terreno" unique_id=482214459 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 14.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha48" parent="Terreno" unique_id=444485664 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha48" parent="Terreno" unique_id=1578886256 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 2.5)
 
-[node name="t13_laje_rachada22" parent="Terreno" unique_id=1413962307 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada22" parent="Terreno" unique_id=1698415256 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 15.5, 0.3, 2.5)
 
-[node name="m06_terra_vermelha49" parent="Terreno" unique_id=156997570 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha49" parent="Terreno" unique_id=1001571520 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 3.5)
 
-[node name="t13_laje_rachada23" parent="Terreno" unique_id=1032515456 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada23" parent="Terreno" unique_id=1727784999 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha50" parent="Terreno" unique_id=1556994611 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha50" parent="Terreno" unique_id=186357496 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 3.5)
 
-[node name="t13_laje_rachada24" parent="Terreno" unique_id=2124749322 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada24" parent="Terreno" unique_id=519191344 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha51" parent="Terreno" unique_id=1086581653 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha51" parent="Terreno" unique_id=1255846687 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 3.5)
 
-[node name="t13_laje_rachada25" parent="Terreno" unique_id=1801310746 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada25" parent="Terreno" unique_id=208002793 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha52" parent="Terreno" unique_id=1074357234 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha52" parent="Terreno" unique_id=1438402701 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 3.5)
 
-[node name="m29_piso_marajoara21" parent="Terreno" unique_id=967473159 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara21" parent="Terreno" unique_id=771105919 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 3.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha53" parent="Terreno" unique_id=1934645935 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha53" parent="Terreno" unique_id=1000865677 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 3.5)
 
-[node name="m29_piso_marajoara22" parent="Terreno" unique_id=1744685405 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara22" parent="Terreno" unique_id=2049825692 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha54" parent="Terreno" unique_id=1723503313 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha54" parent="Terreno" unique_id=599564452 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 3.5)
 
-[node name="m29_piso_marajoara23" parent="Terreno" unique_id=2044269532 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara23" parent="Terreno" unique_id=309019253 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 5.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha55" parent="Terreno" unique_id=505741950 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha55" parent="Terreno" unique_id=2013587082 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 3.5)
 
-[node name="m29_piso_marajoara24" parent="Terreno" unique_id=577624068 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara24" parent="Terreno" unique_id=1573337289 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha56" parent="Terreno" unique_id=2084642880 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha56" parent="Terreno" unique_id=748126328 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 3.5)
 
-[node name="m29_piso_marajoara25" parent="Terreno" unique_id=1839310293 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara25" parent="Terreno" unique_id=78928046 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha57" parent="Terreno" unique_id=1582667460 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha57" parent="Terreno" unique_id=263384563 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 3.5)
 
-[node name="m29_piso_marajoara26" parent="Terreno" unique_id=493946706 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara26" parent="Terreno" unique_id=39456665 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha58" parent="Terreno" unique_id=1865740034 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha58" parent="Terreno" unique_id=499239033 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 3.5)
 
-[node name="m29_piso_marajoara27" parent="Terreno" unique_id=649094243 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara27" parent="Terreno" unique_id=683811903 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 9.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha59" parent="Terreno" unique_id=699524396 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha59" parent="Terreno" unique_id=344385519 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 3.5)
 
-[node name="m29_piso_marajoara28" parent="Terreno" unique_id=1591397392 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara28" parent="Terreno" unique_id=1984727196 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 10.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha60" parent="Terreno" unique_id=1205738815 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha60" parent="Terreno" unique_id=660442476 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 3.5)
 
-[node name="m29_piso_marajoara29" parent="Terreno" unique_id=552585100 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara29" parent="Terreno" unique_id=1964367501 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 11.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha61" parent="Terreno" unique_id=1819439546 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha61" parent="Terreno" unique_id=420508012 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 3.5)
 
-[node name="m29_piso_marajoara30" parent="Terreno" unique_id=1369026160 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara30" parent="Terreno" unique_id=1777930736 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 12.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha62" parent="Terreno" unique_id=1848084489 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha62" parent="Terreno" unique_id=1498876541 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 3.5)
 
-[node name="t13_laje_rachada26" parent="Terreno" unique_id=108326543 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada26" parent="Terreno" unique_id=226581469 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 13.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha63" parent="Terreno" unique_id=1768404161 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha63" parent="Terreno" unique_id=1488005301 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 3.5)
 
-[node name="t13_laje_rachada27" parent="Terreno" unique_id=692121104 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada27" parent="Terreno" unique_id=1403014207 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 14.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha64" parent="Terreno" unique_id=303866935 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha64" parent="Terreno" unique_id=1222202743 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 3.5)
 
-[node name="t13_laje_rachada28" parent="Terreno" unique_id=2069793780 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada28" parent="Terreno" unique_id=1890620473 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.3, 3.5)
 
-[node name="m06_terra_vermelha65" parent="Terreno" unique_id=1169393031 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha65" parent="Terreno" unique_id=947208039 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 4.5)
 
-[node name="m25_terra_rachada" parent="Terreno" unique_id=724864052 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada" parent="Terreno" unique_id=724864052 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha66" parent="Terreno" unique_id=1635884436 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha66" parent="Terreno" unique_id=1940999351 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 4.5)
 
-[node name="m25_terra_rachada2" parent="Terreno" unique_id=1021937394 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada2" parent="Terreno" unique_id=1666005801 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha67" parent="Terreno" unique_id=465999156 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha67" parent="Terreno" unique_id=146305933 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 4.5)
 
-[node name="t13_laje_rachada29" parent="Terreno" unique_id=1385471084 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada29" parent="Terreno" unique_id=408630110 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha68" parent="Terreno" unique_id=1921433541 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha68" parent="Terreno" unique_id=686657050 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 4.5)
 
-[node name="t13_laje_rachada30" parent="Terreno" unique_id=180492543 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada30" parent="Terreno" unique_id=424936058 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 3.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha69" parent="Terreno" unique_id=1794752621 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha69" parent="Terreno" unique_id=1325833190 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 4.5)
 
-[node name="m29_piso_marajoara31" parent="Terreno" unique_id=1739500859 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara31" parent="Terreno" unique_id=1303371406 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha70" parent="Terreno" unique_id=1951772450 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha70" parent="Terreno" unique_id=1539116416 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 4.5)
 
-[node name="m29_piso_marajoara32" parent="Terreno" unique_id=999970710 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara32" parent="Terreno" unique_id=269642978 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 5.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha71" parent="Terreno" unique_id=548919613 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha71" parent="Terreno" unique_id=1154127585 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 4.5)
 
-[node name="m29_piso_marajoara33" parent="Terreno" unique_id=193438571 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara33" parent="Terreno" unique_id=901300386 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha72" parent="Terreno" unique_id=1548074653 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha72" parent="Terreno" unique_id=1661148023 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 4.5)
 
-[node name="m29_piso_marajoara34" parent="Terreno" unique_id=552837542 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara34" parent="Terreno" unique_id=206813523 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 7.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha73" parent="Terreno" unique_id=1935088567 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha73" parent="Terreno" unique_id=1906511747 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 4.5)
 
-[node name="m29_piso_marajoara35" parent="Terreno" unique_id=61377466 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara35" parent="Terreno" unique_id=840390299 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha74" parent="Terreno" unique_id=738493 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha74" parent="Terreno" unique_id=1993021472 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 4.5)
 
-[node name="m29_piso_marajoara36" parent="Terreno" unique_id=1680681033 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara36" parent="Terreno" unique_id=105707197 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 9.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha75" parent="Terreno" unique_id=1210440247 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha75" parent="Terreno" unique_id=811785819 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 4.5)
 
-[node name="m29_piso_marajoara37" parent="Terreno" unique_id=1891440464 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara37" parent="Terreno" unique_id=628235085 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha76" parent="Terreno" unique_id=2051669317 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha76" parent="Terreno" unique_id=1999401738 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 4.5)
 
-[node name="m29_piso_marajoara38" parent="Terreno" unique_id=1990905530 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara38" parent="Terreno" unique_id=234700627 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 11.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha77" parent="Terreno" unique_id=1078547003 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha77" parent="Terreno" unique_id=183646297 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 4.5)
 
-[node name="t13_laje_rachada31" parent="Terreno" unique_id=1985918410 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada31" parent="Terreno" unique_id=1719962851 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 12.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha78" parent="Terreno" unique_id=1861905204 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha78" parent="Terreno" unique_id=241104809 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 4.5)
 
-[node name="t13_laje_rachada32" parent="Terreno" unique_id=2073361778 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada32" parent="Terreno" unique_id=686844399 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha79" parent="Terreno" unique_id=1122080544 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha79" parent="Terreno" unique_id=1335179457 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 4.5)
 
-[node name="m25_terra_rachada3" parent="Terreno" unique_id=1807720530 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada3" parent="Terreno" unique_id=1799110349 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 14.5, 0.3, 4.5)
 
-[node name="m06_terra_vermelha80" parent="Terreno" unique_id=616539242 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha80" parent="Terreno" unique_id=1110678855 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 4.5)
 
-[node name="m25_terra_rachada4" parent="Terreno" unique_id=1812597013 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada4" parent="Terreno" unique_id=131766848 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.3, 4.5)
 
-[node name="m25_terra_rachada5" parent="Terreno" unique_id=133393090 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada5" parent="Terreno" unique_id=1147683988 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.5, 0, 5.5)
 
-[node name="m25_terra_rachada6" parent="Terreno" unique_id=1447334797 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada6" parent="Terreno" unique_id=431098853 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 5.5)
 
-[node name="m25_terra_rachada7" parent="Terreno" unique_id=1665785485 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada7" parent="Terreno" unique_id=1572575759 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.5, 0, 5.5)
 
-[node name="m06_terra_vermelha81" parent="Terreno" unique_id=622015989 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha81" parent="Terreno" unique_id=338340812 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 5.5)
 
-[node name="t13_laje_rachada33" parent="Terreno" unique_id=300220747 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada33" parent="Terreno" unique_id=908906881 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.5, 0.3, 5.5)
 
-[node name="m06_terra_vermelha82" parent="Terreno" unique_id=476881452 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha82" parent="Terreno" unique_id=668277571 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 5.5)
 
-[node name="t13_laje_rachada34" parent="Terreno" unique_id=1060036693 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada34" parent="Terreno" unique_id=1454027025 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.5, 0.3, 5.5)
 
-[node name="m06_terra_vermelha83" parent="Terreno" unique_id=725506559 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha83" parent="Terreno" unique_id=1990363223 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 5.5)
 
-[node name="t13_laje_rachada35" parent="Terreno" unique_id=595778534 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada35" parent="Terreno" unique_id=1884253001 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 5.5, 0.3, 5.5)
 
-[node name="m06_terra_vermelha84" parent="Terreno" unique_id=1676281532 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha84" parent="Terreno" unique_id=710909332 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 5.5)
 
-[node name="t13_laje_rachada36" parent="Terreno" unique_id=1465818857 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada36" parent="Terreno" unique_id=280751637 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0.3, 5.5)
 
-[node name="m06_terra_vermelha85" parent="Terreno" unique_id=274328770 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha85" parent="Terreno" unique_id=1725917466 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 5.5)
 
-[node name="m29_piso_marajoara39" parent="Terreno" unique_id=2033296225 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara39" parent="Terreno" unique_id=1894324211 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.5, 0.3, 5.5)
 
-[node name="m06_terra_vermelha86" parent="Terreno" unique_id=1306535936 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha86" parent="Terreno" unique_id=163702462 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 5.5)
 
-[node name="m29_piso_marajoara40" parent="Terreno" unique_id=1008004763 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara40" parent="Terreno" unique_id=487205032 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.5, 0.3, 5.5)
 
-[node name="m06_terra_vermelha87" parent="Terreno" unique_id=1171171602 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha87" parent="Terreno" unique_id=2057368888 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 5.5)
 
-[node name="t13_laje_rachada37" parent="Terreno" unique_id=1739996146 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada37" parent="Terreno" unique_id=631706531 instance=ExtResource("4_8njsn")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 0.3, 5.5)
 
-[node name="m06_terra_vermelha88" parent="Terreno" unique_id=663395078 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha88" parent="Terreno" unique_id=198144948 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 5.5)
 
-[node name="t13_laje_rachada38" parent="Terreno" unique_id=2112611104 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada38" parent="Terreno" unique_id=526188298 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0.3, 5.5)
 
-[node name="m06_terra_vermelha89" parent="Terreno" unique_id=191990845 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha89" parent="Terreno" unique_id=861442105 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 5.5)
 
-[node name="t13_laje_rachada39" parent="Terreno" unique_id=1486658750 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada39" parent="Terreno" unique_id=478078071 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0.3, 5.5)
 
-[node name="m06_terra_vermelha90" parent="Terreno" unique_id=1582091189 instance=ExtResource("2_rqex0")]
+[node name="m06_terra_vermelha90" parent="Terreno" unique_id=113606572 instance=ExtResource("2_vprxl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 5.5)
 
-[node name="t13_laje_rachada40" parent="Terreno" unique_id=1266385052 instance=ExtResource("4_8tj3i")]
+[node name="t13_laje_rachada40" parent="Terreno" unique_id=1503286641 instance=ExtResource("4_8njsn")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 12.5, 0.3, 5.5)
 
-[node name="m25_terra_rachada8" parent="Terreno" unique_id=1010159894 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada8" parent="Terreno" unique_id=2076989084 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.5, 0, 5.5)
 
-[node name="m25_terra_rachada9" parent="Terreno" unique_id=1042720913 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada9" parent="Terreno" unique_id=1979876749 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 5.5)
 
-[node name="m25_terra_rachada10" parent="Terreno" unique_id=517601341 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada10" parent="Terreno" unique_id=1067908995 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 5.5)
 
-[node name="m20_folhas_secas_pedra" parent="Terreno" unique_id=46201717 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra" parent="Terreno" unique_id=46201717 instance=ExtResource("7_386av")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.5, 0, 6.5)
 
-[node name="m20_folhas_secas_pedra2" parent="Terreno" unique_id=1307241438 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra2" parent="Terreno" unique_id=1070355358 instance=ExtResource("7_386av")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.5, 0, 6.5)
 
-[node name="m25_terra_rachada11" parent="Terreno" unique_id=133499432 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada11" parent="Terreno" unique_id=1394515762 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 6.5)
 
-[node name="m25_terra_rachada12" parent="Terreno" unique_id=518262308 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada12" parent="Terreno" unique_id=459090245 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 6.5)
 
-[node name="m25_terra_rachada13" parent="Terreno" unique_id=855528749 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada13" parent="Terreno" unique_id=1853421650 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.5, 0, 6.5)
 
-[node name="m25_terra_rachada14" parent="Terreno" unique_id=251428239 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada14" parent="Terreno" unique_id=1573923598 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5.5, 0, 6.5)
 
-[node name="m25_terra_rachada15" parent="Terreno" unique_id=507247654 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada15" parent="Terreno" unique_id=1881376727 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.5, 0, 6.5)
 
-[node name="m29_piso_marajoara41" parent="Terreno" unique_id=167891823 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara41" parent="Terreno" unique_id=2031745713 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.5, 0, 6.5)
 
-[node name="m29_piso_marajoara42" parent="Terreno" unique_id=2069014511 instance=ExtResource("5_xq3e5")]
+[node name="m29_piso_marajoara42" parent="Terreno" unique_id=2003545213 instance=ExtResource("5_8tj3i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 6.5)
 
-[node name="m25_terra_rachada16" parent="Terreno" unique_id=1490920263 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada16" parent="Terreno" unique_id=1134695672 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 0, 6.5)
 
-[node name="m25_terra_rachada17" parent="Terreno" unique_id=2134435578 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada17" parent="Terreno" unique_id=1337114709 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 6.5)
 
-[node name="m25_terra_rachada18" parent="Terreno" unique_id=1143569803 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada18" parent="Terreno" unique_id=1345077367 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 11.5, 0, 6.5)
 
-[node name="m25_terra_rachada19" parent="Terreno" unique_id=1474317635 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada19" parent="Terreno" unique_id=1003759669 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 6.5)
 
-[node name="m25_terra_rachada20" parent="Terreno" unique_id=1547677217 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada20" parent="Terreno" unique_id=1559038959 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 6.5)
 
-[node name="m20_folhas_secas_pedra3" parent="Terreno" unique_id=671059531 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra3" parent="Terreno" unique_id=1475548144 instance=ExtResource("7_386av")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 14.5, 0, 6.5)
 
-[node name="m20_folhas_secas_pedra4" parent="Terreno" unique_id=2072779481 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra4" parent="Terreno" unique_id=371454043 instance=ExtResource("7_386av")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 6.5)
 
-[node name="t12_chao_floresta" parent="Terreno" unique_id=437184802 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta" parent="Terreno" unique_id=437184802 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.5, 0, 7.5)
 
-[node name="t12_chao_floresta2" parent="Terreno" unique_id=614641084 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta2" parent="Terreno" unique_id=2050034118 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.5, 0, 7.5)
 
-[node name="m20_folhas_secas_pedra5" parent="Terreno" unique_id=1186086364 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra5" parent="Terreno" unique_id=740147899 instance=ExtResource("7_386av")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.5, 0, 7.5)
 
-[node name="m20_folhas_secas_pedra6" parent="Terreno" unique_id=1370634564 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra6" parent="Terreno" unique_id=525664982 instance=ExtResource("7_386av")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.5, 0, 7.5)
 
-[node name="m25_terra_rachada21" parent="Terreno" unique_id=1270874885 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada21" parent="Terreno" unique_id=240605683 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.5, 0, 7.5)
 
-[node name="m25_terra_rachada22" parent="Terreno" unique_id=1276889559 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada22" parent="Terreno" unique_id=1142142300 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 5.5, 0, 7.5)
 
-[node name="m20_folhas_secas_pedra7" parent="Terreno" unique_id=1592957810 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra7" parent="Terreno" unique_id=924406191 instance=ExtResource("7_386av")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.5, 0, 7.5)
 
-[node name="m20_folhas_secas_pedra8" parent="Terreno" unique_id=1750236619 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra8" parent="Terreno" unique_id=1133727258 instance=ExtResource("7_386av")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 7.5)
 
-[node name="m20_folhas_secas_pedra9" parent="Terreno" unique_id=260246870 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra9" parent="Terreno" unique_id=1932384653 instance=ExtResource("7_386av")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 8.5, 0, 7.5)
 
-[node name="m20_folhas_secas_pedra10" parent="Terreno" unique_id=1320013495 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra10" parent="Terreno" unique_id=444121165 instance=ExtResource("7_386av")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 0, 7.5)
 
-[node name="m25_terra_rachada23" parent="Terreno" unique_id=2061682908 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada23" parent="Terreno" unique_id=311566260 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 10.5, 0, 7.5)
 
-[node name="m25_terra_rachada24" parent="Terreno" unique_id=666113155 instance=ExtResource("6_386av")]
+[node name="m25_terra_rachada24" parent="Terreno" unique_id=562175319 instance=ExtResource("6_xq3e5")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 11.5, 0, 7.5)
 
-[node name="m20_folhas_secas_pedra11" parent="Terreno" unique_id=436874199 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra11" parent="Terreno" unique_id=1492556715 instance=ExtResource("7_386av")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 12.5, 0, 7.5)
 
-[node name="m20_folhas_secas_pedra12" parent="Terreno" unique_id=786648943 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra12" parent="Terreno" unique_id=1177912285 instance=ExtResource("7_386av")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 13.5, 0, 7.5)
 
-[node name="t12_chao_floresta3" parent="Terreno" unique_id=730128482 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta3" parent="Terreno" unique_id=1080642993 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 14.5, 0, 7.5)
 
-[node name="t12_chao_floresta4" parent="Terreno" unique_id=1992115501 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta4" parent="Terreno" unique_id=1992297143 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 15.5, 0, 7.5)
 
-[node name="t12_chao_floresta5" parent="Terreno" unique_id=1171010430 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta5" parent="Terreno" unique_id=1589875988 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 0.5, 0, 8.5)
 
-[node name="t12_chao_floresta6" parent="Terreno" unique_id=7147986 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta6" parent="Terreno" unique_id=1419471003 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 1.5, 0, 8.5)
 
-[node name="t12_chao_floresta7" parent="Terreno" unique_id=1259506664 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta7" parent="Terreno" unique_id=531909036 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 8.5)
 
-[node name="m20_folhas_secas_pedra13" parent="Terreno" unique_id=1951849429 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra13" parent="Terreno" unique_id=1713924058 instance=ExtResource("7_386av")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.5, 0, 8.5)
 
-[node name="m20_folhas_secas_pedra14" parent="Terreno" unique_id=915267808 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra14" parent="Terreno" unique_id=607952490 instance=ExtResource("7_386av")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.5, 0, 8.5)
 
-[node name="t12_chao_floresta8" parent="Terreno" unique_id=1293081308 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta8" parent="Terreno" unique_id=1434559577 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 5.5, 0, 8.5)
 
-[node name="t12_chao_floresta9" parent="Terreno" unique_id=1498304362 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta9" parent="Terreno" unique_id=648277153 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 6.5, 0, 8.5)
 
-[node name="m20_folhas_secas_pedra15" parent="Terreno" unique_id=574440836 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra15" parent="Terreno" unique_id=468789954 instance=ExtResource("7_386av")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 7.5, 0, 8.5)
 
-[node name="m20_folhas_secas_pedra16" parent="Terreno" unique_id=575231117 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra16" parent="Terreno" unique_id=1597160676 instance=ExtResource("7_386av")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 8.5)
 
-[node name="t12_chao_floresta10" parent="Terreno" unique_id=1560221553 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta10" parent="Terreno" unique_id=1045821712 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 9.5, 0, 8.5)
 
-[node name="t12_chao_floresta11" parent="Terreno" unique_id=2001319207 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta11" parent="Terreno" unique_id=1222250029 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 10.5, 0, 8.5)
 
-[node name="m20_folhas_secas_pedra17" parent="Terreno" unique_id=13305249 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra17" parent="Terreno" unique_id=335732452 instance=ExtResource("7_386av")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 11.5, 0, 8.5)
 
-[node name="m20_folhas_secas_pedra18" parent="Terreno" unique_id=1103986414 instance=ExtResource("7_xotsa")]
+[node name="m20_folhas_secas_pedra18" parent="Terreno" unique_id=1037264183 instance=ExtResource("7_386av")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 8.5)
 
-[node name="t12_chao_floresta12" parent="Terreno" unique_id=554918850 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta12" parent="Terreno" unique_id=1543053363 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.5, 0, 8.5)
 
-[node name="t12_chao_floresta13" parent="Terreno" unique_id=218481201 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta13" parent="Terreno" unique_id=1799603383 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 14.5, 0, 8.5)
 
-[node name="t12_chao_floresta14" parent="Terreno" unique_id=472444524 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta14" parent="Terreno" unique_id=297990540 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 8.5)
 
-[node name="t12_chao_floresta15" parent="Terreno" unique_id=836855926 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta15" parent="Terreno" unique_id=1244389263 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.5, 0, 9.5)
 
-[node name="t12_chao_floresta16" parent="Terreno" unique_id=460145819 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta16" parent="Terreno" unique_id=1194272382 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.5, 0, 9.5)
 
-[node name="t12_chao_floresta17" parent="Terreno" unique_id=1105822356 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta17" parent="Terreno" unique_id=708876107 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 9.5)
 
-[node name="t12_chao_floresta18" parent="Terreno" unique_id=900410104 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta18" parent="Terreno" unique_id=776567286 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 9.5)
 
-[node name="t12_chao_floresta19" parent="Terreno" unique_id=640064492 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta19" parent="Terreno" unique_id=1781359474 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.5, 0, 9.5)
 
-[node name="t12_chao_floresta20" parent="Terreno" unique_id=1275840816 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta20" parent="Terreno" unique_id=602929602 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 5.5, 0, 9.5)
 
-[node name="t12_chao_floresta21" parent="Terreno" unique_id=190722261 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta21" parent="Terreno" unique_id=706491604 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 6.5, 0, 9.5)
 
-[node name="t12_chao_floresta22" parent="Terreno" unique_id=392338605 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta22" parent="Terreno" unique_id=1765751158 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 9.5)
 
-[node name="t12_chao_floresta23" parent="Terreno" unique_id=990871831 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta23" parent="Terreno" unique_id=439156410 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 9.5)
 
-[node name="t12_chao_floresta24" parent="Terreno" unique_id=2071578045 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta24" parent="Terreno" unique_id=383135685 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 9.5, 0, 9.5)
 
-[node name="t12_chao_floresta25" parent="Terreno" unique_id=1552240027 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta25" parent="Terreno" unique_id=103692623 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 9.5)
 
-[node name="t12_chao_floresta26" parent="Terreno" unique_id=598698075 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta26" parent="Terreno" unique_id=507134922 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 11.5, 0, 9.5)
 
-[node name="t12_chao_floresta27" parent="Terreno" unique_id=733370790 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta27" parent="Terreno" unique_id=1716987980 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 12.5, 0, 9.5)
 
-[node name="t12_chao_floresta28" parent="Terreno" unique_id=1071397416 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta28" parent="Terreno" unique_id=1312738884 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 13.5, 0, 9.5)
 
-[node name="t12_chao_floresta29" parent="Terreno" unique_id=594890841 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta29" parent="Terreno" unique_id=1063351854 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 14.5, 0, 9.5)
 
-[node name="t12_chao_floresta30" parent="Terreno" unique_id=1025931115 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta30" parent="Terreno" unique_id=1622381138 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 15.5, 0, 9.5)
 
-[node name="t12_chao_floresta31" parent="Terreno" unique_id=797892335 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta31" parent="Terreno" unique_id=1338508150 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 0.5, 0, 10.5)
 
-[node name="t12_chao_floresta32" parent="Terreno" unique_id=1864567085 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta32" parent="Terreno" unique_id=1250886718 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.5, 0, 10.5)
 
-[node name="t12_chao_floresta33" parent="Terreno" unique_id=1266001937 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta33" parent="Terreno" unique_id=2042049896 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.5, 0, 10.5)
 
-[node name="t12_chao_floresta34" parent="Terreno" unique_id=240325876 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta34" parent="Terreno" unique_id=954980944 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 10.5)
 
-[node name="t12_chao_floresta35" parent="Terreno" unique_id=1579955745 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta35" parent="Terreno" unique_id=1239435092 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 4.5, 0, 10.5)
 
-[node name="t12_chao_floresta36" parent="Terreno" unique_id=894545826 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta36" parent="Terreno" unique_id=608671748 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5.5, 0, 10.5)
 
-[node name="m01_raizes_musgo" parent="Terreno" unique_id=412378144 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo" parent="Terreno" unique_id=412378144 instance=ExtResource("9_qfisj")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 6.5, 0, 10.5)
 
-[node name="m01_raizes_musgo2" parent="Terreno" unique_id=668472691 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo2" parent="Terreno" unique_id=1039113168 instance=ExtResource("9_qfisj")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.5, 0, 10.5)
 
-[node name="m01_raizes_musgo3" parent="Terreno" unique_id=1647887728 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo3" parent="Terreno" unique_id=21393133 instance=ExtResource("9_qfisj")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 8.5, 0, 10.5)
 
-[node name="m01_raizes_musgo4" parent="Terreno" unique_id=1223356702 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo4" parent="Terreno" unique_id=435594126 instance=ExtResource("9_qfisj")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.5, 0, 10.5)
 
-[node name="t12_chao_floresta37" parent="Terreno" unique_id=790717271 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta37" parent="Terreno" unique_id=568019675 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 10.5, 0, 10.5)
 
-[node name="t12_chao_floresta38" parent="Terreno" unique_id=1278780025 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta38" parent="Terreno" unique_id=1014318026 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 11.5, 0, 10.5)
 
-[node name="t12_chao_floresta39" parent="Terreno" unique_id=1697755724 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta39" parent="Terreno" unique_id=640585309 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 10.5)
 
-[node name="t12_chao_floresta40" parent="Terreno" unique_id=1468602856 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta40" parent="Terreno" unique_id=1734688346 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.5, 0, 10.5)
 
-[node name="t12_chao_floresta41" parent="Terreno" unique_id=799012109 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta41" parent="Terreno" unique_id=2071339467 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 14.5, 0, 10.5)
 
-[node name="t12_chao_floresta42" parent="Terreno" unique_id=497691559 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta42" parent="Terreno" unique_id=133749050 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 15.5, 0, 10.5)
 
-[node name="t12_chao_floresta43" parent="Terreno" unique_id=1337753027 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta43" parent="Terreno" unique_id=1968853722 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.5, 0, 11.5)
 
-[node name="t12_chao_floresta44" parent="Terreno" unique_id=1102035201 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta44" parent="Terreno" unique_id=432484904 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.5, 0, 11.5)
 
-[node name="t12_chao_floresta45" parent="Terreno" unique_id=2077032966 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta45" parent="Terreno" unique_id=1345394921 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.5, 0, 11.5)
 
-[node name="t12_chao_floresta46" parent="Terreno" unique_id=2087663101 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta46" parent="Terreno" unique_id=1845149984 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 11.5)
 
-[node name="t12_chao_floresta47" parent="Terreno" unique_id=992056308 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta47" parent="Terreno" unique_id=699627768 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 4.5, 0, 11.5)
 
-[node name="m01_raizes_musgo5" parent="Terreno" unique_id=307735970 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo5" parent="Terreno" unique_id=1838735725 instance=ExtResource("9_qfisj")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5.5, 0, 11.5)
 
-[node name="m01_raizes_musgo6" parent="Terreno" unique_id=841752041 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo6" parent="Terreno" unique_id=71915348 instance=ExtResource("9_qfisj")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.5, 0, 11.5)
 
-[node name="m01_raizes_musgo7" parent="Terreno" unique_id=13438890 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo7" parent="Terreno" unique_id=1663805013 instance=ExtResource("9_qfisj")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.5, 0, 11.5)
 
-[node name="m01_raizes_musgo8" parent="Terreno" unique_id=1115589793 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo8" parent="Terreno" unique_id=2061915973 instance=ExtResource("9_qfisj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 11.5)
 
-[node name="m01_raizes_musgo9" parent="Terreno" unique_id=89326895 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo9" parent="Terreno" unique_id=1851046453 instance=ExtResource("9_qfisj")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 0, 11.5)
 
-[node name="m01_raizes_musgo10" parent="Terreno" unique_id=746659960 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo10" parent="Terreno" unique_id=875507998 instance=ExtResource("9_qfisj")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 10.5, 0, 11.5)
 
-[node name="t12_chao_floresta48" parent="Terreno" unique_id=1624920153 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta48" parent="Terreno" unique_id=36055906 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 11.5)
 
-[node name="t12_chao_floresta49" parent="Terreno" unique_id=1912543225 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta49" parent="Terreno" unique_id=1119546305 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 12.5, 0, 11.5)
 
-[node name="t12_chao_floresta50" parent="Terreno" unique_id=1518675541 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta50" parent="Terreno" unique_id=1126424988 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 13.5, 0, 11.5)
 
-[node name="t12_chao_floresta51" parent="Terreno" unique_id=1891795791 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta51" parent="Terreno" unique_id=723448219 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 11.5)
 
-[node name="t12_chao_floresta52" parent="Terreno" unique_id=324265631 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta52" parent="Terreno" unique_id=706752825 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 15.5, 0, 11.5)
 
-[node name="t12_chao_floresta53" parent="Terreno" unique_id=216676282 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta53" parent="Terreno" unique_id=1637917416 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.5, 0, 12.5)
 
-[node name="t12_chao_floresta54" parent="Terreno" unique_id=564718799 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta54" parent="Terreno" unique_id=1544451520 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 12.5)
 
-[node name="t12_chao_floresta55" parent="Terreno" unique_id=1499036479 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta55" parent="Terreno" unique_id=2100063303 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 12.5)
 
-[node name="t12_chao_floresta56" parent="Terreno" unique_id=2145980851 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta56" parent="Terreno" unique_id=1019370558 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.5, 0, 12.5)
 
-[node name="t12_chao_floresta57" parent="Terreno" unique_id=49597647 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta57" parent="Terreno" unique_id=1187641372 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 12.5)
 
-[node name="t12_chao_floresta58" parent="Terreno" unique_id=997243932 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta58" parent="Terreno" unique_id=1049379896 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 12.5)
 
-[node name="m01_raizes_musgo11" parent="Terreno" unique_id=396912770 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo11" parent="Terreno" unique_id=988237019 instance=ExtResource("9_qfisj")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 6.5, 0, 12.5)
 
-[node name="m01_raizes_musgo12" parent="Terreno" unique_id=1182467446 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo12" parent="Terreno" unique_id=1929427551 instance=ExtResource("9_qfisj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 12.5)
 
-[node name="m01_raizes_musgo13" parent="Terreno" unique_id=429238672 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo13" parent="Terreno" unique_id=1380641534 instance=ExtResource("9_qfisj")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.5, 0, 12.5)
 
-[node name="m01_raizes_musgo14" parent="Terreno" unique_id=1730302109 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo14" parent="Terreno" unique_id=22717721 instance=ExtResource("9_qfisj")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 9.5, 0, 12.5)
 
-[node name="t12_chao_floresta59" parent="Terreno" unique_id=1244701080 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta59" parent="Terreno" unique_id=2146014014 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 10.5, 0, 12.5)
 
-[node name="t12_chao_floresta60" parent="Terreno" unique_id=1953495149 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta60" parent="Terreno" unique_id=1102528324 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 12.5)
 
-[node name="t12_chao_floresta61" parent="Terreno" unique_id=246208944 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta61" parent="Terreno" unique_id=1389626036 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 12.5)
 
-[node name="t12_chao_floresta62" parent="Terreno" unique_id=998283015 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta62" parent="Terreno" unique_id=288912481 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.5, 0, 12.5)
 
-[node name="t12_chao_floresta63" parent="Terreno" unique_id=11707813 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta63" parent="Terreno" unique_id=1686834230 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 14.5, 0, 12.5)
 
-[node name="t12_chao_floresta64" parent="Terreno" unique_id=1405957233 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta64" parent="Terreno" unique_id=712930233 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 15.5, 0, 12.5)
 
-[node name="t12_chao_floresta65" parent="Terreno" unique_id=19115641 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta65" parent="Terreno" unique_id=1849300736 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.5, 0, 13.5)
 
-[node name="t12_chao_floresta66" parent="Terreno" unique_id=969805352 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta66" parent="Terreno" unique_id=1916882536 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.5, 0, 13.5)
 
-[node name="t12_chao_floresta67" parent="Terreno" unique_id=384249814 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta67" parent="Terreno" unique_id=675962240 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.5, 0, 13.5)
 
-[node name="t12_chao_floresta68" parent="Terreno" unique_id=1520900970 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta68" parent="Terreno" unique_id=2137611688 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.5, 0, 13.5)
 
-[node name="t12_chao_floresta69" parent="Terreno" unique_id=2065571379 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta69" parent="Terreno" unique_id=1348443268 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 4.5, 0, 13.5)
 
-[node name="t12_chao_floresta70" parent="Terreno" unique_id=1975642461 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta70" parent="Terreno" unique_id=265123220 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 13.5)
 
-[node name="t12_chao_floresta71" parent="Terreno" unique_id=1893115215 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta71" parent="Terreno" unique_id=694908577 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.5, 0, 13.5)
 
-[node name="t12_chao_floresta72" parent="Terreno" unique_id=825065195 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta72" parent="Terreno" unique_id=288646273 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 7.5, 0, 13.5)
 
-[node name="t12_chao_floresta73" parent="Terreno" unique_id=1957635803 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta73" parent="Terreno" unique_id=639110442 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 8.5, 0, 13.5)
 
-[node name="t12_chao_floresta74" parent="Terreno" unique_id=459003894 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta74" parent="Terreno" unique_id=518124255 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 9.5, 0, 13.5)
 
-[node name="t12_chao_floresta75" parent="Terreno" unique_id=1676598459 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta75" parent="Terreno" unique_id=1488193616 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 10.5, 0, 13.5)
 
-[node name="t12_chao_floresta76" parent="Terreno" unique_id=1040365964 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta76" parent="Terreno" unique_id=346478548 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 13.5)
 
-[node name="t12_chao_floresta77" parent="Terreno" unique_id=980041388 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta77" parent="Terreno" unique_id=41129717 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 12.5, 0, 13.5)
 
-[node name="t12_chao_floresta78" parent="Terreno" unique_id=483577761 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta78" parent="Terreno" unique_id=1864191665 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 13.5)
 
-[node name="t12_chao_floresta79" parent="Terreno" unique_id=1576076910 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta79" parent="Terreno" unique_id=1051584555 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 14.5, 0, 13.5)
 
-[node name="t12_chao_floresta80" parent="Terreno" unique_id=302961627 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta80" parent="Terreno" unique_id=198165654 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 15.5, 0, 13.5)
 
-[node name="m01_raizes_musgo15" parent="Terreno" unique_id=738554625 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo15" parent="Terreno" unique_id=543320813 instance=ExtResource("9_qfisj")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.5, 0, 14.5)
 
-[node name="t12_chao_floresta81" parent="Terreno" unique_id=1974643271 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta81" parent="Terreno" unique_id=1994844200 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 14.5)
 
-[node name="t12_chao_floresta82" parent="Terreno" unique_id=1586849189 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta82" parent="Terreno" unique_id=76137644 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 14.5)
 
-[node name="t12_chao_floresta83" parent="Terreno" unique_id=946700537 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta83" parent="Terreno" unique_id=362410589 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 3.5, 0, 14.5)
 
-[node name="t12_chao_floresta84" parent="Terreno" unique_id=640886049 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta84" parent="Terreno" unique_id=1350265309 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.5, 0, 14.5)
 
-[node name="t12_chao_floresta85" parent="Terreno" unique_id=450384617 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta85" parent="Terreno" unique_id=591821856 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 14.5)
 
-[node name="t12_chao_floresta86" parent="Terreno" unique_id=142946686 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta86" parent="Terreno" unique_id=1742000344 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 6.5, 0, 14.5)
 
-[node name="t12_chao_floresta87" parent="Terreno" unique_id=1470743711 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta87" parent="Terreno" unique_id=1968799579 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 14.5)
 
-[node name="t12_chao_floresta88" parent="Terreno" unique_id=884389899 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta88" parent="Terreno" unique_id=1919756810 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 8.5, 0, 14.5)
 
-[node name="t12_chao_floresta89" parent="Terreno" unique_id=82440729 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta89" parent="Terreno" unique_id=1800668114 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 14.5)
 
-[node name="t12_chao_floresta90" parent="Terreno" unique_id=1659006899 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta90" parent="Terreno" unique_id=721138486 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 14.5)
 
-[node name="t12_chao_floresta91" parent="Terreno" unique_id=1115130961 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta91" parent="Terreno" unique_id=406174313 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 11.5, 0, 14.5)
 
-[node name="t12_chao_floresta92" parent="Terreno" unique_id=1395353755 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta92" parent="Terreno" unique_id=1100736442 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 14.5)
 
-[node name="t12_chao_floresta93" parent="Terreno" unique_id=2042161249 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta93" parent="Terreno" unique_id=1442188903 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 13.5, 0, 14.5)
 
-[node name="t12_chao_floresta94" parent="Terreno" unique_id=1234086980 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta94" parent="Terreno" unique_id=1773063928 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 14.5, 0, 14.5)
 
-[node name="m01_raizes_musgo16" parent="Terreno" unique_id=1743692340 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo16" parent="Terreno" unique_id=2039995877 instance=ExtResource("9_qfisj")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 15.5, 0, 14.5)
 
-[node name="m01_raizes_musgo17" parent="Terreno" unique_id=1667196113 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo17" parent="Terreno" unique_id=639807910 instance=ExtResource("9_qfisj")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.5, 0, 15.5)
 
-[node name="m01_raizes_musgo18" parent="Terreno" unique_id=1537159227 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo18" parent="Terreno" unique_id=301914119 instance=ExtResource("9_qfisj")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.5, 0, 15.5)
 
-[node name="t12_chao_floresta95" parent="Terreno" unique_id=1450153137 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta95" parent="Terreno" unique_id=1494715197 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.5, 0, 15.5)
 
-[node name="t12_chao_floresta96" parent="Terreno" unique_id=1750845099 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta96" parent="Terreno" unique_id=724766959 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.5, 0, 15.5)
 
-[node name="t12_chao_floresta97" parent="Terreno" unique_id=616978225 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta97" parent="Terreno" unique_id=1026953294 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 4.5, 0, 15.5)
 
-[node name="t12_chao_floresta98" parent="Terreno" unique_id=1724157114 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta98" parent="Terreno" unique_id=1785070696 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 5.5, 0, 15.5)
 
-[node name="t12_chao_floresta99" parent="Terreno" unique_id=402702520 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta99" parent="Terreno" unique_id=926412164 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 6.5, 0, 15.5)
 
-[node name="t12_chao_floresta100" parent="Terreno" unique_id=113487971 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta100" parent="Terreno" unique_id=453636444 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 7.5, 0, 15.5)
 
-[node name="t12_chao_floresta101" parent="Terreno" unique_id=345942114 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta101" parent="Terreno" unique_id=1768789274 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.5, 0, 15.5)
 
-[node name="t12_chao_floresta102" parent="Terreno" unique_id=788662160 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta102" parent="Terreno" unique_id=28291931 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 9.5, 0, 15.5)
 
-[node name="t12_chao_floresta103" parent="Terreno" unique_id=211778999 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta103" parent="Terreno" unique_id=2014879548 instance=ExtResource("8_xotsa")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 10.5, 0, 15.5)
 
-[node name="t12_chao_floresta104" parent="Terreno" unique_id=1612331275 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta104" parent="Terreno" unique_id=1385130535 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 11.5, 0, 15.5)
 
-[node name="t12_chao_floresta105" parent="Terreno" unique_id=1032166604 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta105" parent="Terreno" unique_id=987016523 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 12.5, 0, 15.5)
 
-[node name="t12_chao_floresta106" parent="Terreno" unique_id=1874318096 instance=ExtResource("8_qfisj")]
+[node name="t12_chao_floresta106" parent="Terreno" unique_id=684642358 instance=ExtResource("8_xotsa")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 13.5, 0, 15.5)
 
-[node name="m01_raizes_musgo19" parent="Terreno" unique_id=452909400 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo19" parent="Terreno" unique_id=557264219 instance=ExtResource("9_qfisj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 15.5)
 
-[node name="m01_raizes_musgo20" parent="Terreno" unique_id=1520211994 instance=ExtResource("9_g6ame")]
+[node name="m01_raizes_musgo20" parent="Terreno" unique_id=1905460610 instance=ExtResource("9_qfisj")]
 transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 15.5, 0, 15.5)
 
-[node name="Cenario" type="Node3D" parent="." unique_id=918354123]
+[node name="Cenario" type="Node3D" parent="." unique_id=1479891979]
 
-[node name="c09_vaso_marajoara" parent="Cenario" unique_id=423609091 instance=ExtResource("10_pywxj")]
+[node name="c09_vaso_marajoara" parent="Cenario" unique_id=423609091 instance=ExtResource("10_g6ame")]
 transform = Transform3D(0.55, 0, 0, 0, 0.55, 0, 0, 0, 0.55, 2.5, 0.61, 1.5)
 
-[node name="c10_totem" parent="Cenario" unique_id=263416553 instance=ExtResource("11_x54un")]
+[node name="c10_totem" parent="Cenario" unique_id=263416553 instance=ExtResource("11_pywxj")]
 transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 13.5, 0.61, 1.5)
 
-[node name="c13_braseiro" parent="Cenario" unique_id=1350447806 instance=ExtResource("12_cu5g0")]
+[node name="c13_braseiro" parent="Cenario" unique_id=1350447806 instance=ExtResource("12_x54un")]
 transform = Transform3D(0.55, 0, 0, 0, 0.55, 0, 0, 0, 0.55, 6.5, 0.61, 2.5)
 
-[node name="Fogo" type="OmniLight3D" parent="Cenario" unique_id=1012947778]
+[node name="Fogo" type="OmniLight3D" parent="Cenario" unique_id=1253958167]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 1.51, 2.5)
 light_color = Color(1, 0.6, 0.25, 1)
 omni_range = 4.0
-script = ExtResource("13_u2g5y")
+script = ExtResource("13_cu5g0")
 base_energy = 2.0
 
-[node name="c13_braseiro2" parent="Cenario" unique_id=1809816431 instance=ExtResource("12_cu5g0")]
+[node name="c13_braseiro2" parent="Cenario" unique_id=1515242255 instance=ExtResource("12_x54un")]
 transform = Transform3D(0.55, 0, 0, 0, 0.55, 0, 0, 0, 0.55, 9.5, 0.61, 2.5)
 
-[node name="Fogo2" type="OmniLight3D" parent="Cenario" unique_id=1316158297]
+[node name="Fogo2" type="OmniLight3D" parent="Cenario" unique_id=1149036334]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 1.51, 2.5)
 light_color = Color(1, 0.6, 0.25, 1)
 omni_range = 4.0
-script = ExtResource("13_u2g5y")
+script = ExtResource("13_cu5g0")
 base_energy = 2.0
 
-[node name="f04_arvore_copa_densa" parent="Cenario" unique_id=799028564 instance=ExtResource("14_2j7tv")]
+[node name="f04_arvore_copa_densa" parent="Cenario" unique_id=799028564 instance=ExtResource("14_u2g5y")]
 transform = Transform3D(-1.1296767, 0, -0.9868285, 0, 1.5, 0, 0.9868285, 0, -1.1296767, 0.5, 0.32, 9.5)
 
-[node name="f04_arvore_copa_densa2" parent="Cenario" unique_id=165817885 instance=ExtResource("14_2j7tv")]
+[node name="f04_arvore_copa_densa2" parent="Cenario" unique_id=813012429 instance=ExtResource("14_u2g5y")]
 transform = Transform3D(1.4312835, 0, 0.44880694, 0, 1.5, 0, -0.44880694, 0, 1.4312835, 15.5, 0.32, 9.5)
 
-[node name="f06_planta_folhas_largas" parent="Cenario" unique_id=2077841877 instance=ExtResource("15_d3keb")]
+[node name="f06_planta_folhas_largas" parent="Cenario" unique_id=2077841877 instance=ExtResource("15_2j7tv")]
 transform = Transform3D(-0.24990587, 0, 1.1736896, 0, 1.2, 0, -1.1736896, 0, -0.24990587, 2.5, 0.32, 10.5)
 
-[node name="f06_planta_folhas_largas2" parent="Cenario" unique_id=1368750723 instance=ExtResource("15_d3keb")]
+[node name="f06_planta_folhas_largas2" parent="Cenario" unique_id=13425293 instance=ExtResource("15_2j7tv")]
 transform = Transform3D(-0.98266023, 0, 0.68875176, 0, 1.2, 0, -0.68875176, 0, -0.98266023, 13.5, 0.32, 10.5)
 
-[node name="f02_acaizeiros" parent="Cenario" unique_id=1134339719 instance=ExtResource("16_7l4gf")]
+[node name="f02_acaizeiros" parent="Cenario" unique_id=1134339719 instance=ExtResource("16_d3keb")]
 transform = Transform3D(0.5236741, 0, 1.5118748, 0, 1.6, 0, -1.5118748, 0, 0.5236741, 0.5, 0.32, 12.5)
 
-[node name="f02_acaizeiros2" parent="Cenario" unique_id=835450170 instance=ExtResource("16_7l4gf")]
+[node name="f02_acaizeiros2" parent="Cenario" unique_id=1595475880 instance=ExtResource("16_d3keb")]
 transform = Transform3D(-0.7726857, 0, 1.4010557, 0, 1.6, 0, -1.4010557, 0, -0.7726857, 15.5, 0.32, 12.5)
 
-[node name="f10_toco" parent="Cenario" unique_id=1268356211 instance=ExtResource("17_lr2t0")]
+[node name="f10_toco" parent="Cenario" unique_id=1268356211 instance=ExtResource("17_7l4gf")]
 transform = Transform3D(-0.5155213, 0, 0.8568768, 0, 1, 0, -0.8568768, 0, -0.5155213, 3.5, 0.32, 13.5)
 
-[node name="f10_toco2" parent="Cenario" unique_id=1669426468 instance=ExtResource("17_lr2t0")]
+[node name="f10_toco2" parent="Cenario" unique_id=1624517886 instance=ExtResource("17_7l4gf")]
 transform = Transform3D(0.58641595, 0, -0.8100101, 0, 1, 0, 0.8100101, 0, 0.58641595, 12.5, 0.32, 13.5)
 
-[node name="f01_samauma" parent="Cenario" unique_id=1212929759 instance=ExtResource("18_bree0")]
+[node name="f01_samauma" parent="Cenario" unique_id=1212929759 instance=ExtResource("18_lr2t0")]
 transform = Transform3D(-1.6264426, 0, -0.9821836, 0, 1.9, 0, 0.9821836, 0, -1.6264426, 0.5, 0.36, 14.5)
 
-[node name="f01_samauma2" parent="Cenario" unique_id=996837295 instance=ExtResource("18_bree0")]
+[node name="f01_samauma2" parent="Cenario" unique_id=1944318582 instance=ExtResource("18_lr2t0")]
 transform = Transform3D(1.891646, 0, -0.1779748, 0, 1.9, 0, 0.1779748, 0, 1.891646, 15.5, 0.36, 14.5)
 
-[node name="f01_samauma3" parent="Cenario" unique_id=2036806355 instance=ExtResource("18_bree0")]
+[node name="f01_samauma3" parent="Cenario" unique_id=613241590 instance=ExtResource("18_lr2t0")]
 transform = Transform3D(1.5756538, 0, -1.061751, 0, 1.9, 0, 1.061751, 0, 1.5756538, 0.5, 0.36, 15.5)
 
-[node name="f01_samauma4" parent="Cenario" unique_id=1004374586 instance=ExtResource("18_bree0")]
+[node name="f01_samauma4" parent="Cenario" unique_id=1174454458 instance=ExtResource("18_lr2t0")]
 transform = Transform3D(-1.6584542, 0, -0.92710835, 0, 1.9, 0, 0.92710835, 0, -1.6584542, 1.5, 0.36, 15.5)
 
-[node name="f04_arvore_copa_densa3" parent="Cenario" unique_id=2020811400 instance=ExtResource("14_2j7tv")]
+[node name="f04_arvore_copa_densa3" parent="Cenario" unique_id=551692993 instance=ExtResource("14_u2g5y")]
 transform = Transform3D(-1.4641923, 0, 0.32579318, 0, 1.5, 0, -0.32579318, 0, -1.4641923, 4.5, 0.32, 15.5)
 
-[node name="f04_arvore_copa_densa4" parent="Cenario" unique_id=1214734841 instance=ExtResource("14_2j7tv")]
+[node name="f04_arvore_copa_densa4" parent="Cenario" unique_id=1633920528 instance=ExtResource("14_u2g5y")]
 transform = Transform3D(-1.4955945, 0, -0.114877775, 0, 1.5, 0, 0.114877775, 0, -1.4955945, 11.5, 0.32, 15.5)
 
-[node name="f01_samauma5" parent="Cenario" unique_id=79979744 instance=ExtResource("18_bree0")]
+[node name="f01_samauma5" parent="Cenario" unique_id=935422227 instance=ExtResource("18_lr2t0")]
 transform = Transform3D(-1.396835, 0, -1.2879642, 0, 1.9, 0, 1.2879642, 0, -1.396835, 14.5, 0.36, 15.5)
 
-[node name="f01_samauma6" parent="Cenario" unique_id=1283813819 instance=ExtResource("18_bree0")]
+[node name="f01_samauma6" parent="Cenario" unique_id=926335194 instance=ExtResource("18_lr2t0")]
 transform = Transform3D(1.7957127, 0, 0.62081856, 0, 1.9, 0, -0.62081856, 0, 1.7957127, 15.5, 0.36, 15.5)
 
-[node name="c12_muro_ruina_cipos" parent="Cenario" unique_id=1659720894 instance=ExtResource("19_vppff")]
+[node name="c12_muro_ruina_cipos" parent="Cenario" unique_id=1659720894 instance=ExtResource("19_bree0")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 2.5, 0.59, 6)
 
-[node name="c12_muro_ruina_cipos2" parent="Cenario" unique_id=82149442 instance=ExtResource("19_vppff")]
+[node name="c12_muro_ruina_cipos2" parent="Cenario" unique_id=485528738 instance=ExtResource("19_bree0")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 13.5, 0.59, 6)
 
-[node name="c08_torre_vigia" parent="Cenario" unique_id=644618334 instance=ExtResource("20_hs5ot")]
+[node name="c08_torre_vigia" parent="Cenario" unique_id=644618334 instance=ExtResource("20_vppff")]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0.5, 0.59, 2.5)
 
-[node name="c08_torre_vigia2" parent="Cenario" unique_id=2046732372 instance=ExtResource("20_hs5ot")]
+[node name="c08_torre_vigia2" parent="Cenario" unique_id=1271884269 instance=ExtResource("20_vppff")]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 15.5, 0.59, 2.5)
 
-[node name="c11_portao_entalhado" parent="Cenario" unique_id=1627674504 instance=ExtResource("21_3x3re")]
+[node name="c11_portao_entalhado" parent="Cenario" unique_id=1627674504 instance=ExtResource("21_hs5ot")]
 transform = Transform3D(-3.4969112e-08, 0, 0.8, 0, 0.8, 0, -0.8, 0, -3.4969112e-08, 8, 0.61, 0.5)
 
-[node name="Personagens" type="Node3D" parent="." unique_id=1037828645]
+[node name="Personagens" type="Node3D" parent="." unique_id=1631303359]
 
-[node name="Node3D" type="Node3D" parent="Personagens" unique_id=1667640459]
+[node name="Node3D" type="Node3D" parent="Personagens" unique_id=151666681]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.61, 5.5)
-script = ExtResource("22_jy7my")
-modelo = ExtResource("23_r5t3d")
+script = ExtResource("22_3x3re")
+modelo = ExtResource("23_jy7my")
 display_name = "Jacaré-açu"
 enemy = true
 especie = "jacare_acu"
-nivel = 5
+nivel = 4
 forca = 16
 destreza = 7
 constituicao = 16
@@ -1226,45 +1225,30 @@ inteligencia = 6
 sabedoria = 8
 carisma = 7
 
-[node name="Node3D2" type="Node3D" parent="Personagens" unique_id=500521198]
+[node name="Node3D2" type="Node3D" parent="Personagens" unique_id=1486792375]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.61, 2.5)
-script = ExtResource("22_jy7my")
-modelo = ExtResource("24_3at13")
+script = ExtResource("22_3x3re")
+modelo = ExtResource("24_r5t3d")
 display_name = "Sapo-cururu"
 classe = "mago"
 enemy = true
 especie = "cururu"
-nivel = 5
+nivel = 4
 forca = 9
 destreza = 8
 constituicao = 13
 inteligencia = 13
 sabedoria = 14
 
-[node name="Node3D3" type="Node3D" parent="Personagens" unique_id=1038358241]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0.59, 1.5)
-script = ExtResource("22_jy7my")
-modelo = ExtResource("25_rmysa")
-display_name = "Arqueira Bromélia"
-classe = "ranger"
-enemy = true
-especie = "bromelia"
-nivel = 5
-forca = 9
-destreza = 13
-constituicao = 9
-inteligencia = 8
-carisma = 8
-
-[node name="Node3D4" type="Node3D" parent="Personagens" unique_id=1754262663]
+[node name="Node3D3" type="Node3D" parent="Personagens" unique_id=861735333]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0.34, 6.5)
-script = ExtResource("22_jy7my")
-modelo = ExtResource("26_sdjqo")
+script = ExtResource("22_3x3re")
+modelo = ExtResource("25_3at13")
 display_name = "Cobra-coral"
 classe = "assassino"
 enemy = true
 especie = "coral"
-nivel = 5
+nivel = 4
 forca = 11
 destreza = 16
 constituicao = 9
@@ -1272,50 +1256,50 @@ inteligencia = 9
 sabedoria = 9
 carisma = 9
 
-[node name="Node3D5" type="Node3D" parent="Personagens" unique_id=16630497]
+[node name="Node3D4" type="Node3D" parent="Personagens" unique_id=1283205427]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0.61, 3.5)
-script = ExtResource("22_jy7my")
-modelo = ExtResource("27_afrdr")
+script = ExtResource("22_3x3re")
+modelo = ExtResource("26_rmysa")
 display_name = "Tartaruga-da-amazônia"
 classe = "clerigo"
 enemy = true
 especie = "tartaruga_amazonia"
-nivel = 5
+nivel = 4
 forca = 9
 destreza = 7
 constituicao = 14
 sabedoria = 14
 
-[node name="Node3D6" type="Node3D" parent="Personagens" unique_id=1094564380]
+[node name="Node3D5" type="Node3D" parent="Personagens" unique_id=1259413561]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0.61, 3.5)
-script = ExtResource("22_jy7my")
-modelo = ExtResource("28_j5tf8")
+script = ExtResource("22_3x3re")
+modelo = ExtResource("27_sdjqo")
 display_name = "Cobra cavaleira"
 classe = "lanceiro"
 enemy = true
 especie = "cobra_cavaleira"
-nivel = 5
+nivel = 4
 forca = 13
 constituicao = 14
 inteligencia = 8
 sabedoria = 9
 carisma = 9
 
-[node name="Inicio" type="Node3D" parent="." unique_id=262983668]
+[node name="Inicio" type="Node3D" parent="." unique_id=1185276195]
 
-[node name="Casa1" type="Marker3D" parent="Inicio" unique_id=584575926]
+[node name="Casa1" type="Marker3D" parent="Inicio" unique_id=1064673782]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.32, 13.5)
 
-[node name="Casa2" type="Marker3D" parent="Inicio" unique_id=1940310104]
+[node name="Casa2" type="Marker3D" parent="Inicio" unique_id=1817570301]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0.32, 13.5)
 
-[node name="Casa3" type="Marker3D" parent="Inicio" unique_id=1895598974]
+[node name="Casa3" type="Marker3D" parent="Inicio" unique_id=944728347]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0.32, 14.5)
 
-[node name="Casa4" type="Marker3D" parent="Inicio" unique_id=1642496446]
+[node name="Casa4" type="Marker3D" parent="Inicio" unique_id=1059603869]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0.32, 14.5)
 
-[node name="Camera" type="Camera3D" parent="." unique_id=1490627070]
+[node name="Camera" type="Camera3D" parent="." unique_id=326080213]
 transform = Transform3D(0.70710677, -0.35355338, 0.6123724, 0, 0.8660254, 0.5, -0.70710677, -0.35355338, 0.6123724, 69.23724, 50.3, 69.23724)
 projection = 1
 current = true
@@ -1323,16 +1307,16 @@ size = 13.5
 near = 1.0
 far = 300.0
 
-[node name="Contorno" type="MeshInstance3D" parent="Camera" unique_id=1825092306]
-material_override = SubResource("ShaderMaterial_s5i63")
+[node name="Contorno" type="MeshInstance3D" parent="Camera" unique_id=1308449528]
+material_override = SubResource("ShaderMaterial_j5tf8")
 cast_shadow = 0
 extra_cull_margin = 16384.0
-mesh = SubResource("QuadMesh_d7i65")
+mesh = SubResource("QuadMesh_17nhg")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=154297251]
-environment = SubResource("Environment_btehr")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1304239690]
+environment = SubResource("Environment_e1wni")
 
-[node name="Sol" type="DirectionalLight3D" parent="." unique_id=1002744498]
+[node name="Sol" type="DirectionalLight3D" parent="." unique_id=205945576]
 transform = Transform3D(0.8660254, 0.25, -0.4330127, 0, 0.8660254, 0.5, 0.5, -0.4330127, 0.75, 0, 0, 0)
 light_color = Color(1, 0.8, 0.55, 1)
 light_energy = 1.5
@@ -1340,7 +1324,7 @@ shadow_enabled = true
 shadow_blur = 1.5
 directional_shadow_max_distance = 200.0
 
-[node name="LuzDoCeu" type="DirectionalLight3D" parent="." unique_id=560628111]
+[node name="LuzDoCeu" type="DirectionalLight3D" parent="." unique_id=1354151416]
 transform = Transform3D(-0.9396926, -0.19617474, 0.28016657, 0, 0.81915206, 0.57357645, -0.3420202, 0.53898555, -0.76975113, 0, 0, 0)
 light_color = Color(0.55, 0.7, 1, 1)
 light_energy = 0.35

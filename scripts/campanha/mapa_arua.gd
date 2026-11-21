@@ -173,6 +173,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			_mover_sel(1)
 		KEY_G:
 			_abrir_grupo()
+		KEY_L:
+			abrir_loja()
 		KEY_ENTER, KEY_KP_ENTER:
 			var r: Dictionary = D.REGIOES[_sel]
 			var prox = campanha.proxima_batalha()
@@ -243,6 +245,16 @@ func _lutar(n: int) -> void:
 	if n != campanha.proxima_batalha():
 		return
 	get_tree().change_scene_to_file(D.cena_batalha(n))
+
+
+## Loja da cidade (só onde DadosAto1.LOJAS tem a região atual; tecla L).
+func abrir_loja() -> void:
+	if campanha.loja_aqui().is_empty() or _andando or get_node_or_null("Loja"):
+		return
+	var l: Loja = preload("res://scripts/campanha/loja.gd").new()
+	l.name = "Loja"
+	add_child(l)
+	l.fechou.connect(func(): _hud.atualizar(_sel, _andando))
 
 
 func _abrir_grupo() -> void:

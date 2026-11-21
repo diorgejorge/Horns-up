@@ -11,6 +11,7 @@ const D := preload("res://scripts/campanha/dados_ato1.gd")
 
 var herois := {}          # id -> {nivel, xp, hp, mp, atributos{}, equipamento{}, recrutado}
 var inventario := {}      # id do item -> quantidade
+var ouro := 0
 var vencidas: Array = []  # números das batalhas vencidas
 var regiao_atual := "vila"
 var posicao_rota := 0     # casa da DadosAto1.ROTA onde o grupo está no mapa-múndi
@@ -40,6 +41,7 @@ func novo_jogo() -> void:
 		e["hp"] = hp_max(id)
 		e["mp"] = mp_max(id)
 	inventario = D.INVENTARIO_INICIAL.duplicate()
+	ouro = D.OURO_INICIAL
 	vencidas = []
 	regiao_atual = "vila"
 	posicao_rota = 0
@@ -153,9 +155,15 @@ func remover_item(id: String, qtd := 1) -> void:
 	mudou.emit()
 
 
+## Consumível que faz efeito neste herói (cura com HP faltando, mana com MP faltando).
+## Vale dentro e fora da batalha (regra do Diorge, 2026-11-21).
 func pode_usar(item: String, heroi: String) -> bool:
-	return fora_da_batalha() and inventario.get(item, 0) > 0 and D.ITENS[item]["tipo"] == "consumivel" \
-		and herois[heroi]["hp"] < hp_max(heroi)
+	if inventario.get(item, 0) <= 0 or D.ITENS[item]["tipo"] != "consumivel":
+		return false
+	var it: Dictionary = D.ITENS[item]
+	var h: Dictionary = herois[heroi]
+	return (it.get("cura", 0) > 0 and h["hp"] < hp_max(heroi)) \
+		or (it.get("mana", 0) > 0 and h["mp"] < mp_max(heroi))
 
 
 func usar_item(item: String, heroi: String) -> bool:
@@ -163,8 +171,22 @@ func usar_item(item: String, heroi: String) -> bool:
 		return false
 	var h: Dictionary = herois[heroi]
 	h["hp"] = mini(hp_max(heroi), h["hp"] + D.ITENS[item].get("cura", 0))
+	h["mp"] = mini(mp_max(heroi), h["mp"] + D.ITENS[item].get("mana", 0))
 	remover_item(item)
 	salvar()
+	return true
+
+
+## Consumíveis que o grupo tem agora (para o menu de itens da batalha).
+func consumiveis() -> Array:
+	return inventario.keys().filter(func(k): return D.ITENS[k]["tipo"] == "consumivel" and inventario[k] > 0)
+
+
+## A batalha gasta o item do inventário do grupo (o efeito é aplicado nela).
+func gastar_item(item: String) -> bool:
+	if inventario.get(item, 0) <= 0:
+		return false
+	remover_item(item)
 	return true
 
 
@@ -206,6 +228,35 @@ func _limitar(heroi: String) -> void:
 	h["hp"] = mini(h["hp"], hp_max(heroi))
 	h["mp"] = mini(h["mp"], mp_max(heroi))
 	mudou.emit()
+
+
+# --- ouro e lojas --------------------------------------------------------------------------
+
+## Loja da região onde o grupo está ({} se não houver).
+func loja_aqui() -> Dictionary:
+	return D.LOJAS.get(regiao_atual, {})
+
+
+func pode_comprar(item: String) -> bool:
+	var preco: int = loja_aqui().get(item, -1)
+	return preco >= 0 and ouro >= preco
+
+
+func comprar(item: String) -> bool:
+	if not pode_comprar(item):
+		return false
+	ouro -= loja_aqui()[item]
+	adicionar_item(item)
+	salvar()
+	return true
+
+
+## Ouro que a batalha n paga na vitória (soma dos inimigos dela).
+func ouro_da_batalha(n: int) -> int:
+	var t := 0
+	for e in D.BATALHAS[n]["inimigos"]:
+		t += D.OURO_POR_INIMIGO + D.OURO_POR_NIVEL * int(e[3])
+	return t
 
 
 ## Descansar na Vila de Aruã recupera HP e MP do grupo.
@@ -255,6 +306,8 @@ func concluir_batalha(n: int, estado: Dictionary) -> Dictionary:
 	if b.has("recruta") and not herois[b["recruta"]]["recrutado"]:
 		herois[b["recruta"]]["recrutado"] = true
 		resumo["recruta"] = b["recruta"]
+	resumo["ouro"] = ouro_da_batalha(n)
+	ouro += resumo["ouro"]
 	if not n in vencidas:
 		vencidas.append(n)
 	batalha_atual = 0
@@ -279,7 +332,7 @@ func salvar() -> void:
 	var f := FileAccess.open(ARQUIVO, FileAccess.WRITE)
 	if f == null:
 		return
-	f.store_string(JSON.stringify({"herois": herois, "inventario": inventario, "vencidas": vencidas, "regiao": regiao_atual, "posicao": posicao_rota}, "\t"))
+	f.store_string(JSON.stringify({"herois": herois, "inventario": inventario, "vencidas": vencidas, "regiao": regiao_atual, "posicao": posicao_rota, "ouro": ouro}, "\t"))
 
 
 func tem_jogo_salvo() -> bool:
@@ -307,6 +360,7 @@ func carregar() -> bool:
 	for n in dados.get("vencidas", []):
 		vencidas.append(int(n))
 	regiao_atual = dados.get("regiao", "vila")
+	ouro = int(dados.get("ouro", D.OURO_INICIAL))
 	posicao_rota = int(dados.get("posicao", D.ROTA.find(D.regiao(regiao_atual).get("pos", D.ROTA[0]))))
 	mudou.emit()
 	return true

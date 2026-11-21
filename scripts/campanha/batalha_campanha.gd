@@ -5,7 +5,7 @@ extends "res://scripts/batalha_3d.gd"
 ##   Personagens/        inimigos (Unidade3D, editáveis no Inspector)
 ##   Inicio/             casas onde o grupo começa (Marker3D, na ordem)
 ## O grupo (Búfalo e, depois da batalha 03, a Tartaruga) entra pela Campanha.
-## Ordem dos turnos: Destreza. Inventário e equipamento NÃO existem aqui.
+## Ordem dos turnos: iniciativa. Poções podem ser usadas (gastam a ação); equipamento só fora.
 ## Ações: ataque básico (corpo a corpo, flecha ou magia da espécie) e habilidades
 ## da API Combate (scripts/combate/). Magia gasta MP; o Golpe Pesado tem recarga.
 ## Diálogos: autoload Dialogo ("bNN_antes", "bNN_depois", "b12_durante").
@@ -46,6 +46,9 @@ var _painel_hud: HudBatalha
 var _cursor: MeshInstance3D
 var _alcance_mov := {}   # casa -> pai (caminho)
 var _alvos := []         # unidades que podem ser alvo agora
+var _molhado := {}       # casa -> true (lama, brejo, água rasa: vantagem dos aquáticos)
+var _custo := {}         # casa -> custo de movimento (2 = terreno difícil)
+var _especial := {}      # casa -> "salto" | "voo" (só quem salta/voa entra)
 var _iniciativa := {}    # Unidade3D -> d20 + Destreza (rolado no início)
 var _cobertura := {}     # casa -> true: objeto do Cenário que bloqueia ataque à distância
 
@@ -57,6 +60,7 @@ func _ready() -> void:
 	_criar_grupo()
 	_units = find_children("*", "Unidade3D", true, false)
 	_ler_terreno()
+	_ler_tipos_de_terreno()
 	_ler_cobertura()
 	_overlays = Node3D.new()
 	_overlays.name = "Destaques"
@@ -202,11 +206,20 @@ func movimento(u: Unidade3D) -> int:
 
 ## Dados de uma ação ("ataque" ou id de habilidade) para esta unidade (API Combate).
 ## O ataque mágico sem MP vira "Golpe de cajado".
+## Itens: ação "item:<id do item>" (poções), alcance 1, gasta a ação do turno.
 func info_acao(u: Unidade3D, acao: String) -> Dictionary:
+	if acao.begins_with("item:"):
+		var id := acao.substr(5)
+		var it: Dictionary = D.ITENS[id]
+		return {"id": acao, "item": id, "nome": it["nome"], "tipo": "item", "alc": 1, "mp": 0, "recarga": 0,
+			"cura": it.get("cura", 0), "mana": it.get("mana", 0), "visual": "cura",
+			"cor": Color(0.5, 1.0, 0.6) if it.get("cura", 0) > 0 else Color(0.45, 0.7, 1.0)}
 	return Combate.info(_st[u]["especie"], acao, _st[u]["mp"], _st[u])
 
 
 func pode_usar(u: Unidade3D, acao: String) -> bool:
+	if acao.begins_with("item:"):
+		return not u.enemy and campanha.inventario.get(acao.substr(5), 0) > 0
 	return Combate.pode_usar(info_acao(u, acao), _st[u]["mp"], _st[u]["recarga"])
 
 
@@ -216,6 +229,10 @@ func acoes(u: Unidade3D) -> Array:
 	out.append(["ataque", Combate.rotulo(info_acao(u, "ataque")), pode_agir()])
 	for h in _st[u]["habs"]:
 		out.append([h, Combate.rotulo(info_acao(u, h), _st[u]["recarga"]), pode_agir() and pode_usar(u, h) and not alvos_de(u, u.grid(), h).is_empty()])
+	if not u.enemy:
+		for item in campanha.consumiveis():
+			var a: String = "item:" + str(item)
+			out.append([a, "%s x%d" % [D.ITENS[item]["nome"], campanha.inventario[item]], pode_agir() and pode_usar(u, a) and not alvos_de(u, u.grid(), a).is_empty()])
 	return out
 
 
@@ -230,6 +247,10 @@ func info_casa(c: Vector2i) -> String:
 	if not _pisos.has(c):
 		return ""
 	var t := "Casa %d,%d · altura %.2f" % [c.x, c.y, _pisos[c]]
+	if _especial.has(c) and _bloqueio.has(c):
+		t += " · só quem " + ("voa" if _especial[c] == "voo" else "salta ou voa")
+	elif _custo.get(c, 1) > 1:
+		t += " · terreno difícil (custa 2)" + (" · molhado: aquáticos andam normal e batem +25%" if _molhado.has(c) else "")
 	if _cobertura.has(c):
 		return t + " · cobertura (bloqueia flechas e magias)"
 	if _atual and not _atual.enemy and _protegida(_atual, c):
@@ -436,29 +457,69 @@ func _bfs(u: Unidade3D, mov: int) -> Dictionary:
 	for o in _units:
 		if o != u:
 			ocupado[o.grid()] = o.enemy != u.enemy
+	var mob := Regras.mobilidade(_st[u]["especie"])
+	var aquatico := Regras.aquatico(_st[u]["especie"])
 	var ini := u.grid()
 	var dist := {ini: 0}
 	var pai := {ini: ini}
 	var fila: Array[Vector2i] = [ini]
+	# Menor custo primeiro (terreno difícil custa 2): fila ordenada pelo custo.
 	while fila.size() > 0:
 		var c: Vector2i = fila.pop_front()
-		if dist[c] >= mov:
-			continue
 		for d in DIRS:
 			var n: Vector2i = c + d
-			if dist.has(n) or not _pisos.has(n) or _bloqueio.has(n):
-				continue
-			if absf(_pisos[n] - _pisos.get(c, _pisos[n])) > salto:
+			if not _pisos.has(n) or not pode_entrar(mob, c, n):
 				continue
 			if ocupado.get(n, false):
 				continue
-			dist[n] = dist[c] + 1
+			var passo: int = 1 if mob == "voo" or (aquatico and _molhado.has(n)) else _custo.get(n, 1)
+			var custo: int = dist[c] + passo
+			if custo > mov or (dist.has(n) and dist[n] <= custo):
+				continue
+			dist[n] = custo
 			pai[n] = c
-			fila.append(n)
+			var i := 0
+			while i < fila.size() and dist[fila[i]] <= custo:
+				i += 1
+			fila.insert(i, n)
 	for o in ocupado:
 		pai.erase(o)
 	pai.erase(ini)
 	return pai
+
+
+## Lê o tipo de cada piso: terreno difícil (custo 2) e casas só para quem
+## salta/voa (água funda, vitórias-régias, troncos...). Objetos em cima (árvores,
+## muros) continuam bloqueando para todos.
+func _ler_tipos_de_terreno() -> void:
+	var objeto := {}
+	for p in find_children("*", "Peca3D", true, false):
+		var nome: String = p.scene_file_path.get_file().get_basename()
+		for c in p.casas():
+			if not p.piso:
+				if not p.andavel:
+					objeto[c] = true
+				continue
+			if nome in Regras.TERRENO_DIFICIL:
+				_custo[c] = 2
+			if nome in Regras.TERRENO_MOLHADO:
+				_molhado[c] = true
+			if Regras.TERRENO_ESPECIAL.has(nome):
+				_especial[c] = Regras.TERRENO_ESPECIAL[nome]
+	for c in objeto:
+		_especial.erase(c)
+
+
+## Pode passar da casa `de` para a vizinha `para` com essa mobilidade?
+func pode_entrar(mob: String, de: Vector2i, para: Vector2i) -> bool:
+	if _bloqueio.has(para):
+		var tipo: String = _especial.get(para, "")
+		if tipo == "" or mob == "" or (tipo == "voo" and mob != "voo"):
+			return false
+	if mob == "voo":
+		return true
+	var degrau := Regras.DEGRAU_SALTO if mob == "salto" else salto
+	return absf(_pisos[para] - _pisos.get(de, _pisos[para])) <= degrau
 
 
 func _dist(a: Vector2i, b: Vector2i) -> int:
@@ -486,7 +547,16 @@ func alvos_de(u: Unidade3D, de: Vector2i, acao: String) -> Array:
 		"defesa":
 			if not _st[u]["efeitos"].has("defesa"):
 				out.append(u)
+		"item":
+			for o in _units:
+				if o.enemy == u.enemy and _dist(de, o.grid()) <= i["alc"] and _item_serve(i, o):
+					out.append(o)
 	return out
+
+
+func _item_serve(i: Dictionary, o: Unidade3D) -> bool:
+	return (i["cura"] > 0 and _st[o]["hp"] < _st[o]["hpmax"]) \
+		or (i["mana"] > 0 and _st[o]["mpmax"] > 0 and _st[o]["mp"] < _st[o]["mpmax"])
 
 
 func _feridos_em_volta(centro: Unidade3D, raio := 1) -> Array:
@@ -529,6 +599,9 @@ func _executar(u: Unidade3D, alvo: Unidade3D, acao: String) -> void:
 		e["recarga"][acao] = i["recarga"] + 1  # +1: o fim deste turno já desconta
 	if alvo != u:
 		_virar(u, alvo.position)
+	if i["tipo"] == "item":
+		await _usar_item(u, alvo, i)
+		return
 	u.tocar("attack")
 	var cajado: bool = acao == "ataque" and i.get("nome", "") == Combate.hab(Combate.SEM_MP).nome
 	if acao == "ataque" and not cajado:
@@ -571,6 +644,40 @@ func _executar(u: Unidade3D, alvo: Unidade3D, acao: String) -> void:
 	await _checar_fim()
 
 
+## Poção: gasta do inventário do grupo e cura HP e/ou MP do alvo (vizinho ou si).
+func _usar_item(u: Unidade3D, alvo: Unidade3D, i: Dictionary) -> void:
+	if not campanha.gastar_item(i["item"]):
+		return
+	_som(SONS + "hab_cura_leve.wav")
+	_mostrar_pocao(alvo)
+	await _espera(0.2)
+	VfxCombate.acertar(self, i, alvo.global_position)
+	if i["cura"] > 0:
+		_curar(alvo, i["cura"])
+	if i["mana"] > 0:
+		var e: Dictionary = _st[alvo]
+		var v: int = mini(i["mana"], e["mpmax"] - e["mp"])
+		e["mp"] += v
+		_numero(alvo, "+%d MP" % v, Color(0.5, 0.75, 1.0))
+	await _espera(0.5)
+	_painel_hud.atualizar()
+
+
+## O frasco (itensCura.glb) sobe e some acima de quem bebe.
+func _mostrar_pocao(alvo: Unidade3D) -> void:
+	if not ResourceLoader.exists(D.MODELO_POCAO):
+		return
+	var m: Node3D = load(D.MODELO_POCAO).instantiate()
+	add_child(m)
+	m.global_position = alvo.global_position + Vector3.UP * 1.1 * alvo.escala
+	m.scale = Vector3.ONE * 0.35
+	var tw := create_tween()
+	tw.tween_property(m, "position:y", m.position.y + 0.5, 0.7)
+	tw.parallel().tween_property(m, "rotation:y", TAU, 0.7)
+	tw.tween_property(m, "scale", Vector3.ZERO, 0.2)
+	tw.tween_callback(m.queue_free)
+
+
 func _curar(alvo: Unidade3D, v: int) -> void:
 	_st[alvo]["hp"] = mini(_st[alvo]["hpmax"], _st[alvo]["hp"] + v)
 	_numero(alvo, "+%d" % v, Color(0.4, 1.0, 0.5))
@@ -590,6 +697,8 @@ func _ferir(u: Unidade3D, t: Unidade3D, mult: float, efeito: String) -> void:
 	var d := Regras.dano(a["attrs"], a["classe"], a["nivel"], b["attrs"], a["arma"], dif, _rng)
 	if a["efeitos"].has("fraco"):
 		d += Regras.EFEITOS["fraco"]["dano_feito"]
+	if Regras.aquatico(a["especie"]) and _molhado.has(u.grid()):
+		mult *= Regras.BONUS_DANO_AQUATICO  # búfalo forte na lama e na água rasa
 	d = maxi(1, roundi(d * mult))
 	var bruto := d
 	d = Regras.absorver(d, _defesa_total(t))  # armadura segura parte do golpe
@@ -675,6 +784,10 @@ func _ia(u: Unidade3D) -> void:
 	var reach := _bfs(u, movimento(u))
 	var casas: Array = reach.keys()
 	casas.push_front(u.grid())
+	# 0) herói muito ferido (só no --auto) toma poção
+	if not u.enemy and _st[u]["hp"] < _st[u]["hpmax"] * 0.3 and pode_usar(u, "item:pocao"):
+		await _executar(u, u, "item:pocao")
+		return
 	# 1) apoio: cura em área, cura, defesa
 	for h in e["habs"]:
 		if not pode_usar(u, h):

@@ -292,6 +292,10 @@ func _batalha(n: int) -> Node3D:
 			bloq[c] = true
 		p.position.y = y
 	_brilhos(cenario, root, casas, topo, AMBIENTES[dados["ambiente"]]["brilho"])
+	if n == 1:  # a Moradora (cuca.glb) assiste da vila; ocupa a casa dela
+		var c := Vector2i(12, 13)
+		_moradora(cenario, root, Vector3(c.x + 0.5, topo[c], c.y + 0.5), 200.0)
+		bloq[c] = true
 
 	# Inimigos (nós da cena: mova no editor) e marcadores de início do grupo.
 	for e in dados["inimigos"]:
@@ -545,6 +549,7 @@ func _mapa() -> Node3D:
 	_peca(cenario, root, "props", "e02_secador_rede", 2.5, 19.5, t.call(2, 19), 40.0)
 	_peca(cenario, root, "pantano", "s06_canoa", 6.5, 16.5, t.call(6, 16), 70.0, 0.9)
 	_peca(cenario, root, "props", "e03_cestos_peixe", 8.5, 20.5, t.call(8, 20), 0.0)
+	_moradora(cenario, root, Vector3(6.5, t.call(6, 20), 20.5), 200.0)
 	# Várzea: palafita, canoa encalhada, cupinzeiro
 	_peca(cenario, root, "pantano", "s12_cabana_palafita", 22.5, 21.5, t.call(22, 21), 160.0, 1.2)
 	_peca(cenario, root, "pantano", "s06_canoa", 16.5, 22.5, t.call(16, 22), 10.0, 0.9)
@@ -587,6 +592,24 @@ func _mapa() -> Node3D:
 	root.grupo = NodePath("Grupo")
 	_camera_luz(root, Vector3(15.5, 0.3, 12.5), 25.5, AMBIENTES["vila"])
 	return root
+
+
+## A Moradora da vila (modelo cuca.glb, sem esqueleto): uma Peca3D que é
+## objeto, não piso, e bloqueia a casa onde está.
+func _moradora(parent: Node3D, owner_: Node, pos: Vector3, giro: float) -> void:
+	var p := Node3D.new()
+	p.set_script(load("res://scripts/components/peca_3d.gd"))
+	p.name = "Moradora"
+	p.piso = false
+	p.andavel = false
+	p.position = pos
+	p.rotation_degrees.y = giro
+	var m: Node3D = load(DadosAto1.MODELO_MORADORA).instantiate(PackedScene.GEN_EDIT_STATE_INSTANCE)
+	m.name = "Modelo"
+	p.add_child(m)
+	parent.add_child(p, true)
+	m.owner = owner_
+	p.owner = owner_
 
 
 func _local(parent: Node3D, owner_: Node, nome: String, pos: Vector3, regiao: String) -> void:

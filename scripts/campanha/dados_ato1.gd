@@ -64,13 +64,18 @@ const ESPECIES := {
 
 ## Nomes de quem fala nos diálogos. O Pajé não tem falas no roteiro.
 const FALANTES := {
-	"bufalo": "Búfalo", "tartaruga": "Tartaruga", "morador": "Morador",
+	"bufalo": "Búfalo", "tartaruga": "Tartaruga", "morador": "Moradora",
 	"voz": "Voz distante", "mapinguari": "Mapinguari", "": "",
 }
 
 ## Retrato nos diálogos (estilo Final Fantasy) feito do próprio modelo 3D.
 ## Morador e Voz distante não têm modelo: aparecem com o losango.
+## A moradora da Vila de Aruã usa o modelo cuca.glb. No Ato I ninguém sabe que
+## ela é a Cuca (pedido do Diorge): o jogo só a chama de "Moradora".
+const MODELO_MORADORA := "res://assets/diorge/cuca.glb"
+
 const RETRATOS := {
+	"morador": MODELO_MORADORA,
 	"bufalo": RIG + "buffalo.glb",
 	"tartaruga": RIG + "herois/tartaruga_paladina.glb",
 	"mapinguari": RIG + "bosses/mapinguari.glb",
@@ -82,7 +87,9 @@ const RETRATOS := {
 ## `so`: classes que podem equipar (vazio = todas).
 const ITENS := {
 	"pocao": {"nome": "Poção de cura", "tipo": "consumivel", "cura": 30,
-		"desc": "Recupera 30 HP de um herói. Só pode ser usada fora da batalha."},
+		"desc": "Recupera 30 HP de um herói. Na batalha, gasta a ação do turno (alcance 1)."},
+	"pocao_mana": {"nome": "Poção de mana", "tipo": "consumivel", "mana": 12,
+		"desc": "Recupera 12 MP de um herói que usa magia. Na batalha, gasta a ação do turno (alcance 1)."},
 	"espadao_bronze": {"nome": "Espadão de bronze", "tipo": "arma", "ataque": 3, "so": ["guerreiro"],
 		"desc": "O espadão que o Búfalo carrega. +3 de ataque."},
 	"maca_pedra": {"nome": "Maça de pedra", "tipo": "arma", "ataque": 2, "so": ["paladino"],
@@ -98,7 +105,22 @@ const ITENS := {
 ## Slots que o sistema de equipamento suporta.
 const SLOTS := {"arma": "Arma", "armadura": "Armadura", "acessorio": "Acessório"}
 
-const INVENTARIO_INICIAL := {"pocao": 2}
+const INVENTARIO_INICIAL := {"pocao": 2, "pocao_mana": 1}
+
+## Modelo 3D da poção de cura (aparece quando alguém bebe uma na batalha).
+const MODELO_POCAO := "res://assets/diorge/itensCura.glb"
+
+# --- ouro e lojas ------------------------------------------------------------------
+
+const OURO_INICIAL := 30
+## Ouro por inimigo derrotado numa vitória: base + por nível do inimigo.
+const OURO_POR_INIMIGO := 6
+const OURO_POR_NIVEL := 3
+
+## Lojas das cidades: região -> {item: preço}. No Ato I só a Vila de Aruã é cidade.
+const LOJAS := {
+	"vila": {"pocao": 25, "pocao_mana": 35},
+}
 
 # --- mapa-múndi ----------------------------------------------------------------------
 
@@ -165,7 +187,7 @@ const BATALHAS := {
 		"objetivo": "Derrotar os inimigos que controlam as passarelas.", "vitoria": "todos",
 		"inicio": [Vector2i(6, 13), Vector2i(8, 13), Vector2i(7, 14), Vector2i(9, 14)],
 		"inimigos": [["acaizeiro", 5, 4, 3], ["vitoria_regia", 8, 4, 3], ["aninga", 5, 1, 3], ["buriti", 13, 4, 3], ["sapo_dardo", 2, 0, 3], ["jacaretinga", 10, 4, 3]],
-		"recompensa": {"pocao": 1},
+		"recompensa": {"pocao": 1, "pocao_mana": 1},
 	},
 	5: {
 		"regiao": "varzea", "nome": "O igarapé dos ossos", "ambiente": "igarape",
@@ -188,15 +210,15 @@ const BATALHAS := {
 		"trilha": "batalha_floresta",
 		"objetivo": "Derrotar os defensores de uma área ritual antiga.", "vitoria": "todos",
 		"inicio": [Vector2i(7, 14), Vector2i(8, 14), Vector2i(7, 15), Vector2i(8, 15)],
-		"inimigos": [["vitoria_regia", 7, 9, 5], ["aninga", 8, 9, 5], ["cogumelo", 8, 6, 5], ["golem_toco", 5, 7, 5], ["naga", 10, 6, 5], ["cururu", 7, 5, 5]],
-		"recompensa": {"muiraquita": 1, "pocao": 1},
+		"inimigos": [["vitoria_regia", 7, 9, 4], ["aninga", 8, 9, 4], ["cogumelo", 8, 6, 4], ["golem_toco", 5, 7, 4], ["naga", 10, 6, 4], ["cururu", 7, 5, 4]],
+		"recompensa": {"muiraquita": 1, "pocao": 1, "pocao_mana": 1},
 	},
 	8: {
 		"regiao": "ruinas", "nome": "Guardiões das ruínas", "ambiente": "ruinas",
 		"trilha": "batalha_ruinas",
 		"objetivo": "Derrotar os defensores que ocupam o acesso ao complexo.", "vitoria": "todos",
 		"inicio": [Vector2i(7, 13), Vector2i(8, 13), Vector2i(6, 14), Vector2i(9, 14)],
-		"inimigos": [["jacare_acu", 7, 5, 5], ["cururu", 4, 2, 5], ["bromelia", 11, 1, 5], ["coral", 9, 6, 5], ["tartaruga_amazonia", 8, 3, 5], ["cobra_cavaleira", 6, 3, 5]],
+		"inimigos": [["jacare_acu", 7, 5, 4], ["cururu", 4, 2, 4], ["coral", 9, 6, 4], ["tartaruga_amazonia", 8, 3, 4], ["cobra_cavaleira", 6, 3, 4]],
 		"recompensa": {"pocao": 2},
 	},
 	9: {
@@ -205,7 +227,7 @@ const BATALHAS := {
 		"objetivo": "Derrotar as unidades que guardam a passagem para o altar.", "vitoria": "todos",
 		"inicio": [Vector2i(7, 13), Vector2i(8, 13), Vector2i(6, 14), Vector2i(9, 14)],
 		"inimigos": [["naga", 7, 2, 5], ["coral", 9, 5, 5], ["cururu", 6, 1, 5], ["jacare_acu", 7, 7, 5], ["cogumelo", 5, 3, 5], ["tartaruga_amazonia", 10, 3, 5]],
-		"recompensa": {"pocao": 1},
+		"recompensa": {"pocao": 1, "pocao_mana": 1},
 	},
 	10: {
 		"regiao": "ruinas", "nome": "O altar rompido", "ambiente": "ruinas",
@@ -221,7 +243,7 @@ const BATALHAS := {
 		"objetivo": "Derrotar os defensores que protegem a aproximação ao covil.", "vitoria": "todos",
 		"inicio": [Vector2i(7, 13), Vector2i(8, 13), Vector2i(6, 13), Vector2i(9, 13)],
 		"inimigos": [["golem_toco", 7, 4, 6], ["acaizeiro", 5, 6, 6], ["vitoria_regia", 9, 6, 6], ["carnivora", 8, 5, 6], ["buriti", 3, 3, 6], ["jacare_acu", 8, 1, 6], ["perereca", 12, 3, 6]],
-		"recompensa": {"pocao": 2},
+		"recompensa": {"pocao": 2, "pocao_mana": 1},
 	},
 	12: {
 		"regiao": "covil", "nome": "O despertar do Mapinguari", "ambiente": "covil",

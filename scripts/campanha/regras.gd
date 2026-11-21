@@ -89,6 +89,47 @@ static func movimento(classe_id: String, destreza: int) -> int:
 	return classe(classe_id)["mov"] + maxi(0, floori((destreza - 10) / 4.0))
 
 
+## Terreno (regra do Diorge, 2026-11-21), pelo nome da peça de piso:
+## custo 2 = terreno difícil (cada casa vale 2 de movimento; quem voa paga 1).
+const TERRENO_DIFICIL := [
+	"m05_lama_furos", "m03_lama_cupins", "m09_brejo_capim", "m12_lodo_ouricos", "m28_lodo_ouricos_b",
+	"m17_agua_rasa_pedras", "m23_riacho_pedras", "t04_agua_rasa_pedras", "s10_poca_agua",
+	"s04_lama_juncos", "s08_lama_fungos", "t06_pantano_raizes", "t10_lama_raizes",
+	"m08_raizes_terra",  # raízes altas; o chão de musgo (m01) e o de raízes (f12) são normais
+]
+## Parte molhada do terreno difícil (lama, brejo, juncos, água rasa, riacho).
+const TERRENO_MOLHADO := [
+	"m05_lama_furos", "m03_lama_cupins", "m09_brejo_capim", "m12_lodo_ouricos", "m28_lodo_ouricos_b",
+	"m17_agua_rasa_pedras", "m23_riacho_pedras", "t04_agua_rasa_pedras", "s10_poca_agua",
+	"s04_lama_juncos", "s08_lama_fungos", "t06_pantano_raizes", "t10_lama_raizes",
+]
+## Animais aquáticos (pedido do Diorge: o búfalo amazônico é forte e aquático):
+## no terreno molhado andam com custo 1 e causam mais dano.
+const AQUATICOS := ["bufalo"]
+const BONUS_DANO_AQUATICO := 1.25
+
+
+static func aquatico(especie: String) -> bool:
+	return especie in AQUATICOS
+
+
+## Casas que só quem salta ("salto") ou voa ("voo") acessa. "salto" também vale para quem voa.
+const TERRENO_ESPECIAL := {
+	"m21_tronco_caido_grama": "salto", "s14_monte_lama": "salto",
+	"m04_agua_vitorias_regias": "salto", "t14_agua_vitorias_regias": "salto", "s01_vitorias_regias": "salto",
+	"m15_raiz_tronco": "salto", "m16_raizes_grama": "salto",
+	"m24_agua_funda": "voo", "t05_agua_escura": "voo", "m30_corredeira_pedras": "voo",
+}
+## Mobilidade especial por espécie (as demais andam normal).
+const MOBILIDADE := {"perereca": "salto", "sapo_dardo": "salto", "cururu": "salto"}
+## Maior degrau num passo para quem salta (quem voa ignora a altura).
+const DEGRAU_SALTO := 0.9
+
+
+static func mobilidade(especie: String) -> String:
+	return MOBILIDADE.get(especie, "")
+
+
 static func mod(valor: int) -> int:
 	return floori((valor - 10) / 2.0)
 
