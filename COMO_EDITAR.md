@@ -2,7 +2,10 @@
 
 Abra a pasta no Godot 4.7 e dê duplo clique numa cena em `scenes/3d/`:
 `batalha_3d.tscn` (batalha 16x16) ou `mapa_mundi_3d.tscn` (mapa-múndi).
-F5 roda o jogo (começa na batalha). Dentro do jogo: **F1** batalha, **F2** mapa-múndi, **Esc** sai.
+F5 roda o jogo, que começa no **Ato I** (mapa de Aruã): é lá que as 12 batalhas têm música e
+efeitos de som. Dentro do jogo: **F3** Ato I, **F1** batalha de protótipo (sem música),
+**F2** mapa-múndi de protótipo, **Esc** sai. Para testar uma batalha do Ato I direto, abra
+`scenes/3d/ato1/batalha_NN.tscn` e aperte **F6**.
 
 ## Controles de teste
 - Batalha: **Tab** troca o aliado selecionado (azul = onde ele pode andar, vermelho = casas

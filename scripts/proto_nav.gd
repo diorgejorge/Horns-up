@@ -1,11 +1,13 @@
 extends Node
 ## Autoload de navegação entre os protótipos (não é jogabilidade).
-## F1 = batalha 3D, F2 = mapa-múndi 3D.
+## F1 = batalha 3D (protótipo), F2 = mapa-múndi 3D (protótipo), F3 = Ato I (mapa de Aruã).
+## O jogo (F5) começa no Ato I: só as batalhas do Ato I têm música e efeitos de ação.
 ## Para capturas de tela automáticas: godot --path . <cena> -- --shot=C:/caminho/arquivo.png
 
 const SCENES := {
 	KEY_F1: "res://scenes/3d/batalha_3d.tscn",
 	KEY_F2: "res://scenes/3d/mapa_mundi_3d.tscn",
+	KEY_F3: "res://scenes/3d/ato1/mapa_arua.tscn",
 }
 
 var _shot_path := ""
