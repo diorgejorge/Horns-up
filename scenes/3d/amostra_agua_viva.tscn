@@ -1,0 +1,199 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/pantano/s10_poca_agua.tscn" id="t0"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/pantano/s02_mangue.tscn" id="t1"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/pantano/s01_vitorias_regias.tscn" id="t2"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m04_agua_vitorias_regias.tscn" id="t3"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m17_agua_rasa_pedras.tscn" id="t4"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m24_agua_funda.tscn" id="t5"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m23_riacho_pedras.tscn" id="t6"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m30_corredeira_pedras.tscn" id="t7"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno2/t04_agua_rasa_pedras.tscn" id="t8"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno2/t05_agua_escura.tscn" id="t9"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno2/t14_agua_vitorias_regias.tscn" id="t10"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/efeitos/terreno_molhado.tscn" id="molh"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ceu_mat"]
+sky_top_color = Color(0.32, 0.55, 0.8, 1)
+sky_horizon_color = Color(0.85, 0.82, 0.72, 1)
+ground_bottom_color = Color(0.2, 0.25, 0.18, 1)
+ground_horizon_color = Color(0.5, 0.55, 0.45, 1)
+
+[sub_resource type="Sky" id="ceu"]
+sky_material = SubResource("ceu_mat")
+
+[sub_resource type="Environment" id="amb"]
+background_mode = 1
+background_color = Color(0.12, 0.2, 0.14, 1)
+sky = SubResource("ceu")
+ambient_light_source = 3
+ambient_light_energy = 0.45
+reflected_light_source = 2
+tonemap_mode = 3
+tonemap_exposure = 1.15
+ssao_enabled = true
+ssao_radius = 0.6
+ssao_intensity = 1.6
+glow_enabled = true
+
+
+[node name="AmostraAguaViva" type="Node3D"]
+
+[node name="LEIA" type="Node" parent="."]
+editor_description = "Amostra de água viva nos tiles que já têm água. Fileira de trás = original; fileira da frente = mesmo tile com o nó TerrenoMolhado no estado AGUA_DO_TILE (ondinhas + chuva). Para voltar, apague o nó TerrenoMolhado. Os GLBs não foram alterados."
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("amb")
+
+[node name="Sol" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.9848077, 0.14224426, -0.09960051, 0, 0.57357645, 0.81915206, 0.17364818, -0.80670726, 0.56486255, 0, 0, 0)
+light_color = Color(0.95, 0.95, 0.75, 1)
+light_energy = 1.2
+shadow_enabled = true
+shadow_blur = 1.5
+
+[node name="LuzDoCeu" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.9396926, -0.19617474, 0.28016657, 0, 0.81915206, 0.57357645, -0.3420202, 0.53898555, -0.76975113, 0, 0, 0)
+light_color = Color(0.55, 0.7, 1, 1)
+light_energy = 0.35
+
+
+[node name="s10_poca_agua_seco" parent="." instance=ExtResource("t0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0, 0.0)
+encaixar = false
+
+[node name="s10_poca_agua_viva" parent="." instance=ExtResource("t0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0, 1.3)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="s10_poca_agua_viva" instance=ExtResource("molh")]
+estado = 3
+chuva = 0.7
+
+[node name="s02_mangue_seco" parent="." instance=ExtResource("t1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3, 0, 0.0)
+encaixar = false
+
+[node name="s02_mangue_viva" parent="." instance=ExtResource("t1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3, 0, 1.3)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="s02_mangue_viva" instance=ExtResource("molh")]
+estado = 3
+chuva = 0.7
+
+[node name="s01_vitorias_regias_seco" parent="." instance=ExtResource("t2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0, 0.0)
+encaixar = false
+
+[node name="s01_vitorias_regias_viva" parent="." instance=ExtResource("t2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0, 1.3)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="s01_vitorias_regias_viva" instance=ExtResource("molh")]
+estado = 3
+chuva = 0.7
+
+[node name="m04_agua_vitorias_regias_seco" parent="." instance=ExtResource("t3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9000000000000004, 0, 0.0)
+encaixar = false
+
+[node name="m04_agua_vitorias_regias_viva" parent="." instance=ExtResource("t3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9000000000000004, 0, 1.3)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m04_agua_vitorias_regias_viva" instance=ExtResource("molh")]
+estado = 3
+chuva = 0.7
+
+[node name="m17_agua_rasa_pedras_seco" parent="." instance=ExtResource("t4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 0, 0.0)
+encaixar = false
+
+[node name="m17_agua_rasa_pedras_viva" parent="." instance=ExtResource("t4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 0, 1.3)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m17_agua_rasa_pedras_viva" instance=ExtResource("molh")]
+estado = 3
+chuva = 0.7
+
+[node name="m24_agua_funda_seco" parent="." instance=ExtResource("t5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 0.0)
+encaixar = false
+
+[node name="m24_agua_funda_viva" parent="." instance=ExtResource("t5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 1.3)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m24_agua_funda_viva" instance=ExtResource("molh")]
+estado = 3
+chuva = 0.7
+
+[node name="m23_riacho_pedras_seco" parent="." instance=ExtResource("t6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0, 3.2)
+encaixar = false
+
+[node name="m23_riacho_pedras_viva" parent="." instance=ExtResource("t6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0, 4.5)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m23_riacho_pedras_viva" instance=ExtResource("molh")]
+estado = 3
+chuva = 0.7
+
+[node name="m30_corredeira_pedras_seco" parent="." instance=ExtResource("t7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3, 0, 3.2)
+encaixar = false
+
+[node name="m30_corredeira_pedras_viva" parent="." instance=ExtResource("t7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3, 0, 4.5)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m30_corredeira_pedras_viva" instance=ExtResource("molh")]
+estado = 3
+chuva = 0.7
+
+[node name="t04_agua_rasa_pedras_seco" parent="." instance=ExtResource("t8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0, 3.2)
+encaixar = false
+
+[node name="t04_agua_rasa_pedras_viva" parent="." instance=ExtResource("t8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0, 4.5)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="t04_agua_rasa_pedras_viva" instance=ExtResource("molh")]
+estado = 3
+chuva = 0.7
+
+[node name="t05_agua_escura_seco" parent="." instance=ExtResource("t9")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9000000000000004, 0, 3.2)
+encaixar = false
+
+[node name="t05_agua_escura_viva" parent="." instance=ExtResource("t9")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9000000000000004, 0, 4.5)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="t05_agua_escura_viva" instance=ExtResource("molh")]
+estado = 3
+chuva = 0.7
+
+[node name="t14_agua_vitorias_regias_seco" parent="." instance=ExtResource("t10")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 0, 3.2)
+encaixar = false
+
+[node name="t14_agua_vitorias_regias_viva" parent="." instance=ExtResource("t10")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 0, 4.5)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="t14_agua_vitorias_regias_viva" instance=ExtResource("molh")]
+estado = 3
+chuva = 0.7
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(0.70710677, -0.35355338, 0.6123724, 0, 0.8660254, 0.5, -0.70710677, -0.35355338, 0.6123724, 14.6, 10.0, 15.4)
+projection = 1
+current = true
+size = 7.5
+near = 0.1
+far = 100.0

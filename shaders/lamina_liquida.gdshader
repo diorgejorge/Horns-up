@@ -16,6 +16,8 @@ uniform float chuva : hint_range(0.0, 1.0) = 0.0;     // anéis de gotas
 uniform float pocas : hint_range(0.0, 1.0) = 1.0;     // 1 = cobre tudo, menor = só poças espalhadas
 uniform float escala_pocas = 1.3;
 
+uniform float espessura_max = 0.3;      // acima disso (em vista) considera que não há chão embaixo
+
 uniform sampler2D tex_profundidade : hint_depth_texture, filter_linear, repeat_disable;
 
 varying vec3 pos_mundo;
@@ -77,7 +79,7 @@ void fragment() {
 
 	float borda = smoothstep(0.0, borda_suave, espessura);
 	// Sem chão embaixo (beira do tile, vão entre peças): some.
-	float sem_chao = 1.0 - smoothstep(0.18, 0.3, espessura);
+	float sem_chao = 1.0 - smoothstep(espessura_max * 0.6, espessura_max, espessura);
 	float fundo = clamp(espessura / profundidade_cor, 0.0, 1.0);
 
 	// Poças: recorte irregular pelo ruído do mundo.
@@ -89,7 +91,8 @@ void fragment() {
 
 	ALBEDO = mix(cor_rasa, cor_funda, fundo);
 	ALPHA = mix(opacidade * 0.65, opacidade, fundo) * borda * mascara * sem_chao;
-	ROUGHNESS = rugosidade;
+	// Rugosidade muito baixa + glow pode estourar em placas de vídeo reais (quadrados pretos).
+	ROUGHNESS = max(rugosidade, 0.14);
 	SPECULAR = 0.45;
 	METALLIC = 0.0;
 }

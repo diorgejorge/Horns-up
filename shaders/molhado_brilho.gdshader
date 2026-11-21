@@ -30,7 +30,7 @@ void fragment() {
 	float m = umidade * mix(0.55, 1.0, topo) * smoothstep(0.15, 0.75, manchas + umidade * 0.5);
 	ALBEDO = cor_molhada;
 	ALPHA = m * 0.7;
-	ROUGHNESS = 0.1;
+	ROUGHNESS = 0.18;
 	SPECULAR = 0.5;
 	METALLIC = 0.0;
 }

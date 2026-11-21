@@ -12,13 +12,16 @@ extends Node3D
 ##  - "Lamina": um plano com shader de líquido (água ou lama) na altura do topo,
 ##    com ondulação, gotas de chuva e borda suave onde encosta no chão.
 
-enum Estado { MOLHADO, POCAS, ALAGADO }
+enum Estado { MOLHADO, POCAS, ALAGADO, AGUA_DO_TILE }
 enum Liquido { AGUA_BARRENTA, AGUA_ESCURA, LAMA }
 
 const SH_BRILHO := preload("res://shaders/molhado_brilho.gdshader")
 const SH_LAMINA := preload("res://shaders/lamina_liquida.gdshader")
+const SH_PINTADA := preload("res://shaders/agua_pintada.gdshader")
 
 ## MOLHADO = só brilho. POCAS = brilho + poças espalhadas. ALAGADO = lâmina cobrindo o tile.
+## AGUA_DO_TILE = para tiles que JÁ têm água desenhada (poça, mangue, riacho...):
+## só a parte azulada/esverdeada da textura ganha ondinhas, reflexo e chuva.
 @export var estado := Estado.POCAS:
 	set(v): estado = v; _refazer()
 @export var liquido := Liquido.AGUA_BARRENTA:
@@ -33,6 +36,10 @@ const SH_LAMINA := preload("res://shaders/lamina_liquida.gdshader")
 ## 0 a 1: quanto do tile as poças cobrem (só no estado POCAS).
 @export_range(0.0, 1.0, 0.01) var cobertura_pocas := 0.6:
 	set(v): cobertura_pocas = v; _refazer()
+## AGUA_DO_TILE: quão azulada a cor precisa ser para contar como água.
+## Diminua se faltar água, aumente se a terra/pedra estiver ondulando.
+@export_range(-0.2, 0.3, 0.005) var limiar_agua := -0.01:
+	set(v): limiar_agua = v; _refazer()
 ## Anéis de gotas de chuva na superfície.
 @export_range(0.0, 1.0, 0.01) var chuva := 0.0:
 	set(v): chuva = v; _refazer()
@@ -63,7 +70,7 @@ func _refazer() -> void:
 	if peca == null:
 		return
 	# Brilho molhado: mesma malha, mesmo lugar, material por cima.
-	if umidade > 0.0:
+	if umidade > 0.0 and estado != Estado.AGUA_DO_TILE:
 		var mat := ShaderMaterial.new()
 		mat.shader = SH_BRILHO
 		mat.set_shader_parameter("umidade", umidade)
@@ -79,6 +86,27 @@ func _refazer() -> void:
 			add_child(c)
 			c.global_transform = mi.global_transform
 			_criados.append(c)
+	# Água pintada no tile ganha vida (mesma malha, só onde a cor é de água).
+	if estado == Estado.AGUA_DO_TILE:
+		for mi in _malhas(peca):
+			var c := MeshInstance3D.new()
+			c.name = "AguaViva"
+			c.mesh = mi.mesh
+			c.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			add_child(c)
+			c.global_transform = mi.global_transform
+			for i in mi.mesh.get_surface_count():
+				var orig := mi.get_active_material(i) as BaseMaterial3D
+				if orig == null or orig.albedo_texture == null:
+					continue
+				var m := ShaderMaterial.new()
+				m.shader = SH_PINTADA
+				m.set_shader_parameter("tex_albedo", orig.albedo_texture)
+				m.set_shader_parameter("limiar", limiar_agua)
+				m.set_shader_parameter("chuva", chuva)
+				c.set_surface_override_material(i, m)
+			_criados.append(c)
+		return
 	# Lâmina de líquido.
 	if estado != Estado.MOLHADO:
 		var topo: float = peca.get("altura_topo") if peca.get("altura_topo") != null else 0.3
@@ -91,8 +119,10 @@ func _refazer() -> void:
 		lam.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		lam.material_override = _material_lamina()
 		add_child(lam)
-		var extra := 0.06 if estado == Estado.ALAGADO else 0.0
-		lam.position = Vector3(0.0, topo + extra + nivel, 0.0) - position
+		var y := topo + nivel
+		if estado == Estado.ALAGADO:
+			y += 0.06
+		lam.position = Vector3(0.0, y, 0.0) - position
 		_criados.append(lam)
 
 
