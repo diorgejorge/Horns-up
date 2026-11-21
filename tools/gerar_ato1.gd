@@ -594,11 +594,11 @@ func _mapa() -> Node3D:
 	return root
 
 
-## A Moradora da vila (modelo cuca.glb, sem esqueleto): uma Peca3D que é
-## objeto, não piso, e bloqueia a casa onde está.
+## A Moradora da vila (modelo cuca.glb, rigado): um Npc3D (Peca3D que é
+## objeto, não piso, bloqueia a casa e toca a animação "idle").
 func _moradora(parent: Node3D, owner_: Node, pos: Vector3, giro: float) -> void:
 	var p := Node3D.new()
-	p.set_script(load("res://scripts/components/peca_3d.gd"))
+	p.set_script(load("res://scripts/components/npc_3d.gd"))
 	p.name = "Moradora"
 	p.piso = false
 	p.andavel = false

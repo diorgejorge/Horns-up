@@ -1083,10 +1083,18 @@ func _resultado_auto(vitoria: bool, estado: Dictionary) -> void:
 		get_tree().quit()
 
 
-## Diálogo pelo autoload Dialogo (pausa a árvore enquanto roda).
+## Diálogo pelo autoload Dialogo (pausa a árvore enquanto roda). Se a Moradora
+## (Npc3D) está na cena, ela gesticula ("talk") enquanto a conversa dura.
 func _dialogo(id: String) -> void:
-	if dialogo.existe(id):
-		await dialogo.tocar(id)
+	if not dialogo.existe(id):
+		return
+	var npc := find_child("Moradora", true, false)
+	if npc and npc.has_method("tocar"):
+		npc.process_mode = Node.PROCESS_MODE_ALWAYS  # anima mesmo com a árvore pausada
+		npc.tocar("talk")
+	await dialogo.tocar(id)
+	if npc and npc.has_method("tocar"):
+		npc.tocar("idle")
 
 
 func _som(caminho: String) -> void:
