@@ -1,19 +1,20 @@
-"""Gera todos os áudios do Ato I do zero, sem amostras de terceiros.
+"""Gera todos os áudios do Ato I do zero, sem amostras de terceiros (versão 2).
 
-Instrumentos sintetizados aqui mesmo (Python puro, só biblioteca padrão):
-  carimbó  -> curimbó (tambor de tronco), maracá, pandeiro
-  marujada -> viola (corda dedilhada, Karplus-Strong) e acordeom (palheta dupla)
-Melodias originais em compasso binário (2/4).
-Trilhas em rock rápido (bateria, guitarra distorcida, baixo) sem perder o
-curimbó, o maracá, o pandeiro, a viola e o acordeom.
+Tudo é sintetizado aqui, em Python puro (só biblioteca padrão):
+  amazônia/carimbó -> curimbó (tambor de tronco), maracá, pau-de-chuva,
+                      flauta de bambu, viola, acordeom
+  power metal      -> bateria com bumbo duplo, guitarras distorcidas dobradas,
+                      baixo, guitarras solo gêmeas em terças e coro
+Melodias e riffs originais.
 
 Uso:   python audio/gerar_audio.py            (gera tudo)
        python audio/gerar_audio.py acoes      (só os efeitos)
        python audio/gerar_audio.py trilhas    (só as músicas)
 
-Saída: assets/diorge/audio/acoes/*.wav e assets/diorge/audio/trilhas/*.wav
-Para ajustar: mude as tabelas PERSONAGENS / HABILIDADES e as partituras
-EXPLORACAO / CHEFE no fim do arquivo e rode de novo.
+Saída: assets/diorge/audio/acoes/*.wav (mono) e assets/diorge/audio/trilhas/*.wav
+(estéreo). Cada som tem semente própria: gerar só uma parte dá o mesmo resultado.
+O loop das trilhas é ligado nos arquivos .import (edit/loop_mode=2).
+Para ajustar: tabelas PERSONAGENS / HABILIDADES e partituras EXPLORACAO / CHEFE.
 """
 import math
 import os
@@ -21,14 +22,19 @@ import random
 import struct
 import sys
 import wave
+import zlib
 
-SR = 32000
+SR = 44100
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIR_ACOES = os.path.join(RAIZ, "assets", "diorge", "audio", "acoes")
 DIR_TRILHAS = os.path.join(RAIZ, "assets", "diorge", "audio", "trilhas")
 TAU = 2 * math.pi
 
-rnd = random.Random(1616)  # semente fixa: o mesmo script gera sempre os mesmos sons
+rnd = random.Random()
+
+
+def semear(nome):
+    rnd.seed(zlib.crc32(repr(nome).encode()))
 
 
 # --- básico ------------------------------------------------------------------
@@ -37,18 +43,13 @@ def n_am(seg):
     return max(1, int(seg * SR))
 
 
-def silencio(seg):
-    return [0.0] * n_am(seg)
-
-
 def misturar(dest, src, em=0.0, ganho=1.0):
     """Soma src dentro de dest a partir de `em` segundos (estica dest se precisar)."""
     i0 = int(em * SR)
     fim = i0 + len(src)
     if fim > len(dest):
         dest.extend([0.0] * (fim - len(dest)))
-    for i, v in enumerate(src):
-        dest[i0 + i] += v * ganho
+    dest[i0:fim] = [a + b * ganho for a, b in zip(dest[i0:fim], src)]
     return dest
 
 
@@ -57,172 +58,439 @@ def ruido(seg):
     return [g(-1.0, 1.0) for _ in range(n_am(seg))]
 
 
-def passa_baixa(x, corte):
-    a = 1.0 - math.exp(-TAU * corte / SR)
-    y, s = [], 0.0
+def _biquad(x, b0, b1, b2, a1, a2):
+    x1 = x2 = y1 = y2 = 0.0
+    y = []
+    ap = y.append
     for v in x:
-        s += a * (v - s)
-        y.append(s)
+        o = b0 * v + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2
+        x2, x1, y2, y1 = x1, v, y1, o
+        ap(o)
     return y
 
 
-def passa_alta(x, corte):
-    lp = passa_baixa(x, corte)
-    return [a - b for a, b in zip(x, lp)]
-
-
-def passa_faixa(x, freq, q):
-    """Biquad passa-faixa (RBJ, ganho 0 dB no pico)."""
+def filtro(x, tipo, freq, q=0.707, ganho_db=0.0):
+    """Biquads RBJ: pb (passa-baixa), pa (passa-alta), pf (passa-faixa), pico."""
     w = TAU * min(freq, SR * 0.45) / SR
-    al = math.sin(w) / (2 * q)
-    a0 = 1 + al
-    b0, b2 = al / a0, -al / a0
-    a1, a2 = -2 * math.cos(w) / a0, (1 - al) / a0
-    x1 = x2 = y1 = y2 = 0.0
+    cw, al = math.cos(w), math.sin(w) / (2 * q)
+    if tipo == "pb":
+        b = ((1 - cw) / 2, 1 - cw, (1 - cw) / 2)
+        a0, a1, a2 = 1 + al, -2 * cw, 1 - al
+    elif tipo == "pa":
+        b = ((1 + cw) / 2, -(1 + cw), (1 + cw) / 2)
+        a0, a1, a2 = 1 + al, -2 * cw, 1 - al
+    elif tipo == "pf":
+        b = (al, 0.0, -al)
+        a0, a1, a2 = 1 + al, -2 * cw, 1 - al
+    else:  # pico
+        A = 10 ** (ganho_db / 40)
+        b = (1 + al * A, -2 * cw, 1 - al * A)
+        a0, a1, a2 = 1 + al / A, -2 * cw, 1 - al / A
+    return _biquad(x, b[0] / a0, b[1] / a0, b[2] / a0, a1 / a0, a2 / a0)
+
+
+def varredura(x, f0, f1, q=1.5, curva=1.0):
+    """Passa-faixa com a frequência deslizando de f0 a f1 (sem emendas)."""
+    n = len(x)
     y = []
-    for v in x:
+    x1 = x2 = y1 = y2 = 0.0
+    b0 = b2 = a1 = a2 = 0.0
+    for i, v in enumerate(x):
+        if i % 32 == 0:
+            t = (i / n) ** curva
+            f = f0 * (f1 / f0) ** t
+            w = TAU * min(f, SR * 0.45) / SR
+            al = math.sin(w) / (2 * q)
+            a0 = 1 + al
+            b0, b2 = al / a0, -al / a0
+            a1, a2 = -2 * math.cos(w) / a0, (1 - al) / a0
         o = b0 * v + b2 * x2 - a1 * y1 - a2 * y2
         x2, x1, y2, y1 = x1, v, y1, o
         y.append(o)
     return y
 
 
-def envelope(x, ataque=0.005, queda=0.2, curva=1.0):
+def env_exp(x, ataque=0.005, queda=0.2):
     """Ataque linear e queda exponencial (queda = tempo para cair ~63%)."""
     na = n_am(ataque)
     k = math.exp(-1.0 / (queda * SR)) if queda > 0 else 0.0
     y, g = [], 1.0
     for i, v in enumerate(x):
         if i < na:
-            e = i / na
+            y.append(v * i / na)
         else:
             g *= k
-            e = g
-        y.append(v * (e ** curva))
+            y.append(v * g)
     return y
 
 
-def janela(x, ataque=0.01, soltura=0.05):
-    """Liga e desliga suave, sem estalos."""
+def janela(x, ataque=0.005, soltura=0.03):
     n = len(x)
-    na, ns = n_am(ataque), n_am(soltura)
+    na, ns = min(n, n_am(ataque)), min(n, n_am(soltura))
     y = list(x)
-    for i in range(min(na, n)):
+    for i in range(na):
         y[i] *= i / na
-    for i in range(min(ns, n)):
+    for i in range(ns):
         y[n - 1 - i] *= i / ns
     return y
 
 
-def seno_glide(seg, f0, f1, amp=1.0, curva=1.0):
-    """Seno com altura indo de f0 até f1 (curva >1 cai rápido no começo)."""
+def seno_glide(seg, f0, f1, curva=1.0):
     n = n_am(seg)
     y, fase = [], 0.0
     for i in range(n):
-        t = (i / n) ** (1.0 / curva)
-        f = f0 + (f1 - f0) * t
+        f = f0 + (f1 - f0) * (i / n) ** (1.0 / curva)
         fase += TAU * f / SR
-        y.append(math.sin(fase) * amp)
+        y.append(math.sin(fase))
     return y
 
 
-def normalizar(x, pico=0.89):
-    m = max(1e-9, max(abs(v) for v in x))
-    return [v * pico / m for v in x]
+def saturar(x, ganho, assimetria=0.0):
+    off = math.tanh(assimetria)
+    return [math.tanh(v * ganho + assimetria) - off for v in x]
 
 
-def salvar(caminho, x, pico=0.89):
-    x = normalizar(x, pico)
+def limitar(canais, limiar=0.5, razao=4.0, soltura=0.12):
+    """Compressor simples ligado nos canais juntos (mantém a imagem estéreo)."""
+    ka = math.exp(-1 / (0.002 * SR))
+    kr = math.exp(-1 / (soltura * SR))
+    env = 0.0
+    n = len(canais[0])
+    saida = [[0.0] * n for _ in canais]
+    expo = 1 - 1 / razao
+    for i in range(n):
+        p = max(abs(c[i]) for c in canais)
+        env = ka * env + (1 - ka) * p if p > env else kr * env + (1 - kr) * p
+        g = 1.0 if env <= limiar else (limiar / env) ** expo
+        for c, s in zip(canais, saida):
+            s[i] = c[i] * g
+    return saida
+
+
+def salvar(caminho, canais, pico=0.95):
+    """canais: lista com 1 (mono) ou 2 (estéreo) listas de amostras."""
+    m = max(1e-9, max(abs(v) for c in canais for v in c))
+    k = pico / m
     os.makedirs(os.path.dirname(caminho), exist_ok=True)
     with wave.open(caminho, "wb") as w:
-        w.setnchannels(1)
+        w.setnchannels(len(canais))
         w.setsampwidth(2)
         w.setframerate(SR)
-        w.writeframes(b"".join(struct.pack("<h", int(max(-1, min(1, v)) * 32767)) for v in x))
-    print("  ", os.path.relpath(caminho, RAIZ), f"{len(x) / SR:.2f}s")
+        if len(canais) == 1:
+            dados = [int(max(-1.0, min(1.0, v * k)) * 32767) for v in canais[0]]
+        else:
+            dados = [int(max(-1.0, min(1.0, v * k)) * 32767) for par in zip(*canais) for v in par]
+        w.writeframes(struct.pack("<%dh" % len(dados), *dados))
+    print("  ", os.path.relpath(caminho, RAIZ), f"{len(canais[0]) / SR:.2f}s")
 
-
-# --- instrumentos do carimbó -----------------------------------------------------
 
 _cache = {}
 
 
-def _guardado(chave, fazer):
+def guardado(chave, fazer):
+    """Cada som é gerado uma vez, com semente própria (repetível)."""
     if chave not in _cache:
+        semear(chave)
         _cache[chave] = fazer()
     return _cache[chave]
 
-
-def curimba(altura=95.0, tapa=False, seg=0.45):
-    """Curimbó: tambor de tronco tocado com a mão. Grave (palma) ou tapa (agudo, seco)."""
-    def fazer():
-        if tapa:
-            pele = envelope(seno_glide(0.18, altura * 3.2, altura * 2.6, curva=3), 0.001, 0.05)
-            estalo = envelope(passa_faixa(ruido(0.08), 1800, 1.2), 0.001, 0.02)
-            return misturar(pele, estalo, 0, 0.9)
-        corpo = envelope(seno_glide(seg, altura * 1.7, altura, curva=4), 0.002, seg * 0.35)
-        oco = envelope(seno_glide(seg, altura * 2.6, altura * 2.3, curva=3), 0.002, seg * 0.15)
-        mao = envelope(passa_baixa(ruido(0.05), 900), 0.001, 0.015)
-        x = misturar(corpo, oco, 0, 0.35)
-        return misturar(x, mao, 0, 0.5)
-    return _guardado(("curimba", altura, tapa, seg), fazer)
-
-
-def maraca(seg=0.09, forte=1.0):
-    """Maracá: sementes numa cabaça (ruído agudo com 'chiado' de grãos)."""
-    def fazer():
-        r = passa_alta(ruido(seg), 3500)
-        graos = [v * (1.0 if rnd.random() < 0.35 else 0.3) for v in r]
-        return janela(envelope(graos, seg * 0.25, seg * 0.35), 0.002, 0.01)
-    return [v * forte for v in _guardado(("maraca", seg), fazer)]
-
-
-def pandeiro(platinela=True):
-    """Pandeiro: pele curta + platinelas metálicas (parciais inarmônicas)."""
-    def fazer():
-        pele = envelope(seno_glide(0.12, 260, 190, curva=3), 0.001, 0.04)
-        x = list(pele)
-        if platinela:
-            for f in (5200, 6900, 8300, 9700):
-                p = envelope([math.sin(TAU * f * i / SR + rnd.random()) for i in range(n_am(0.25))], 0.001, 0.07)
-                misturar(x, p, 0.002, 0.08)
-            misturar(x, envelope(passa_alta(ruido(0.2), 6000), 0.001, 0.06), 0, 0.25)
-        return x
-    return _guardado(("pandeiro", platinela), fazer)
-
-
-# --- instrumentos da marujada ------------------------------------------------------
 
 def midi_hz(m):
     return 440.0 * 2 ** ((m - 69) / 12)
 
 
-def viola(nota, seg=0.8, brilho=0.5, abafar=False):
-    """Viola de corda (Karplus-Strong). `brilho` 0..1, `abafar` = palma da mão na corda."""
+def reverb(x, tamanho=1.0, mistura=0.25, cauda=1.5, desvio=0, circular=False):
+    """Reverb de Schroeder (4 pentes + 2 passa-tudo). `desvio` muda os atrasos
+    (canal direito diferente do esquerdo = estéreo). `circular` dobra a cauda no
+    começo, para a música emendar em loop."""
+    n = len(x)
+    nc = n_am(cauda)
+    entrada = x + [0.0] * nc
+    molhado = [0.0] * len(entrada)
+    for atraso, fb in ((1557, 0.84), (1617, 0.83), (1491, 0.85), (1422, 0.82)):
+        d = int((atraso + desvio) * tamanho)
+        buf = [0.0] * d
+        j = 0
+        for i, v in enumerate(entrada):
+            s = buf[j]
+            buf[j] = v + s * fb
+            molhado[i] += s
+            j = (j + 1) % d
+    for atraso in (225, 556):
+        d = int((atraso + desvio // 3) * tamanho)
+        buf = [0.0] * d
+        j = 0
+        for i, v in enumerate(molhado):
+            s = buf[j]
+            buf[j] = v + s * 0.5
+            molhado[i] = s - v * 0.5
+            j = (j + 1) % d
+    molhado = filtro(molhado, "pb", 6000)
+    saida = [a + b * mistura * 0.25 for a, b in zip(entrada, molhado)]
+    if circular:
+        for i in range(nc):
+            saida[i % n] += saida[n + i]
+        return saida[:n]
+    return saida
+
+
+# --- percussão amazônica ---------------------------------------------------------
+
+MODOS_PELE = ((1.0, 1.0), (1.59, 0.55), (2.14, 0.4), (2.30, 0.3), (2.65, 0.22), (2.92, 0.15), (3.16, 0.1))
+
+
+def membrana(f, seg, queda, curvatura=0.35, brilho=1.0):
+    """Pele de tambor por modos (razões de Bessel) com a altura caindo no ataque."""
+    n = n_am(seg)
+    y = [0.0] * n
+    kp = math.exp(-1 / (0.025 * SR))
+    for r, a in MODOS_PELE:
+        a *= brilho ** (r - 1)
+        k = math.exp(-1 / (queda / math.sqrt(r) * SR))
+        g, fase, fr = a, rnd.random() * TAU, f * r
+        p = curvatura
+        for i in range(n):
+            fase += TAU * fr * (1 + p) / SR
+            p *= kp
+            y[i] += math.sin(fase) * g
+            g *= k
+    return y
+
+
+def curimba(altura=90.0, tapa=False):
+    """Curimbó: tronco escavado com couro, tocado com as mãos."""
+    def fazer():
+        if tapa:
+            x = membrana(altura * 2.2, 0.25, 0.05, brilho=1.3)
+            estalo = env_exp(filtro(ruido(0.05), "pf", 2400, 0.9), 0.0005, 0.012)
+            return janela(misturar(x, estalo, 0, 1.2), 0.0005, 0.02)
+        x = membrana(altura, 0.6, 0.18, brilho=0.8)
+        oco = env_exp(filtro(ruido(0.4), "pf", altura * 1.5, 6), 0.002, 0.1)  # ressonância do tronco
+        mao = env_exp(filtro(ruido(0.03), "pb", 1500), 0.0005, 0.008)
+        misturar(x, oco, 0, 2.0)
+        return janela(misturar(x, mao, 0, 0.8), 0.0005, 0.05)
+    return guardado(("curimba", altura, tapa), fazer)
+
+
+def maraca(seg=0.12, chacoalhada=1.0):
+    """Maracá: modelo de partículas (sementes batendo dentro da cabaça)."""
+    def fazer():
+        n = n_am(seg)
+        y = [0.0] * n
+        energia = 0.3
+        ke = math.exp(-1 / (seg * 0.3 * SR))
+        for i in range(n):
+            if i < n * 0.15:
+                energia = min(1.0, energia + 0.0003)
+            else:
+                energia *= ke
+            if rnd.random() < 0.12 * energia:
+                y[i] = rnd.uniform(-1, 1) * energia
+        a = filtro(y, "pf", 3200, 2.5)
+        b = filtro(y, "pf", 5600, 3)
+        return janela([p + 0.7 * q for p, q in zip(a, b)], 0.001, 0.01)
+    return [v * chacoalhada for v in guardado(("maraca", seg), fazer)]
+
+
+def pau_de_chuva(seg=1.2):
+    """Grãos caindo devagar (pau-de-chuva), para curas e despedidas."""
+    def fazer():
+        n = n_am(seg)
+        y = [0.0] * n
+        for i in range(n):
+            if rnd.random() < 0.02 * math.sin(math.pi * i / n):
+                y[i] = rnd.uniform(-1, 1)
+        return filtro(filtro(y, "pf", 4200, 4), "pa", 2000)
+    return guardado(("pau_de_chuva", seg), fazer)
+
+
+# --- bateria de metal ---------------------------------------------------------------
+
+def bumbo(duplo=False):
+    def fazer():
+        corpo = env_exp(seno_glide(0.35, 140, 48, curva=7), 0.001, 0.07 if duplo else 0.12)
+        clique = env_exp(filtro(ruido(0.012), "pf", 3500, 1.2), 0.0003, 0.003)
+        return janela(misturar(corpo, clique, 0, 0.9), 0.0005, 0.02)
+    return guardado(("bumbo", duplo), fazer)
+
+
+def caixa():
+    def fazer():
+        pele = membrana(190, 0.25, 0.06, curvatura=0.15, brilho=1.2)
+        esteira = env_exp(filtro(filtro(ruido(0.3), "pa", 1200), "pico", 4000, 1, 6), 0.0008, 0.09)
+        return janela(misturar([v * 0.6 for v in pele], esteira, 0, 1.0), 0.0005, 0.03)
+    return guardado("caixa", fazer)
+
+
+def metal_cluster(seg, queda, corte=7000):
+    """Prato/chimbal: seis ondas quadradas inarmônicas (como as baterias eletrônicas)."""
+    n = n_am(seg)
+    y = [0.0] * n
+    for f in (205.3, 304.4, 369.6, 522.7, 540.0, 800.0):
+        per = SR / (f * 1.7)
+        meio = per / 2
+        y = [v + (1.0 if (i % per) < meio else -1.0) for i, v in enumerate(y)]
+    y = filtro(filtro(y, "pa", corte), "pa", corte)
+    y = misturar(y, filtro(ruido(seg), "pa", corte), 0, 2.0)
+    return env_exp(y, 0.0005, queda)
+
+
+def chimbal(aberto=False):
+    return guardado(("chimbal", aberto), lambda: metal_cluster(0.4 if aberto else 0.08, 0.15 if aberto else 0.02))
+
+
+def prato():
+    return guardado("prato", lambda: metal_cluster(2.2, 0.7, 4500))
+
+
+def tom(altura):
+    return guardado(("tom", altura), lambda: janela(membrana(altura, 0.5, 0.15, curvatura=0.3), 0.0005, 0.05))
+
+
+# --- cordas -------------------------------------------------------------------------
+
+def corda(f, seg, brilho=0.6, perda=0.997, posicao=0.15):
+    """Karplus-Strong com posição da palheta e atraso fracionário (afinado)."""
+    p_real = SR / f + 0.5
+    p = max(2, int(p_real))
+    frac = p_real - p
+    c = (1 - frac) / (1 + frac)  # passa-tudo para o pedaço fracionário do atraso
+    exc = filtro([rnd.uniform(-1, 1) for _ in range(p)], "pb", 800 + 9000 * brilho)
+    d = max(1, int(p * posicao))
+    buf = [exc[i] - 0.7 * exc[i - d] for i in range(p)]
+    y = []
+    i = 0
+    ax = ay = 0.0
+    for _ in range(n_am(seg)):
+        a = buf[i]
+        media = (a + buf[(i + 1) % p]) * 0.5 * perda
+        ay = c * media + ax - c * ay
+        ax = media
+        buf[i] = ay
+        y.append(a)
+        i = (i + 1) % p
+    return y
+
+
+def viola(nota, seg=0.9, brilho=0.55):
+    """Viola de dez cordas (pares em oitava/uníssono), com caixa de madeira."""
     def fazer():
         f = midi_hz(nota)
-        p = max(2, int(SR / f))
-        buf = [rnd.uniform(-1, 1) for _ in range(p)]
-        buf = passa_baixa(buf, 1500 + 6000 * brilho)
-        perda = 0.985 if abafar else 0.9975
+        x = corda(f, seg, brilho)
+        par = corda(f * (2.0 if nota < 60 else 1.003), seg, brilho)
+        x = [a + 0.6 * b for a, b in zip(x, par)]
+        corpo = filtro(x, "pf", 220, 1.5)
+        corpo2 = filtro(x, "pf", 480, 2)
+        x = [a + 0.8 * b + 0.4 * c for a, b, c in zip(x, corpo, corpo2)]
+        return janela(x, 0.0005, 0.04)
+    return guardado(("viola", nota, seg, brilho), fazer)
+
+
+def gabinete(x):
+    """Caixa de guitarra: corta graves e agudos ásperos, realça o médio."""
+    x = filtro(x, "pa", 90)
+    x = filtro(x, "pico", 1800, 0.8, 4)
+    x = filtro(x, "pico", 400, 1.0, -3)
+    x = filtro(x, "pb", 5200, 0.8)
+    return filtro(x, "pb", 6500, 0.6)
+
+
+def guitarra(raiz, seg, abafada=False, take=0):
+    """Guitarra base distorcida (power chord tônica + quinta + oitava).
+    `take` diferente = outra gravação, para dobrar esquerda/direita."""
+    def fazer():
+        x = [0.0] * n_am(seg)
+        perda = 0.975 if abafada else 0.9985
+        for k, m in enumerate((raiz, raiz + 7, raiz + 12)):
+            misturar(x, corda(midi_hz(m), seg, 0.9, perda, 0.12), k * 0.003 * (1 + take))
+        x = x[:n_am(seg)]
+        if abafada:
+            x = filtro(x, "pb", 1400)
+        x = filtro(x, "pa", 120)
+        x = saturar(x, 14.0 if abafada else 10.0, 0.15)
+        return janela(gabinete(x), 0.0005, 0.02)
+    return guardado(("guitarra", raiz, round(seg, 4), abafada, take), fazer)
+
+
+def baixo(nota, seg):
+    def fazer():
+        x = corda(midi_hz(nota), seg, 0.5, 0.996, 0.2)
+        sub = env_exp([math.sin(TAU * midi_hz(nota) * i / SR) for i in range(len(x))], 0.003, seg)
+        x = saturar([a + 0.5 * b for a, b in zip(x, sub)], 2.5)
+        return janela(filtro(x, "pb", 1600), 0.001, 0.02)
+    return guardado(("baixo", nota, round(seg, 4)), fazer)
+
+
+def solo(nota, seg):
+    """Guitarra solo: duas dente-de-serra com vibrato, distorção e caixa."""
+    def fazer():
+        f = midi_hz(nota)
         y = []
+        f1 = f2 = 0.0
+        for i in range(n_am(seg)):
+            t = i / SR
+            v = 1 + 0.006 * min(1.0, max(0.0, (t - 0.15) / 0.2)) * math.sin(TAU * 5.5 * t)
+            f1 = (f1 + f * v / SR) % 1.0
+            f2 = (f2 + f * 1.003 * v / SR) % 1.0
+            y.append(f1 + f2 - 1.0)
+        y = saturar(filtro(y, "pb", 3000), 6.0, 0.1)
+        return janela(gabinete(y), 0.006, 0.04)
+    return guardado(("solo", nota, round(seg, 4)), fazer)
+
+
+# --- sopros e vozes ---------------------------------------------------------------------
+
+def flauta(nota, seg):
+    """Flauta de bambu: fundamental forte, sopro de ar e vibrato que chega devagar."""
+    def fazer():
+        f = midi_hz(nota)
+        sopro = filtro(ruido(seg), "pf", f * 2, 2.5)
+        y = []
+        fase = 0.0
+        for i in range(n_am(seg)):
+            t = i / SR
+            v = 1 + 0.008 * min(1.0, max(0.0, (t - 0.12) / 0.25)) * math.sin(TAU * 5.2 * t)
+            fase += TAU * f * v / SR
+            y.append(math.sin(fase) + 0.18 * math.sin(2 * fase) + 0.07 * math.sin(3 * fase))
+        y = [a + 0.12 * b for a, b in zip(y, sopro)]
+        misturar(y, env_exp(filtro(ruido(0.06), "pf", f * 3, 1.5), 0.002, 0.02), 0, 0.5)
+        return janela(y[:n_am(seg)], 0.035, min(0.08, seg * 0.3))
+    return guardado(("flauta", nota, round(seg, 4)), fazer)
+
+
+VOGAIS = {"a": (800, 1150, 2900), "o": (450, 800, 2830), "u": (325, 700, 2530), "e": (400, 1700, 2600)}
+
+
+def formantes(x, vogal, escala=1.0):
+    f1, f2, f3 = (v * escala for v in VOGAIS[vogal])
+    a = filtro(x, "pf", f1, 6)
+    b = filtro(x, "pf", f2, 8)
+    c = filtro(x, "pf", f3, 10)
+    return [p + 0.6 * q + 0.25 * r for p, q, r in zip(a, b, c)]
+
+
+def coro(nota, seg, vogal="a"):
+    """Coro 'aah': três vozes levemente desafinadas por nota, com vibrato."""
+    def fazer():
+        f = midi_hz(nota)
         n = n_am(seg)
-        i = 0
-        for _ in range(n):
-            a = buf[i]
-            b = buf[(i + 1) % p]
-            buf[i] = (a + b) * 0.5 * perda
-            y.append(a)
-            i = (i + 1) % p
-        # corpo de madeira: realça uns 250 Hz
-        corpo = passa_faixa(y, 250, 1.0)
-        y = [a + 0.6 * c for a, c in zip(y, corpo)]
-        return janela(y, 0.001, 0.03)
-    return _guardado(("viola", nota, seg, brilho, abafar), fazer)
+        y = [0.0] * n
+        for k, det in enumerate((-0.006, 0.0, 0.007)):
+            fase = rnd.random()
+            vel = rnd.uniform(4.5, 5.8)
+            for i in range(n):
+                v = 1 + det + 0.005 * math.sin(TAU * vel * i / SR + k)
+                fase = (fase + f * v / SR) % 1.0
+                y[i] += 2 * fase - 1
+        y = formantes(y, vogal, 1.0 if nota < 64 else 1.1)
+        n_at = min(n, n_am(min(0.25, seg * 0.3)))
+        for i in range(n_at):
+            y[i] *= i / n_at
+        return janela(y, 0.01, min(0.2, seg * 0.3))
+    return guardado(("coro", nota, round(seg, 4), vogal), fazer)
 
 
 def _tabela_palheta():
-    """Um ciclo da onda de palheta do acordeom (ímpares fortes, pares fracos)."""
     n = 2048
     harm = [(1, 1.0), (2, 0.55), (3, 0.6), (4, 0.3), (5, 0.35), (6, 0.15), (7, 0.2), (8, 0.08), (9, 0.1)]
     t = [sum(a * math.sin(TAU * h * i / n) for h, a in harm) for i in range(n)]
@@ -233,352 +501,329 @@ def _tabela_palheta():
 TAB_PALHETA = _tabela_palheta()
 
 
-def acordeom(nota, seg, vol=1.0):
-    """Acordeom: duas palhetas levemente desafinadas (som 'musette') + fole."""
+def acordeom(nota, seg):
+    """Acordeom de marujada: três palhetas (uma afinada, duas 'musette')."""
     def fazer():
-        n = n_am(seg)
         tab, tn = TAB_PALHETA, len(TAB_PALHETA)
         f = midi_hz(nota)
-        d1, d2 = f * tn / SR, f * 1.004 * tn / SR
-        p1, p2 = 0.0, rnd.random() * tn
+        passos = [f * d * tn / SR for d in (0.996, 1.0, 1.0045)]
+        fases = [rnd.random() * tn for _ in passos]
         y = []
-        for _ in range(n):
-            y.append(tab[int(p1) % tn] + tab[int(p2) % tn])
-            p1 += d1
-            p2 += d2
-        y = passa_baixa(y, 3800)
-        # fole: ataque macio, leve inchaço e soltura curta
-        ntot = len(y)
-        na, ns = n_am(min(0.04, seg * 0.3)), n_am(min(0.06, seg * 0.3))
-        for i in range(ntot):
-            e = 1.0
-            if i < na:
-                e = i / na
-            elif i > ntot - ns:
-                e = (ntot - i) / ns
-            y[i] *= e * (0.85 + 0.15 * math.sin(TAU * 0.8 * i / SR))
-        return y
-    return [v * vol for v in _guardado(("acordeom", nota, seg), fazer)]
+        for _ in range(n_am(seg)):
+            s = 0.0
+            for k in range(3):
+                fases[k] += passos[k]
+                s += tab[int(fases[k]) % tn]
+            y.append(s)
+        return janela(filtro(y, "pb", 4000), min(0.04, seg * 0.3), min(0.06, seg * 0.3))
+    return guardado(("acordeom", nota, round(seg, 4)), fazer)
 
 
-def sino(freq, seg=0.9):
-    """Plaquinha de metal/cristal para curas (parciais de sino, decaimento lento)."""
+def sino(freq, seg=1.2):
+    """Sino de cristal por FM (portadora 1 : modulador 3,5)."""
     def fazer():
-        x = [0.0] * n_am(seg)
-        for mult, amp, q in ((1.0, 1.0, 0.45), (2.76, 0.4, 0.2), (5.4, 0.2, 0.1)):
-            p = envelope([math.sin(TAU * freq * mult * i / SR) for i in range(n_am(seg))], 0.002, seg * q)
-            misturar(x, p, 0, amp)
-        return x
-    return _guardado(("sino", freq, seg), fazer)
+        y = []
+        ki = math.exp(-1 / (0.15 * SR))
+        ka = math.exp(-1 / (seg * 0.35 * SR))
+        ind, amp = 3.0, 1.0
+        for i in range(n_am(seg)):
+            t = i / SR
+            y.append(math.sin(TAU * freq * t + ind * math.sin(TAU * freq * 3.5 * t)) * amp)
+            ind *= ki
+            amp *= ka
+        return janela(y, 0.001, 0.05)
+    return guardado(("sino", freq, seg), fazer)
 
 
-def reverb(x, sala=0.5, mistura=0.25, circular=False):
-    """Reverb de Schroeder (4 pentes + 2 passa-tudo). `circular` dobra a cauda
-    no começo, para a música emendar em loop sem buraco."""
-    n = len(x)
-    cauda = n_am(1.5)
-    entrada = x + [0.0] * cauda
-    molhado = [0.0] * len(entrada)
-    for atraso, fb in ((1557, 0.84), (1617, 0.83), (1491, 0.85), (1422, 0.82)):
-        atraso = int(atraso * SR / 44100)
-        fb = fb * (0.85 + 0.15 * sala)
-        buf = [0.0] * atraso
-        j = 0
-        for i, v in enumerate(entrada):
-            s = buf[j]
-            buf[j] = v + s * fb
-            molhado[i] += s
-            j = (j + 1) % atraso
-    for atraso in (225, 556):
-        atraso = int(atraso * SR / 44100)
-        buf = [0.0] * atraso
-        j = 0
-        for i, v in enumerate(molhado):
-            s = buf[j]
-            buf[j] = v + s * 0.5
-            molhado[i] = s - v * 0.5
-            j = (j + 1) % atraso
-    molhado = passa_baixa(molhado, 5000)
-    saida = [a * (1 - mistura) + b * mistura * 0.25 for a, b in zip(entrada, molhado)]
-    if circular:
-        for i in range(cauda):
-            saida[i] += saida[n + i]
-        saida = saida[:n]
-    return saida
+# --- vozes dos bichos ---------------------------------------------------------------------
+
+def pulsos_glote(n, f_ini, f_fim, aspereza=0.0, jitter=0.01):
+    """Fonte de voz: pulsos suaves com variação natural de altura."""
+    y, fase = [], 0.0
+    for i in range(n):
+        f = (f_ini + (f_fim - f_ini) * i / n) * (1 + rnd.uniform(-jitter, jitter))
+        if aspereza:
+            f *= 1 + 0.08 * aspereza * math.sin(TAU * 33 * i / SR)
+        fase = (fase + f / SR) % 1.0
+        y.append(math.sin(math.pi * fase) ** 3 - 0.42)
+    return y
 
 
-# --- vozes dos bichos (dano e morte) ---------------------------------------------
-
-def voz(tipo, f0, seg, queda=0.8, aspereza=0.0):
-    """Uma 'voz' curta de bicho. tipo: grito, ave, coruja, sapo, chiado, madeira, agua."""
+def voz(tipo, f0, seg, queda=0.75, vogal="a", aspereza=0.0):
+    """Voz curta de bicho. tipo: grito, ave, coruja, sapo, chiado, madeira, agua."""
     n = n_am(seg)
     if tipo in ("grito", "sapo"):
-        y, fase = [], 0.0
-        for i in range(n):
-            t = i / n
-            f = f0 * (1.15 - (1.15 - queda) * t)
-            if aspereza:  # rosnado: sub-modulação
-                f *= 1 + 0.06 * aspereza * math.sin(TAU * 31 * i / SR)
-            fase += f / SR
-            y.append(2 * (fase % 1.0) - 1)
-        y = misturar(y, passa_baixa(ruido(seg), 2500), 0, 0.25 + 0.3 * aspereza)
-        tam = max(0.4, min(1.6, 140.0 / f0)) if tipo == "grito" else 1.4
-        f1 = passa_faixa(y, 700 / tam ** 0.5, 3)
-        f2 = passa_faixa(y, 1250 / tam ** 0.5, 4)
-        y = [a + 0.7 * b for a, b in zip(f1, f2)]
-        if tipo == "sapo":  # coaxar: pulsos rápidos
-            y = [v * (0.5 + 0.5 * math.sin(TAU * 28 * i / SR)) ** 2 for i, v in enumerate(y)]
-        return janela(envelope(y, 0.015, seg * 0.5), 0.005, seg * 0.3)
+        y = pulsos_glote(n, f0 * 1.15, f0 * queda, aspereza)
+        sopro = filtro(ruido(seg), "pb", 3000)
+        y = [a + b * (0.15 + 0.35 * aspereza) for a, b in zip(y, sopro)]
+        y = formantes(y, vogal, max(0.55, min(1.5, (f0 / 140) ** 0.35)))
+        if aspereza:  # rosnado: sub-harmônico e corpo grave
+            sub = pulsos_glote(n, f0 * 0.58, f0 * queda * 0.5, 0)
+            y = misturar(y, filtro(sub, "pb", 400), 0, 0.8 * aspereza)
+        if tipo == "sapo":
+            y = [v * (0.5 + 0.5 * math.sin(TAU * 26 * i / SR)) ** 3 for i, v in enumerate(y)]
+        return janela(env_exp(y, 0.02, seg * 0.6), 0.005, seg * 0.35)
     if tipo == "ave":
+        y = [0.0] * n
+        for s in range(3):
+            pio = seno_glide(seg / 3 * 0.8, f0 * 7.5, f0 * 5, curva=0.6)
+            misturar(y, env_exp(pio, 0.004, seg / 3 * 0.35), s * seg / 3, 1.0 - 0.2 * s)
+        return janela(y[:n], 0.002, 0.02)
+    if tipo == "coruja":
+        y = [0.0] * n
+        for k, (ts, d) in enumerate(((0.0, 0.45), (0.5, 0.5))):
+            h = seno_glide(seg * d, f0 * 1.05, f0 * queda, curva=1.5)
+            h = [a + 0.3 * b for a, b in zip(h, filtro(ruido(seg * d), "pf", f0, 8))]
+            misturar(y, janela(env_exp(h, 0.05, seg * 0.25), 0.04, 0.08), seg * ts, 1.0 - 0.25 * k)
+        return y[:n]
+    if tipo == "chiado":
+        h = filtro(filtro(ruido(seg), "pa", 4000), "pico", 6500, 1.5, 6)
+        h = [v * (0.6 + 0.4 * math.sin(TAU * 45 * i / SR)) for i, v in enumerate(h)]
+        return janela(env_exp(h, 0.03, seg * 0.6), 0.01, seg * 0.35)
+    if tipo == "madeira":  # rangido de tronco: estalos que aceleram + folhas
+        y = [0.0] * n
+        t = 0.0
+        while t < seg * 0.85:
+            y[int(t * SR)] = rnd.uniform(0.6, 1.0)
+            t += max(0.004, 0.028 * (1.0 - 0.6 * t / seg) * (200.0 / f0))
+        a = filtro(y, "pf", f0 * 2.5, 6)
+        b = filtro(y, "pf", f0 * 5.3, 8)
+        y = misturar([p + 0.5 * q for p, q in zip(a, b)], maraca(seg, 0.15), 0, 1.0)
+        return janela(env_exp(y[:n], 0.005, seg * 0.6), 0.003, seg * 0.3)
+    if tipo == "agua":  # boto: assobio com trinado + cliques
         y = []
         fase = 0.0
         for i in range(n):
             t = i / n
-            f = f0 * 6 * (1.2 - 0.6 * t) * (1 + 0.08 * math.sin(TAU * 22 * i / SR))
+            f = f0 * 5 * (1.0 + 0.25 * math.sin(math.pi * t)) * (queda ** t) * (1 + 0.02 * math.sin(TAU * 18 * i / SR))
             fase += TAU * f / SR
             y.append(math.sin(fase))
-        return janela(envelope(y, 0.005, seg * 0.4), 0.003, seg * 0.3)
-    if tipo == "coruja":
-        x = envelope(seno_glide(seg * 0.5, f0 * 1.1, f0 * queda), 0.04, seg * 0.3)
-        x = misturar(x, envelope(seno_glide(seg * 0.5, f0, f0 * queda * 0.9), 0.04, seg * 0.3), seg * 0.45)
-        return janela(misturar(x, passa_faixa(ruido(seg), f0 * 2, 2), 0, 0.15), 0.01, 0.05)
-    if tipo == "chiado":
-        h = passa_alta(ruido(seg), 4500)
-        h = [v * (0.7 + 0.3 * math.sin(TAU * 40 * i / SR)) for i, v in enumerate(h)]
-        return janela(envelope(h, 0.02, seg * 0.5), 0.005, seg * 0.3)
-    if tipo == "madeira":  # rangido de planta/tronco: estalos que aceleram
-        y = [0.0] * n
-        t = 0.0
-        while t < seg * 0.9:
-            k = int(t * SR)
-            if k < n:
-                y[k] = rnd.uniform(0.6, 1.0)
-            t += 0.03 * (1.0 - 0.6 * t / seg) * (220.0 / f0)
-        y = passa_faixa(y, f0 * 3, 5)
-        y = misturar(y, passa_faixa(ruido(seg), 2500, 1), 0, 0.08)
-        return janela(envelope(y, 0.005, seg * 0.5), 0.003, seg * 0.3)
-    if tipo == "agua":  # boto: assobio + cliques
-        y = envelope(seno_glide(seg, f0 * 5, f0 * 5 * queda), 0.02, seg * 0.4)
-        for k in range(6):
-            misturar(y, envelope(passa_alta(ruido(0.01), 3000), 0.0005, 0.003), k * 0.035, 0.6)
-        return janela(y, 0.005, seg * 0.3)
+        y = env_exp(y, 0.02, seg * 0.5)
+        for k in range(8):
+            misturar(y, env_exp(filtro(ruido(0.008), "pa", 3000), 0.0003, 0.002), k * 0.028, 0.8)
+        return janela(y[:n], 0.005, seg * 0.3)
     raise ValueError(tipo)
 
 
-def baque(peso=1.0):
-    """Pancada surda de corpo acertado (grave + 'tapa')."""
-    x = list(curimba(70 + 40 * (1 - peso), seg=0.3))
-    return misturar(x, envelope(passa_baixa(ruido(0.06), 1200), 0.001, 0.02), 0, 0.6)
+# --- camadas dos efeitos ---------------------------------------------------------------
+
+def vulto(seg=0.2, f0=500, f1=2600, forca=1.0):
+    """Zunido de golpe no ar: ruído com filtro deslizando e volume em arco."""
+    x = varredura(ruido(seg), f0, f1, 1.8)
+    n = len(x)
+    return [v * forca * 3 * math.sin(math.pi * i / n) ** 1.8 for i, v in enumerate(x)]
 
 
-def queda_corpo(peso=1.0):
-    x = list(curimba(55 + 30 * (1 - peso), seg=0.5))
-    misturar(x, envelope(passa_baixa(ruido(0.4), 500), 0.005, 0.12), 0, 0.5 * peso)
-    return x
+def impacto(peso=1.0, material="carne"):
+    """Acerto: grave que bate no peito + corpo do material + estalo."""
+    sub = env_exp(seno_glide(0.3, 110 - 40 * peso, 42, curva=5), 0.001, 0.08 + 0.08 * peso)
+    if material == "madeira":
+        corpo = env_exp(filtro(ruido(0.2), "pf", 320, 5), 0.001, 0.05)
+        corpo = misturar([v * 4 for v in corpo], membrana(260, 0.2, 0.04, brilho=1.3), 0, 0.3)
+    elif material == "pedra":
+        corpo = env_exp(filtro(ruido(0.25), "pf", 700, 2), 0.001, 0.06)
+        corpo = [v * 3 for v in corpo]
+    else:
+        corpo = env_exp(filtro(ruido(0.2), "pb", 900), 0.001, 0.045)
+    estalo = env_exp(filtro(ruido(0.02), "pa", 2500), 0.0003, 0.004)
+    x = misturar([v * (0.9 * peso + 0.3) for v in sub], corpo, 0, 1.0)
+    return misturar(x, estalo, 0, 0.6)
 
 
-# --- ataques -------------------------------------------------------------------
-
-def vulto(seg=0.18, f0=600, f1=2400, forca=1.0):
-    """Zunido do golpe no ar (ruído filtrado varrendo)."""
-    r = ruido(seg)
-    y, partes = [], 8
-    m = len(r) // partes
-    for p in range(partes):
-        f = f0 + (f1 - f0) * p / (partes - 1)
-        y += passa_faixa(r[p * m:(p + 1) * m], f, 1.5)
-    env = [math.sin(math.pi * i / len(y)) ** 1.5 * forca for i in range(len(y))]
-    return [a * b for a, b in zip(y, env)]
-
-
-def lamina(f=2400):
-    x = [0.0] * n_am(0.4)
-    for mult, amp in ((1.0, 1.0), (1.53, 0.6), (2.12, 0.4), (2.9, 0.25)):
-        p = envelope([math.sin(TAU * f * mult * i / SR) for i in range(len(x))], 0.001, 0.08)
+def metal(f=2200, seg=0.5):
+    """Lâmina: parciais inarmônicas em pares que batem (brilho de aço)."""
+    x = [0.0] * n_am(seg)
+    for mult, amp in ((1.0, 1.0), (1.007, 0.8), (2.32, 0.5), (2.34, 0.4), (4.25, 0.25), (6.63, 0.12)):
+        p = env_exp([math.sin(TAU * f * mult * i / SR) for i in range(len(x))], 0.0005, seg * 0.25 / mult ** 0.3)
         misturar(x, p, 0, amp * 0.3)
-    return misturar(x, envelope(passa_alta(ruido(0.1), 3000), 0.001, 0.03), 0, 0.4)
+    return misturar(x, env_exp(filtro(ruido(0.06), "pa", 4000), 0.0005, 0.012), 0, 0.5)
 
 
-def ataque(tipo, f0):
+def sala(x, tamanho=0.6, mistura=0.35):
+    return reverb(x, tamanho, mistura, cauda=0.8)
+
+
+def ataque(tipo, f0, peso):
     if tipo == "contundente":
-        x = vulto(0.2, 400, 1600)
-        misturar(x, baque(1.0), 0.17)
-        return misturar(x, curimba(f0 * 0.8, tapa=True), 0.17, 0.4)
+        x = vulto(0.22, 300, 1500, 0.8)
+        return sala(misturar(x, impacto(peso, "madeira"), 0.19, 1.2))
     if tipo == "lamina":
-        x = vulto(0.14, 900, 3500)
-        return misturar(x, lamina(2200 + f0 * 2), 0.11)
+        x = misturar(vulto(0.15, 800, 4200), metal(1900 + f0 * 2), 0.12)
+        return sala(misturar(x, impacto(0.4), 0.12, 0.6))
     if tipo == "duplo":
-        x = misturar(vulto(0.12, 900, 3500), lamina(2600), 0.09)
-        misturar(x, vulto(0.12, 1000, 3800), 0.16)
-        return misturar(x, lamina(3100), 0.25, 0.9)
+        x = misturar(vulto(0.12, 900, 4500), metal(2500), 0.09)
+        misturar(x, vulto(0.12, 1000, 5000), 0.17)
+        return sala(misturar(x, metal(3000), 0.26, 0.9))
     if tipo == "garras":
-        x = []
+        x = voz("grito", 52, 0.75, 0.7, "o", aspereza=1.0)
         for k in range(3):
-            misturar(x, vulto(0.16, 300 + 80 * k, 1400), k * 0.13)
-            misturar(x, lamina(1500 + 300 * k), k * 0.13 + 0.12, 0.6)
-        misturar(x, voz("grito", 60, 0.6, 0.7, aspereza=1.0), 0.0, 0.5)
-        return misturar(x, baque(1.0), 0.4)
+            misturar(x, vulto(0.16, 250 + 60 * k, 1800, 1.3), 0.1 + k * 0.12)
+            misturar(x, metal(1200 + 250 * k, 0.3), 0.22 + k * 0.12, 0.5)
+        return sala(misturar(x, impacto(1.0), 0.48, 1.4), 1.0, 0.45)
     if tipo == "lanca":
-        x = vulto(0.12, 1200, 2800)
-        misturar(x, envelope(passa_faixa(ruido(0.08), 1500, 2), 0.001, 0.03), 0.1)
-        return misturar(x, curimba(f0, tapa=True), 0.1, 0.6)
+        x = vulto(0.12, 1100, 3200)
+        misturar(x, env_exp(filtro(ruido(0.08), "pf", 1600, 2), 0.0005, 0.02), 0.1, 3.0)
+        return sala(misturar(x, impacto(peso * 0.7, "madeira"), 0.1, 0.8))
     if tipo == "mordida":
-        x = []
+        x = voz("madeira", f0, 0.3)
         for k in range(2):
-            misturar(x, envelope(passa_baixa(ruido(0.07), 1800), 0.001, 0.02), k * 0.1)
-            misturar(x, curimba(110, tapa=True), k * 0.1, 0.5)
-        return misturar(x, voz("madeira", f0, 0.3), 0.0, 0.3)
+            misturar(x, env_exp(filtro(ruido(0.06), "pb", 2200), 0.0005, 0.015), 0.08 + k * 0.11, 1.5)
+            misturar(x, impacto(0.5, "madeira"), 0.08 + k * 0.11, 0.7)
+        return sala(x)
     if tipo == "investida":
-        x = vulto(0.4, 300, 2000)
-        return misturar(x, baque(0.8), 0.36)
+        x = vulto(0.45, 200, 2400, 1.1)
+        for k in range(4):  # passos
+            misturar(x, impacto(0.3, "madeira"), k * 0.09, 0.3)
+        return sala(misturar(x, impacto(peso), 0.42, 1.3))
     if tipo == "chicote":
-        x = vulto(0.2, 500, 3000, 0.7)
-        crack = envelope(passa_alta(ruido(0.03), 2500), 0.0005, 0.006)
-        return misturar(x, crack, 0.2, 1.5)
+        x = vulto(0.22, 400, 3500, 0.7)
+        crack = env_exp(filtro(ruido(0.03), "pa", 2000), 0.0002, 0.005)
+        return sala(misturar(x, crack, 0.21, 2.5))
     if tipo == "folha":
         x = []
-        for k in range(5):
-            misturar(x, maraca(0.07, 0.8), k * 0.035)
-        return misturar(x, baque(0.5), 0.15, 0.8)
+        for k in range(6):
+            misturar(x, maraca(0.08, 3.0), k * 0.03)
+        return sala(misturar(x, impacto(0.5, "madeira"), 0.16, 1.0))
     if tipo == "dardo":
-        x = envelope(passa_faixa(ruido(0.1), 900, 1.5), 0.005, 0.04)
-        misturar(x, envelope(seno_glide(0.15, 2400, 1800), 0.005, 0.08), 0.05, 0.3)
-        return misturar(x, curimba(300, tapa=True), 0.2, 0.4)
+        x = env_exp(filtro(ruido(0.12), "pf", 800, 1.5), 0.004, 0.04)  # sopro na zarabatana
+        x = [v * 3 for v in x]
+        misturar(x, env_exp(seno_glide(0.16, 2600, 1900), 0.004, 0.08), 0.06, 0.25)
+        return sala(misturar(x, impacto(0.2, "madeira"), 0.22, 0.8))
     if tipo in ("flecha", "espinhos"):
-        x = list(viola(64 if tipo == "flecha" else 71, 0.35, 0.8))
-        x = envelope(x, 0.001, 0.12)
+        x = env_exp(corda(midi_hz(40 if tipo == "flecha" else 47), 0.4, 0.7, 0.99), 0.001, 0.1)
         for k in range(1 if tipo == "flecha" else 3):
-            misturar(x, envelope(seno_glide(0.25, 3000 - 200 * k, 2200), 0.03, 0.12), 0.05 + 0.06 * k, 0.25)
-            misturar(x, curimba(220 + 40 * k, tapa=True), 0.3 + 0.06 * k, 0.5)
-        return x
+            misturar(x, vulto(0.2, 2500, 5500, 0.6), 0.03 + 0.06 * k)
+            misturar(x, impacto(0.3, "madeira"), 0.24 + 0.06 * k, 0.9)
+        return sala(x)
     if tipo == "luz":
         x = []
-        for k, m in enumerate((72, 76, 79, 84, 88)):
-            misturar(x, sino(midi_hz(m + (f0 > 200) * 2), 0.7), k * 0.05, 0.5)
-        for k in range(8):
-            misturar(x, maraca(0.05, 0.3), k * 0.05)
-        return x
+        base = 72 + (2 if f0 > 200 else 0)
+        for k, m in enumerate((0, 4, 7, 12, 16)):
+            misturar(x, sino(midi_hz(base + m), 1.0), k * 0.045, 0.45)
+        misturar(x, varredura(ruido(0.6), 2000, 9000, 4), 0.0, 0.6)
+        return sala(x, 1.0, 0.5)
     if tipo == "penas":
-        x = voz("coruja", f0, 0.6, 0.8)
-        aba = [v * (0.5 + 0.5 * math.sin(TAU * 16 * i / SR)) for i, v in enumerate(passa_baixa(ruido(0.5), 1500))]
-        return misturar(x, envelope(aba, 0.05, 0.25), 0.15, 0.5)
+        x = voz("coruja", f0, 0.7, 0.8)
+        for k in range(3):  # bater de asas
+            misturar(x, env_exp(filtro(ruido(0.09), "pb", 1300), 0.01, 0.03), 0.1 + k * 0.11, 2.0)
+        return sala(x, 0.9, 0.45)
     if tipo == "esporos":
-        x = []
-        for k in range(4):
-            misturar(x, envelope(passa_baixa(ruido(0.12), 700), 0.005, 0.05), k * 0.08)
-        for k in range(10):
-            misturar(x, envelope(seno_glide(0.03, 600 + rnd.random() * 900, 1600), 0.001, 0.01), 0.15 + k * 0.035, 0.3)
-        return x
+        x = env_exp(filtro(ruido(0.35), "pb", 600), 0.01, 0.1)
+        x = [v * 3 for v in x]
+        for k in range(14):
+            b = env_exp(seno_glide(0.04, rnd.uniform(500, 1400), rnd.uniform(1500, 2600)), 0.001, 0.012)
+            misturar(x, b, 0.1 + k * rnd.uniform(0.02, 0.04), 0.3)
+        return sala(x)
     if tipo == "fumaca":
-        r = ruido(0.9)
-        x = passa_baixa(r, 900)
-        x = [v * math.sin(math.pi * i / len(x)) for i, v in enumerate(x)]
-        return misturar(x, voz("sapo", f0, 0.4, 0.9), 0.0, 0.3)
+        r = varredura(ruido(1.0), 300, 1400, 2.0)
+        x = [v * 3 * math.sin(math.pi * i / len(r)) for i, v in enumerate(r)]
+        return sala(misturar(x, voz("sapo", f0, 0.45, 0.85, "o"), 0.0, 0.35), 0.9, 0.4)
     if tipo == "bote":
         x = voz("chiado", f0, 0.4)
-        misturar(x, envelope(seno_glide(0.3, 300, 1200), 0.02, 0.15), 0.1, 0.4)
-        return misturar(x, curimba(180, tapa=True), 0.38, 0.8)
+        misturar(x, vulto(0.2, 600, 3000), 0.22)
+        return sala(misturar(x, impacto(0.5), 0.4, 1.0))
     raise ValueError(tipo)
 
 
 # --- tabelas: personagens e habilidades ------------------------------------------
 # id (igual aos .tres de scripts/combate/habilidades/ataques) :
-#   (tipo do ataque básico, tipo de voz, altura da voz em Hz, peso 0..1)
+#   (tipo do ataque básico, tipo de voz, altura da voz em Hz, peso 0..1, vogal)
 PERSONAGENS = {
-    "bufalo": ("lamina", "grito", 85, 1.0),
-    "tartaruga": ("contundente", "grito", 110, 0.9),
-    "tartaruga_paladina": ("contundente", "grito", 110, 0.9),
-    "murucututu": ("penas", "coruja", 380, 0.3),
-    "guara": ("flecha", "ave", 300, 0.4),
-    "boto": ("luz", "agua", 600, 0.6),
-    "onca": ("lamina", "grito", 140, 0.7),
-    "acaizeiro": ("contundente", "madeira", 120, 0.7),
-    "vitoria_regia": ("folha", "madeira", 150, 0.6),
-    "carnivora": ("mordida", "madeira", 100, 0.8),
-    "cogumelo": ("esporos", "madeira", 420, 0.3),
-    "golem_toco": ("contundente", "madeira", 70, 1.0),
-    "bromelia": ("espinhos", "madeira", 330, 0.4),
-    "aninga": ("lanca", "madeira", 200, 0.6),
-    "buriti": ("investida", "madeira", 220, 0.5),
-    "sapo_dardo": ("dardo", "sapo", 500, 0.2),
-    "tartaruga_amazonia": ("luz", "grito", 160, 0.7),
-    "iguana": ("flecha", "grito", 260, 0.4),
-    "teiu": ("contundente", "grito", 180, 0.6),
-    "naga": ("bote", "chiado", 240, 0.6),
-    "coral": ("lamina", "chiado", 280, 0.4),
-    "cobra_cavaleira": ("lanca", "chiado", 160, 0.7),
-    "jacare_acu": ("contundente", "grito", 75, 1.0),
-    "jacaretinga": ("duplo", "grito", 170, 0.6),
-    "cururu": ("fumaca", "sapo", 140, 0.6),
-    "perereca": ("chicote", "sapo", 450, 0.3),
-    "mapinguari": ("garras", "grito", 55, 1.0),
+    "bufalo": ("lamina", "grito", 90, 1.0, "o"),
+    "tartaruga": ("contundente", "grito", 120, 0.9, "u"),
+    "tartaruga_paladina": ("contundente", "grito", 120, 0.9, "u"),
+    "murucututu": ("penas", "coruja", 380, 0.3, "u"),
+    "guara": ("flecha", "ave", 320, 0.4, "a"),
+    "boto": ("luz", "agua", 600, 0.6, "a"),
+    "onca": ("lamina", "grito", 135, 0.7, "a"),
+    "acaizeiro": ("contundente", "madeira", 120, 0.7, "o"),
+    "vitoria_regia": ("folha", "madeira", 150, 0.6, "o"),
+    "carnivora": ("mordida", "madeira", 100, 0.8, "o"),
+    "cogumelo": ("esporos", "madeira", 420, 0.3, "e"),
+    "golem_toco": ("contundente", "madeira", 70, 1.0, "o"),
+    "bromelia": ("espinhos", "madeira", 330, 0.4, "e"),
+    "aninga": ("lanca", "madeira", 200, 0.6, "o"),
+    "buriti": ("investida", "madeira", 220, 0.5, "o"),
+    "sapo_dardo": ("dardo", "sapo", 520, 0.2, "e"),
+    "tartaruga_amazonia": ("luz", "grito", 160, 0.7, "u"),
+    "iguana": ("flecha", "grito", 260, 0.4, "e"),
+    "teiu": ("contundente", "grito", 180, 0.6, "a"),
+    "naga": ("bote", "chiado", 240, 0.6, "e"),
+    "coral": ("lamina", "chiado", 280, 0.4, "e"),
+    "cobra_cavaleira": ("lanca", "chiado", 160, 0.7, "e"),
+    "jacare_acu": ("contundente", "grito", 75, 1.0, "o"),
+    "jacaretinga": ("duplo", "grito", 170, 0.6, "a"),
+    "cururu": ("fumaca", "sapo", 140, 0.6, "o"),
+    "perereca": ("chicote", "sapo", 460, 0.3, "e"),
+    "mapinguari": ("garras", "grito", 52, 1.0, "o"),
 }
 
 
-def dano(tipo_voz, f0, peso):
-    x = baque(peso)
-    aspero = 0.8 if f0 < 70 else 0.0
-    return misturar(x, voz(tipo_voz, f0, 0.35, 0.8, aspero), 0.02, 0.9)
+def dano(tipo_voz, f0, peso, vogal):
+    x = impacto(peso)
+    aspero = 0.9 if f0 < 70 else 0.0
+    return sala(misturar(x, voz(tipo_voz, f0, 0.38, 0.8, vogal, aspero), 0.03, 0.9), 0.5, 0.25)
 
 
-def morte(tipo_voz, f0, peso):
+def morte(tipo_voz, f0, peso, vogal):
     aspero = 1.0 if f0 < 70 else 0.0
-    x = voz(tipo_voz, f0, 1.0 + 0.4 * peso, 0.55, aspero)
-    misturar(x, queda_corpo(peso), 0.7 + 0.3 * peso, 1.0)
-    # maracá que vai sumindo e duas notas descendentes da viola: despedida
-    for k in range(6):
-        misturar(x, maraca(0.08, 0.5 * (1 - k / 6)), 0.75 + k * 0.09)
-    misturar(x, viola(57, 1.0, 0.3), 0.8, 0.5)
-    return misturar(x, viola(52, 1.2, 0.3), 1.05, 0.5)
+    x = voz(tipo_voz, f0, 1.0 + 0.5 * peso, 0.5, vogal, aspero)
+    t = 0.75 + 0.3 * peso
+    misturar(x, impacto(peso, "madeira"), t, 1.2)  # corpo no chão
+    misturar(x, env_exp(filtro(ruido(0.5), "pb", 700), 0.01, 0.15), t, 1.2 * peso)
+    misturar(x, pau_de_chuva(1.4), t, 0.5)  # despedida: pau-de-chuva e flauta descendo
+    misturar(x, flauta(76, 0.45), t + 0.1, 0.25)
+    misturar(x, flauta(71, 0.8), t + 0.45, 0.25)
+    return sala(x, 1.0, 0.4)
 
 
 def hab_golpe():
-    x = vulto(0.35, 250, 1800, 1.2)
-    misturar(x, baque(1.0), 0.32)
-    misturar(x, curimba(60, seg=0.7), 0.32)
-    return misturar(x, curimba(80, seg=0.5), 0.45, 0.7)
+    x = vulto(0.38, 200, 2200, 1.3)
+    misturar(x, impacto(1.0, "pedra"), 0.35, 1.5)
+    misturar(x, curimba(55), 0.35, 1.0)
+    misturar(x, prato(), 0.35, 0.15)
+    return sala(x, 1.0, 0.4)
 
 
 def hab_golpe_cajado():
-    x = vulto(0.22, 500, 2200)
-    misturar(x, curimba(200, tapa=True), 0.19)
-    return misturar(x, envelope(passa_faixa(ruido(0.05), 900, 3), 0.001, 0.02), 0.19, 0.8)
+    x = vulto(0.24, 450, 2600)
+    return sala(misturar(x, impacto(0.6, "madeira"), 0.21, 1.2))
 
 
 def hab_area():
-    x = list(curimba(45, seg=1.0))
-    misturar(x, envelope(passa_baixa(ruido(1.2), 300), 0.01, 0.4), 0, 0.8)
-    for k in range(12):
-        misturar(x, curimba(300 + rnd.random() * 500, tapa=True), 0.15 + rnd.random() * 0.6, 0.15)
-    return misturar(x, pandeiro(), 0.0, 0.4)
+    x = list(curimba(42))
+    misturar(x, impacto(1.0, "pedra"), 0, 1.5)
+    misturar(x, env_exp(filtro(ruido(1.4), "pb", 250), 0.01, 0.45), 0, 3.0)
+    for _ in range(14):  # pedrinhas caindo
+        misturar(x, impacto(0.1, "pedra"), rnd.uniform(0.15, 0.9), rnd.uniform(0.1, 0.25))
+    return sala(x, 1.1, 0.45)
 
 
 def hab_casco_firme():
-    x = list(curimba(90, seg=0.5))
-    for f in (420, 610, 1130, 1790):
-        misturar(x, envelope([math.sin(TAU * f * i / SR) for i in range(n_am(0.9))], 0.002, 0.25), 0, 0.15)
-    for k in range(4):
-        misturar(x, pandeiro(), 0.25 + k * 0.08, 0.5 - k * 0.1)
-    return x
+    x = impacto(0.8, "pedra")
+    for f in (380, 590, 1070, 1730, 2650):
+        misturar(x, env_exp([math.sin(TAU * f * i / SR) for i in range(n_am(1.1))], 0.002, 0.35), 0, 0.12)
+    misturar(x, coro(57, 0.9, "o"), 0.05, 0.08)
+    misturar(x, coro(64, 0.9, "o"), 0.05, 0.06)
+    return sala(x, 1.0, 0.45)
 
 
 def hab_cura(notas, passo=0.09):
     x = []
     for k, m in enumerate(notas):
-        misturar(x, sino(midi_hz(m), 1.0), k * passo, 0.5)
-    for k in range(len(notas) * 2):
-        misturar(x, maraca(0.06, 0.25), k * passo / 2)
-    misturar(x, viola(notas[0] - 12, 1.2, 0.3), 0, 0.4)
-    return x
+        misturar(x, sino(midi_hz(m), 1.2), k * passo, 0.5)
+    misturar(x, pau_de_chuva(1.0 + 0.1 * len(notas)), 0, 0.6)
+    misturar(x, flauta(notas[-1], 0.6), passo * len(notas), 0.3)
+    return sala(x, 1.0, 0.5)
 
 
 def hab_mare():
-    onda = passa_baixa(ruido(1.6), 700)
-    onda = [v * (0.5 + 0.5 * math.sin(math.pi * i / len(onda))) * (0.7 + 0.3 * math.sin(TAU * 1.5 * i / SR))
+    onda = varredura(ruido(1.8), 250, 900, 1.2)
+    onda = [v * 3 * math.sin(math.pi * i / len(onda)) * (0.7 + 0.3 * math.sin(TAU * 1.4 * i / SR))
             for i, v in enumerate(onda)]
-    x = janela(onda, 0.2, 0.4)
-    misturar(x, hab_cura([67, 71, 74, 79, 83], 0.12), 0.2, 1.2)
-    return misturar(x, acordeom(43, 1.3, 0.3), 0.1)
+    x = misturar(onda, hab_cura([67, 71, 74, 79, 83], 0.12), 0.2, 1.4)
+    misturar(x, coro(55, 1.6, "u"), 0.1, 0.06)
+    return sala(x, 1.1, 0.45)
 
 
 HABILIDADES = {
@@ -592,211 +837,252 @@ HABILIDADES = {
 }
 
 
+def efeito(nome, fazer):
+    semear(nome)
+    x = filtro(fazer(), "pa", 35)  # tira grave inaudível que só come volume
+    m = max(1e-9, max(abs(v) for v in x))
+    x = limitar([[v / m for v in x]], 0.5, 3.0, 0.08)[0]
+    fim = len(x)
+    while fim > SR // 4 and abs(x[fim - 1]) < 0.003:  # corta o silêncio do fim da cauda
+        fim -= 1
+    x = janela(x[:fim], 0.0, 0.05)
+    salvar(os.path.join(DIR_ACOES, nome + ".wav"), [x], 0.95)
+
+
 def gerar_acoes():
     print("Efeitos de ação:")
-    for pid, (atq, tv, f0, peso) in PERSONAGENS.items():
-        salvar(os.path.join(DIR_ACOES, pid + "_ataque.wav"), ataque(atq, f0))
-        salvar(os.path.join(DIR_ACOES, pid + "_dano.wav"), dano(tv, f0, peso))
-        salvar(os.path.join(DIR_ACOES, pid + "_morte.wav"), morte(tv, f0, peso))
+    for pid, (atq, tv, f0, peso, vogal) in PERSONAGENS.items():
+        efeito(pid + "_ataque", lambda: ataque(atq, f0, peso))
+        efeito(pid + "_dano", lambda: dano(tv, f0, peso, vogal))
+        efeito(pid + "_morte", lambda: morte(tv, f0, peso, vogal))
     for hid, fazer in HABILIDADES.items():
-        salvar(os.path.join(DIR_ACOES, "hab_" + hid + ".wav"), fazer())
+        efeito("hab_" + hid, fazer)
 
 
-# --- trilhas ---------------------------------------------------------------------
-# Partitura: cada compasso 2/4 tem 8 semicolcheias. Nota = (midi, duração em
-# semicolcheias); midi None = pausa.
+# --- trilhas: power metal amazônico -------------------------------------------------------
+# Compasso 4/4 = 16 semicolcheias. Nota = (midi, duração em semicolcheias), None = pausa.
+# Seções: intro, verso, refrao (guitarras gêmeas + coro), ponte (só a floresta).
 
-ACORDES = {
-    "G": [55, 59, 62, 67], "D7": [50, 54, 57, 60], "C": [48, 52, 55, 60],
-    "Em": [52, 55, 59, 64], "B7": [47, 51, 54, 57], "Am": [45, 52, 57, 60],
+ACORDES = {  # nome: (tônica da guitarra, notas do coro/acordeom)
+    "Em": (40, [64, 67, 71]), "C": (48, [60, 64, 67]), "D": (50, [62, 66, 69]),
+    "B": (47, [59, 63, 66]), "G": (43, [62, 67, 71]), "Am": (45, [60, 64, 69]),
+    "Dm": (50, [62, 65, 69]), "Bb": (46, [58, 62, 65]), "F": (41, [60, 65, 69]),
+    "A": (45, [61, 64, 69]), "Gm": (43, [62, 67, 70]),
 }
 
 EXPLORACAO = {
-    "bpm": 152,
-    "acordes": ["G", "G", "D7", "D7", "D7", "D7", "G", "G", "C", "C", "G", "G", "D7", "D7", "G", "G"],
-    "melodia": [
-        [(74, 2), (71, 1), (74, 1), (79, 2), (74, 2)], [(76, 2), (74, 1), (71, 1), (67, 4)],
-        [(69, 2), (66, 1), (69, 1), (72, 2), (69, 2)], [(74, 2), (72, 1), (69, 1), (66, 4)],
-        [(69, 1), (71, 1), (72, 2), (74, 2), (78, 2)], [(76, 2), (74, 1), (72, 1), (69, 4)],
-        [(71, 2), (74, 1), (71, 1), (69, 2), (67, 2)], [(67, 6), (None, 2)],
-        [(76, 2), (79, 1), (76, 1), (72, 2), (76, 2)], [(74, 2), (72, 1), (71, 1), (72, 4)],
-        [(71, 2), (74, 1), (71, 1), (67, 2), (71, 2)], [(69, 2), (67, 1), (66, 1), (67, 4)],
-        [(66, 1), (69, 1), (74, 2), (72, 2), (69, 2)], [(71, 2), (69, 1), (67, 1), (66, 4)],
-        [(67, 2), (71, 1), (74, 1), (79, 2), (78, 1), (76, 1)], [(74, 2), (71, 2), (67, 4)],
+    "bpm": 168,
+    "escala": {4, 6, 7, 9, 11, 0, 2},  # Mi menor / Sol maior
+    "secoes": [
+        ("intro", ["Em", "C", "D", "B"], [
+            [(76, 4), (79, 2), (83, 2), (81, 4), (79, 4)], [(79, 2), (76, 2), (72, 4), (76, 8)],
+            [(78, 4), (81, 2), (78, 2), (74, 4), (78, 4)], [(75, 4), (78, 4), (83, 8)]]),
+        ("verso", ["Em", "Em", "C", "C", "D", "D", "B", "B"], [
+            [(64, 2), (67, 2), (71, 4), (69, 2), (67, 2), (66, 4)], [(64, 4), (71, 4), (67, 8)],
+            [(64, 2), (67, 2), (72, 4), (71, 2), (69, 2), (67, 4)], [(69, 4), (67, 4), (64, 8)],
+            [(66, 2), (69, 2), (74, 4), (72, 2), (71, 2), (69, 4)], [(71, 4), (72, 4), (74, 8)],
+            [(75, 4), (71, 4), (66, 4), (71, 4)], [(75, 2), (78, 2), (75, 2), (71, 2), (66, 8)]]),
+        ("refrao", ["G", "D", "Em", "C", "G", "D", "C", "D"], [
+            [(79, 6), (78, 2), (79, 4), (83, 4)], [(81, 6), (79, 2), (78, 8)],
+            [(76, 4), (78, 4), (79, 4), (83, 4)], [(84, 8), (83, 4), (79, 4)],
+            [(79, 6), (78, 2), (79, 4), (86, 4)], [(86, 4), (84, 4), (83, 4), (81, 4)],
+            [(79, 4), (81, 4), (83, 4), (84, 4)], [(86, 12), (None, 4)]]),
+        ("ponte", ["Em", "D", "C", "B"], [
+            [(88, 2), (86, 2), (83, 4), (86, 2), (83, 2), (79, 4)], [(81, 4), (78, 4), (74, 8)],
+            [(76, 2), (79, 2), (84, 4), (83, 2), (79, 2), (76, 4)], [(78, 4), (75, 4), (71, 8)]]),
     ],
 }
 
 CHEFE = {
-    "bpm": 176,
-    "acordes": ["Em", "Em", "B7", "B7", "Em", "Em", "C", "B7", "Am", "Am", "Em", "Em", "C", "B7", "Em", "Em"],
-    "melodia": [
-        [(64, 1), (64, 1), (67, 1), (64, 1), (71, 2), (64, 2)], [(67, 1), (69, 1), (71, 1), (67, 1), (76, 4)],
-        [(75, 1), (76, 1), (75, 1), (71, 1), (66, 2), (69, 2)], [(71, 1), (69, 1), (67, 1), (66, 1), (63, 4)],
-        [(64, 1), (64, 1), (67, 1), (71, 1), (76, 2), (75, 1), (76, 1)], [(79, 2), (78, 1), (76, 1), (71, 4)],
-        [(72, 1), (71, 1), (72, 1), (76, 1), (79, 2), (76, 2)], [(78, 1), (75, 1), (71, 1), (69, 1), (66, 4)],
-        [(69, 1), (69, 1), (72, 1), (69, 1), (76, 2), (69, 2)], [(72, 1), (74, 1), (76, 1), (72, 1), (69, 4)],
-        [(71, 1), (69, 1), (67, 1), (66, 1), (64, 2), (67, 2)], [(71, 2), (76, 2), (67, 2), (71, 2)],
-        [(72, 1), (76, 1), (79, 1), (76, 1), (72, 2), (67, 2)], [(71, 1), (75, 1), (78, 1), (81, 1), (83, 2), (81, 1), (78, 1)],
-        [(79, 2), (76, 1), (71, 1), (67, 2), (71, 2)], [(76, 4), (64, 4)],
+    "bpm": 188,
+    "escala": {2, 4, 5, 7, 9, 10, 1},  # Ré menor harmônica
+    "secoes": [
+        ("intro", ["Dm", "Dm", "Bb", "A"], [
+            [(62, 2), (62, 2), (65, 2), (62, 2), (69, 4), (67, 4)], [(65, 2), (64, 2), (62, 4), (57, 8)],
+            [(58, 2), (62, 2), (65, 4), (70, 4), (69, 4)], [(64, 4), (61, 4), (57, 8)]]),
+        ("verso", ["Dm", "Dm", "C", "C", "Bb", "Bb", "A", "A"], [
+            [(74, 4), (77, 4), (81, 4), (79, 2), (77, 2)], [(76, 4), (74, 4), (69, 8)],
+            [(72, 4), (76, 4), (79, 4), (77, 2), (76, 2)], [(74, 4), (72, 4), (67, 8)],
+            [(70, 4), (74, 4), (77, 4), (76, 2), (74, 2)], [(72, 4), (70, 4), (65, 8)],
+            [(69, 4), (73, 4), (76, 4), (79, 4)], [(81, 4), (79, 2), (76, 2), (73, 8)]]),
+        ("refrao", ["Dm", "Bb", "F", "C", "Dm", "Bb", "A", "A"], [
+            [(81, 6), (79, 2), (77, 4), (74, 4)], [(77, 6), (76, 2), (74, 8)],
+            [(72, 4), (74, 4), (77, 4), (81, 4)], [(79, 8), (76, 8)],
+            [(81, 6), (79, 2), (77, 4), (86, 4)], [(86, 4), (84, 4), (82, 4), (81, 4)],
+            [(81, 4), (79, 4), (76, 4), (73, 4)], [(76, 12), (None, 4)]]),
+        ("ponte", ["Dm", "Dm", "Bb", "A"], [
+            [(62, 8), (65, 8)], [(69, 8), (67, 8)], [(65, 8), (62, 8)], [(61, 16)]]),
     ],
 }
 
-# --- banda de rock (para as trilhas) ----------------------------------------------
-
-def guitarra(nota, seg, abafar=False, power=True):
-    """Guitarra elétrica distorcida: corda dedilhada (power chord = tônica, quinta
-    e oitava) passando por saturação e uma 'caixa' de amplificador."""
-    def fazer():
-        notas = (nota, nota + 7, nota + 12) if power else (nota,)
-        x = [0.0] * n_am(seg)
-        for k, m in enumerate(notas):
-            misturar(x, viola(m, seg, 0.9, abafar), k * 0.004)
-        ganho = 6.0 if abafar else 9.0
-        x = [math.tanh(v * ganho) for v in x]
-        x = passa_baixa(passa_alta(x, 90), 4200)
-        meio = passa_faixa(x, 1100, 0.8)
-        return janela([a + 0.5 * b for a, b in zip(x, meio)], 0.001, 0.02)
-    return _guardado(("guitarra", nota, seg, abafar, power), fazer)
+# Toque de carimbó (16 semicolcheias): G = grave, T = tapa.
+CARIMBO = "G..T.GT.G..T.GT."
 
 
-def baixo(nota, seg):
-    def fazer():
-        x = viola(nota, seg, 0.35)
-        x = [math.tanh(v * 2.5) for v in x]
-        return janela(passa_baixa(x, 900), 0.001, 0.02)
-    return _guardado(("baixo", nota, seg), fazer)
+def terca_abaixo(nota, escala):
+    """Harmonia de guitarra gêmea: a nota da escala duas posições abaixo."""
+    if nota % 12 not in escala:
+        return nota - 4
+    m, passos = nota, 0
+    while passos < 2:
+        m -= 1
+        if m % 12 in escala:
+            passos += 1
+    return m
 
 
-def bumbo():
-    def fazer():
-        x = envelope(seno_glide(0.3, 160, 45, curva=6), 0.001, 0.12)
-        return misturar(x, envelope(passa_alta(ruido(0.01), 2000), 0.0005, 0.003), 0, 0.5)
-    return _guardado("bumbo", fazer)
+class Estereo:
+    def __init__(self, seg):
+        n = n_am(seg)
+        self.l = [0.0] * n
+        self.r = [0.0] * n
+
+    def por(self, src, t, ganho=1.0, pan=0.0):
+        a = (pan + 1) * math.pi / 4
+        misturar(self.l, src, t, ganho * math.cos(a))
+        misturar(self.r, src, t, ganho * math.sin(a))
 
 
-def caixa():
-    def fazer():
-        x = envelope(seno_glide(0.15, 230, 180, curva=3), 0.001, 0.05)
-        esteira = envelope(passa_faixa(ruido(0.22), 2200, 0.7), 0.001, 0.07)
-        return misturar(x, esteira, 0, 1.3)
-    return _guardado("caixa", fazer)
-
-
-def chimbal(aberto=False):
-    def fazer():
-        return envelope(passa_alta(ruido(0.3 if aberto else 0.06), 7000), 0.0005, 0.12 if aberto else 0.015)
-    return _guardado(("chimbal", aberto), fazer)
-
-
-def prato():
-    def fazer():
-        x = passa_alta(ruido(1.8), 4500)
-        return envelope(x, 0.002, 0.6)
-    return _guardado("prato", fazer)
-
-
-# Toque de carimbó no curimbó (8 semicolcheias): G = grave, T = tapa, . = nada.
-# Continua por cima da bateria de rock: é ele que dá o balanço paraense.
-CARIMBO = "G..T.GT."
-CARIMBO_CHEFE = "G.TTG.TG"
-# Bateria (8 semicolcheias): B = bumbo, C = caixa. Chimbal em todas as colcheias.
-BATERIA = "B..BC.B."
-BATERIA_CHEFE = "B.BBC.BB"
-
-
-def tocar_melodia(trilha, compassos, inicio, semi, instrumento, transpor=0, vol=1.0):
-    t = inicio
-    for comp in compassos:
+def tocar(bus, melodia, t0, semi, instr, vol, pan=0.0, transpor=0, escala=None):
+    t = t0
+    for comp in melodia:
         for nota, dur in comp:
             seg = dur * semi
             if nota is not None:
-                if instrumento == "acordeom":
-                    misturar(trilha, acordeom(nota + transpor, seg * 0.95, vol), t)
-                elif instrumento == "guitarra":
-                    misturar(trilha, guitarra(nota + transpor, seg * 1.1, power=False), t, vol)
-                else:
-                    misturar(trilha, viola(nota + transpor, max(0.5, seg * 2), 0.6), t, vol)
+                m = nota + transpor
+                if escala is not None:
+                    m = terca_abaixo(m, escala)
+                if instr == "flauta":
+                    bus.por(flauta(m, seg * 0.97), t, vol, pan)
+                elif instr == "solo":
+                    bus.por(solo(m, seg * 1.02), t, vol, pan)
+                elif instr == "acordeom":
+                    bus.por(acordeom(m, seg * 0.95), t, vol, pan)
             t += seg
 
 
-def musica(partitura, voltas, chefe=False):
-    """Rock marajoara: bateria + guitarra + baixo, com curimbó, maracá e pandeiro
-    do carimbó por cima e a melodia de marujada no acordeom e na guitarra."""
+def guitarras(bus, raiz, t, seg, abafada, vol):
+    for take, pan in ((0, -0.85), (1, 0.85)):
+        bus.por(guitarra(raiz, seg, abafada, take), t, vol, pan)
+
+
+def musica(partitura, chefe=False):
     semi = 60.0 / partitura["bpm"] / 4
-    comp_seg = semi * 8
-    acordes = partitura["acordes"]
-    total = len(acordes) * voltas
-    x = [0.0] * n_am(total * comp_seg)
-    padrao = CARIMBO_CHEFE if chefe else CARIMBO
-    bateria = BATERIA_CHEFE if chefe else BATERIA
-    for c in range(total):
-        t0 = c * comp_seg
-        volta = c // len(acordes)
-        pos = c % len(acordes)
-        ac = ACORDES[acordes[pos]]
-        raiz = ac[0] - 12 if ac[0] >= 52 else ac[0]  # guitarra entre Lá1 e Mi2
-        # bateria de rock
-        for s, ch in enumerate(bateria):
-            ts = t0 + s * semi
-            if ch == "B":
-                misturar(x, bumbo(), ts, 1.0)
-            elif ch == "C":
-                misturar(x, caixa(), ts, 0.8)
-            if s % 2 == 0:
-                misturar(x, chimbal(s == 6 and pos % 4 == 3), ts, 0.25)
-        if pos % 8 == 0:
-            misturar(x, prato(), t0, 0.35)
-        if pos == len(acordes) - 1:  # virada de caixa no fim da volta
-            for s in range(4, 8):
-                misturar(x, caixa(), t0 + s * semi, 0.5 + 0.1 * s)
-        # carimbó por cima
-        for s, ch in enumerate(padrao):
-            ts = t0 + s * semi
-            if ch == "G":
-                misturar(x, curimba(80 if chefe else 95, seg=0.4), ts, 0.6)
-            elif ch == "T":
-                misturar(x, curimba(110 if chefe else 120, tapa=True), ts, 0.4)
-            misturar(x, maraca(0.07 if s % 2 else 0.1, 0.3 if s % 2 else 0.45), ts)
-        misturar(x, pandeiro(), t0 + 2 * semi, 0.3)
-        misturar(x, pandeiro(), t0 + 6 * semi, 0.3)
-        # guitarra base: colcheias abafadas com acento no tempo
-        for s in range(0, 8, 2 if not chefe else 1):
-            forte = s in (0, 3) if not chefe else s % 4 == 0
-            if forte and not chefe:
-                misturar(x, guitarra(raiz, semi * 3), t0 + s * semi, 0.5)
+    comp = semi * 16
+    total = sum(len(ac) for _, ac, _ in partitura["secoes"])
+    bus = Estereo(total * comp)
+    c = 0
+    for nome, acordes, melodia in partitura["secoes"]:
+        t_secao = c * comp
+        for i, nome_ac in enumerate(acordes):
+            t0 = c * comp
+            raiz, notas_ac = ACORDES[nome_ac]
+            grave = raiz - 12 if raiz >= 40 else raiz
+            ultimo = i == len(acordes) - 1
+            pesado = nome != "ponte"
+            # --- bateria
+            if pesado:
+                for s in range(16):
+                    ts = t0 + s * semi
+                    if nome == "intro":  # galope
+                        if s % 4 in (0, 2, 3):
+                            bus.por(bumbo(True), ts, 0.8)
+                    else:  # bumbo duplo
+                        bus.por(bumbo(True), ts, 0.7 if s % 2 else 0.85)
+                    if s in (4, 12):
+                        bus.por(caixa(), ts, 0.9, 0.05)
+                    if s % 2 == 0 and s != 0:
+                        bus.por(chimbal(nome == "refrao" and s % 4 == 2), ts, 0.22, 0.3)
+                if i == 0 or nome == "refrao" and i % 2 == 0:
+                    bus.por(prato(), t0, 0.4, -0.4)
+                elif nome == "refrao":
+                    bus.por(prato(), t0, 0.3, 0.4)
+                else:
+                    bus.por(chimbal(), t0, 0.22, 0.3)
+                if ultimo:  # virada de tons
+                    for k, s in enumerate(range(8, 16)):
+                        bus.por(tom(160 - k * 12), t0 + s * semi, 0.6, -0.5 + k * 0.14)
+            else:  # ponte: só a floresta (curimbó forte, bumbo meio-tempo)
+                for s in ((0, 3, 6, 10) if chefe else (0, 6, 8, 14)):
+                    bus.por(bumbo(), t0 + s * semi, 0.8)
+                if chefe:
+                    bus.por(caixa(), t0 + 8 * semi, 0.8)
+                if ultimo:  # rufo de caixa crescendo de volta para o começo
+                    for s in range(16):
+                        bus.por(caixa(), t0 + s * semi, 0.2 + 0.04 * s)
+            # --- carimbó por cima (curimbó e maracá)
+            vol = 0.65 if pesado else 1.0
+            for s, ch in enumerate(CARIMBO):
+                ts = t0 + s * semi
+                if ch == "G":
+                    bus.por(curimba(85 if chefe else 95), ts, 0.9 * vol, -0.35)
+                elif ch == "T":
+                    bus.por(curimba(110 if chefe else 120, tapa=True), ts, 0.5 * vol, -0.3)
+                bus.por(maraca(0.1 if s % 2 == 0 else 0.07, 0.45 if s % 4 == 0 else 0.28), ts, vol, 0.55)
+            # --- guitarras dobradas e baixo
+            if pesado:
+                for s in range(16):
+                    ts = t0 + s * semi
+                    if nome == "refrao":
+                        if s in (0, 8):
+                            guitarras(bus, raiz, ts, semi * 8, False, 0.4)
+                    else:  # galope no mapa e na intro; metralhadora de semicolcheias no chefe
+                        galope = nome == "intro" or not chefe
+                        if not galope or s % 4 in (0, 2, 3):
+                            aberto = s == 0
+                            guitarras(bus, raiz, ts, semi * (2 if aberto else 0.9), not aberto, 0.38 if aberto else 0.3)
+                    if s % 2 == 0:
+                        bus.por(baixo(grave, semi * 1.9), ts, 0.55)
             else:
-                misturar(x, guitarra(raiz, semi * 0.9, abafar=True), t0 + s * semi, 0.35)
-        # baixo colado no bumbo
-        for s, ch in enumerate(bateria):
-            if ch == "B":
-                misturar(x, baixo(raiz - 12, semi * 1.8), t0 + s * semi, 0.7)
-        # viola de marujada rasgando o acorde, mais baixinho
-        for s in (0, 4) if not chefe else (0, 2, 4, 6):
-            for k, nota in enumerate(ac):
-                misturar(x, viola(nota + 12, 0.4, 0.5), t0 + s * semi + k * 0.01, 0.1)
-    # melodia: acordeom, depois guitarra solo, depois os dois juntos
-    for v in range(voltas):
-        ini = v * len(acordes) * comp_seg
-        if v % 3 == 0:
-            tocar_melodia(x, partitura["melodia"], ini, semi, "acordeom", 0, 0.45)
-        elif v % 3 == 1:
-            tocar_melodia(x, partitura["melodia"], ini, semi, "guitarra", 0, 0.3)
+                if i >= len(acordes) - 2:  # guitarra volta abafada, crescendo
+                    for s in range(0, 16, 2):
+                        guitarras(bus, raiz, t0 + s * semi, semi * 0.9, True, 0.12 + 0.015 * s)
+                bus.por(baixo(grave, comp * 0.9), t0, 0.5)
+                for s in (0, 6, 8, 14):  # viola rasgando o acorde
+                    for k, nota in enumerate(notas_ac):
+                        bus.por(viola(nota, 0.6), t0 + s * semi + k * 0.012, 0.22, 0.3)
+            # --- coro e acordeom segurando o acorde
+            if nome == "refrao" or (chefe and nome != "verso"):
+                for k, nota in enumerate(notas_ac):
+                    bus.por(coro(nota, comp, "o" if chefe else "a"), t0, 0.05, -0.6 + 0.6 * k)
+                    bus.por(coro(nota - 12, comp, "o"), t0, 0.035, 0.6 - 0.6 * k)
+            if nome == "ponte":
+                for nota in notas_ac:
+                    bus.por(acordeom(nota - 12, comp), t0, 0.07, -0.2)
+            c += 1
+        # --- melodias da seção
+        if nome == "intro":
+            if chefe:  # riff grave em oitavas
+                tocar(bus, melodia, t_secao, semi, "solo", 0.3)
+                tocar(bus, melodia, t_secao, semi, "solo", 0.2, 0, -12)
+            else:
+                tocar(bus, melodia, t_secao, semi, "flauta", 0.45)
+        elif nome == "verso":
+            tocar(bus, melodia, t_secao, semi, "flauta", 0.45, 0.15)
+            tocar(bus, melodia, t_secao, semi, "acordeom", 0.1, -0.25, -12)
+        elif nome == "refrao":  # guitarras gêmeas em terças
+            tocar(bus, melodia, t_secao, semi, "solo", 0.3, -0.25)
+            tocar(bus, melodia, t_secao, semi, "solo", 0.24, 0.25, 0, partitura["escala"])
+        elif chefe:
+            tocar(bus, melodia, t_secao, semi, "acordeom", 0.2, 0.1)
         else:
-            tocar_melodia(x, partitura["melodia"], ini, semi, "acordeom", 0, 0.35)
-            tocar_melodia(x, partitura["melodia"], ini, semi, "guitarra", -12, 0.25)
-    # notas que soam depois do último compasso voltam para o começo: o arquivo
-    # fica com o número exato de compassos e o loop não atrasa o ritmo
-    n = n_am(total * comp_seg)
-    for i, v in enumerate(x[n:]):
-        x[i % n] += v
-    del x[n:]
-    return reverb(x, 0.4, 0.15, circular=True)
+            tocar(bus, melodia, t_secao, semi, "flauta", 0.5, 0.1)
+    # mistura final: cauda de volta ao começo (loop), reverb estéreo, compressor
+    n = n_am(total * comp)
+    for canal in (bus.l, bus.r):
+        for i, v in enumerate(canal[n:]):
+            canal[i % n] += v
+        del canal[n:]
+    l = reverb(bus.l, 1.0, 0.22, circular=True)
+    r = reverb(bus.r, 1.0, 0.22, desvio=23, circular=True)
+    m = max(max(abs(v) for v in l), max(abs(v) for v in r))
+    return limitar([[v / m for v in l], [v / m for v in r]], 0.35, 3.0, 0.15)
 
 
 def gerar_trilhas():
     print("Trilhas (demora um pouco):")
-    salvar(os.path.join(DIR_TRILHAS, "exploracao_carimbo.wav"), musica(EXPLORACAO, 3), 0.85)
-    salvar(os.path.join(DIR_TRILHAS, "chefe_mapinguari.wav"), musica(CHEFE, 3, chefe=True), 0.85)
+    salvar(os.path.join(DIR_TRILHAS, "exploracao_carimbo.wav"), musica(EXPLORACAO), 0.93)
+    salvar(os.path.join(DIR_TRILHAS, "chefe_mapinguari.wav"), musica(CHEFE, chefe=True), 0.93)
 
 
 if __name__ == "__main__":
