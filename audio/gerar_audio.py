@@ -150,12 +150,17 @@ def saturar(x, ganho, assimetria=0.0):
     return [math.tanh(v * ganho + assimetria) - off for v in x]
 
 
-def limitar(canais, limiar=0.5, razao=4.0, soltura=0.12):
-    """Compressor simples ligado nos canais juntos (mantém a imagem estéreo)."""
+def limitar(canais, limiar=0.5, razao=4.0, soltura=0.12, loop=False):
+    """Compressor simples ligado nos canais juntos (mantém a imagem estéreo).
+    `loop`: começa já 'aquecido' com o fim do arquivo, para o ganho não pular na emenda."""
     ka = math.exp(-1 / (0.002 * SR))
     kr = math.exp(-1 / (soltura * SR))
     env = 0.0
     n = len(canais[0])
+    if loop:
+        for i in range(max(0, n - SR), n):
+            p = max(abs(c[i]) for c in canais)
+            env = ka * env + (1 - ka) * p if p > env else kr * env + (1 - kr) * p
     saida = [[0.0] * n for _ in canais]
     expo = 1 - 1 / razao
     for i in range(n):
@@ -1076,7 +1081,7 @@ def musica(partitura, chefe=False):
     l = reverb(bus.l, 1.0, 0.22, circular=True)
     r = reverb(bus.r, 1.0, 0.22, desvio=23, circular=True)
     m = max(max(abs(v) for v in l), max(abs(v) for v in r))
-    return limitar([[v / m for v in l], [v / m for v in r]], 0.35, 3.0, 0.15)
+    return limitar([[v / m for v in l], [v / m for v in r]], 0.35, 3.0, 0.15, loop=True)
 
 
 def gerar_trilhas():
