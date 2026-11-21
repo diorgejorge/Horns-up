@@ -1,0 +1,1087 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/campanha/batalha_campanha.gd" id="1_u3kr8"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m01_raizes_musgo.tscn" id="2_oyfac"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m16_raizes_grama.tscn" id="3_rtt8a"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m29_piso_marajoara.tscn" id="4_pt3u7"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m15_raiz_tronco.tscn" id="5_deiov"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m21_tronco_caido_grama.tscn" id="6_jv8fc"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m24_agua_funda.tscn" id="7_xcohh"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m17_agua_rasa_pedras.tscn" id="8_g5dg6"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m05_lama_furos.tscn" id="9_3u80s"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m18_pedras_escuras.tscn" id="10_58sjr"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/floresta/f01_samauma.tscn" id="11_a6ac4"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/props/r04_altar_cristal.tscn" id="12_5s407"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/props/p3_03_pedra_runica.tscn" id="13_3t6vt"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/floresta/f07_cogumelos_brilhantes.tscn" id="14_x2ued"]
+[ext_resource type="Script" path="res://scripts/components/unidade_3d.gd" id="15_g5f8m"]
+[ext_resource type="PackedScene" path="res://assets/diorge/rigged/bosses/mapinguari.glb" id="16_v4l50"]
+[ext_resource type="Shader" path="res://shaders/outline_post.gdshader" id="17_afki5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wbx43"]
+render_priority = -128
+shader = ExtResource("17_afki5")
+shader_parameter/line_color = null
+shader_parameter/thickness = null
+shader_parameter/depth_threshold = null
+shader_parameter/normal_threshold = null
+shader_parameter/strength = 0.6
+
+[sub_resource type="QuadMesh" id="QuadMesh_lspad"]
+size = Vector2(2, 2)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_pjr1n"]
+sky_top_color = Color(0.32, 0.55, 0.8, 1)
+sky_horizon_color = Color(0.85, 0.82, 0.72, 1)
+ground_bottom_color = Color(0.2, 0.25, 0.18, 1)
+ground_horizon_color = Color(0.5, 0.55, 0.45, 1)
+
+[sub_resource type="Sky" id="Sky_4vj0h"]
+sky_material = SubResource("ProceduralSkyMaterial_pjr1n")
+
+[sub_resource type="Environment" id="Environment_w1kvd"]
+background_mode = 1
+background_color = Color(0.05, 0.04, 0.08, 1)
+sky = SubResource("Sky_4vj0h")
+ambient_light_source = 3
+ambient_light_energy = 0.4
+reflected_light_source = 2
+tonemap_mode = 3
+tonemap_exposure = 1.15
+ssao_enabled = true
+ssao_radius = 0.6
+ssao_intensity = 1.6
+glow_enabled = true
+glow_intensity = 0.6
+glow_bloom = 0.05
+fog_enabled = true
+fog_light_color = Color(0.22, 0.16, 0.3, 1)
+fog_density = 0.005
+fog_sky_affect = 0.0
+adjustment_enabled = true
+adjustment_contrast = 1.05
+adjustment_saturation = 0.95
+
+[node name="Batalha12" type="Node3D" unique_id=1890378567]
+script = ExtResource("1_u3kr8")
+numero = 12
+
+[node name="Terreno" type="Node3D" parent="." unique_id=1383981019]
+
+[node name="m01_raizes_musgo" parent="Terreno" unique_id=412378144 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.5, 0, 0.5)
+
+[node name="m01_raizes_musgo2" parent="Terreno" unique_id=821145959 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 0.5)
+
+[node name="m01_raizes_musgo3" parent="Terreno" unique_id=1988603216 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.5, 0, 0.5)
+
+[node name="m16_raizes_grama" parent="Terreno" unique_id=224712989 instance=ExtResource("3_rtt8a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 0.5)
+
+[node name="m01_raizes_musgo4" parent="Terreno" unique_id=254654282 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.5, 0, 0.5)
+
+[node name="m01_raizes_musgo5" parent="Terreno" unique_id=1363161924 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 5.5, 0, 0.5)
+
+[node name="m29_piso_marajoara" parent="Terreno" unique_id=1413533153 instance=ExtResource("4_pt3u7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 0.5)
+
+[node name="m29_piso_marajoara2" parent="Terreno" unique_id=1552659884 instance=ExtResource("4_pt3u7")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.5, 0, 0.5)
+
+[node name="m29_piso_marajoara3" parent="Terreno" unique_id=1046663351 instance=ExtResource("4_pt3u7")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.5, 0, 0.5)
+
+[node name="m29_piso_marajoara4" parent="Terreno" unique_id=233298354 instance=ExtResource("4_pt3u7")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.5, 0, 0.5)
+
+[node name="m01_raizes_musgo6" parent="Terreno" unique_id=1793608646 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 10.5, 0, 0.5)
+
+[node name="m01_raizes_musgo7" parent="Terreno" unique_id=458384541 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 11.5, 0, 0.5)
+
+[node name="m16_raizes_grama2" parent="Terreno" unique_id=1600534818 instance=ExtResource("3_rtt8a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 0.5)
+
+[node name="m01_raizes_musgo8" parent="Terreno" unique_id=1975344959 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.5, 0, 0.5)
+
+[node name="m01_raizes_musgo9" parent="Terreno" unique_id=2046418645 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 14.5, 0, 0.5)
+
+[node name="m01_raizes_musgo10" parent="Terreno" unique_id=206108540 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 15.5, 0, 0.5)
+
+[node name="m01_raizes_musgo11" parent="Terreno" unique_id=765820754 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 1.5)
+
+[node name="m01_raizes_musgo12" parent="Terreno" unique_id=763257456 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 1.5)
+
+[node name="m16_raizes_grama3" parent="Terreno" unique_id=790052227 instance=ExtResource("3_rtt8a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 1.5)
+
+[node name="m01_raizes_musgo13" parent="Terreno" unique_id=728404892 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.5, 0, 1.5)
+
+[node name="m01_raizes_musgo14" parent="Terreno" unique_id=1998120404 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 4.5, 0, 1.5)
+
+[node name="m01_raizes_musgo15" parent="Terreno" unique_id=988108936 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 5.5, 0, 1.5)
+
+[node name="m29_piso_marajoara5" parent="Terreno" unique_id=812181094 instance=ExtResource("4_pt3u7")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.5, 0, 1.5)
+
+[node name="m29_piso_marajoara6" parent="Terreno" unique_id=1283526290 instance=ExtResource("4_pt3u7")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 7.5, 0, 1.5)
+
+[node name="m29_piso_marajoara7" parent="Terreno" unique_id=1997696904 instance=ExtResource("4_pt3u7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 1.5)
+
+[node name="m29_piso_marajoara8" parent="Terreno" unique_id=1355722578 instance=ExtResource("4_pt3u7")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 9.5, 0, 1.5)
+
+[node name="m01_raizes_musgo16" parent="Terreno" unique_id=388513305 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 10.5, 0, 1.5)
+
+[node name="m01_raizes_musgo17" parent="Terreno" unique_id=1248139632 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 11.5, 0, 1.5)
+
+[node name="m01_raizes_musgo18" parent="Terreno" unique_id=1841024224 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12.5, 0, 1.5)
+
+[node name="m16_raizes_grama4" parent="Terreno" unique_id=713374128 instance=ExtResource("3_rtt8a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 1.5)
+
+[node name="m01_raizes_musgo19" parent="Terreno" unique_id=265061806 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 1.5)
+
+[node name="m01_raizes_musgo20" parent="Terreno" unique_id=1664252750 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 15.5, 0, 1.5)
+
+[node name="m01_raizes_musgo21" parent="Terreno" unique_id=471136707 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.5, 0, 2.5)
+
+[node name="m15_raiz_tronco" parent="Terreno" unique_id=2048320007 instance=ExtResource("5_deiov")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 2.5)
+
+[node name="m01_raizes_musgo22" parent="Terreno" unique_id=454283229 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.5, 0, 2.5)
+
+[node name="m01_raizes_musgo23" parent="Terreno" unique_id=1736165559 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 3.5, 0, 2.5)
+
+[node name="m01_raizes_musgo24" parent="Terreno" unique_id=1553010752 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.5, 0, 2.5)
+
+[node name="m01_raizes_musgo25" parent="Terreno" unique_id=141576157 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 5.5, 0, 2.5)
+
+[node name="m01_raizes_musgo26" parent="Terreno" unique_id=1980589447 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.5, 0, 2.5)
+
+[node name="m29_piso_marajoara9" parent="Terreno" unique_id=1678432073 instance=ExtResource("4_pt3u7")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 7.5, 0, 2.5)
+
+[node name="m29_piso_marajoara10" parent="Terreno" unique_id=704713496 instance=ExtResource("4_pt3u7")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.5, 0, 2.5)
+
+[node name="m01_raizes_musgo27" parent="Terreno" unique_id=431165077 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 2.5)
+
+[node name="m01_raizes_musgo28" parent="Terreno" unique_id=1870862476 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 2.5)
+
+[node name="m01_raizes_musgo29" parent="Terreno" unique_id=1831944294 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 11.5, 0, 2.5)
+
+[node name="m01_raizes_musgo30" parent="Terreno" unique_id=1253129633 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 12.5, 0, 2.5)
+
+[node name="m01_raizes_musgo31" parent="Terreno" unique_id=259907151 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.5, 0, 2.5)
+
+[node name="m15_raiz_tronco2" parent="Terreno" unique_id=619981163 instance=ExtResource("5_deiov")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 2.5)
+
+[node name="m01_raizes_musgo32" parent="Terreno" unique_id=1639929186 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 2.5)
+
+[node name="m01_raizes_musgo33" parent="Terreno" unique_id=1593361029 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 3.5)
+
+[node name="m01_raizes_musgo34" parent="Terreno" unique_id=862694772 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 1.5, 0, 3.5)
+
+[node name="m01_raizes_musgo35" parent="Terreno" unique_id=1808297131 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 2.5, 0, 3.5)
+
+[node name="m01_raizes_musgo36" parent="Terreno" unique_id=1652215245 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.5, 0, 3.5)
+
+[node name="m21_tronco_caido_grama" parent="Terreno" unique_id=468986842 instance=ExtResource("6_jv8fc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 3.5)
+andavel = false
+
+[node name="m01_raizes_musgo37" parent="Terreno" unique_id=1665991633 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5.5, 0, 3.5)
+
+[node name="m01_raizes_musgo38" parent="Terreno" unique_id=1279561752 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.5, 0, 3.5)
+
+[node name="m01_raizes_musgo39" parent="Terreno" unique_id=551205776 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.5, 0, 3.5)
+
+[node name="m01_raizes_musgo40" parent="Terreno" unique_id=1540092255 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.5, 0, 3.5)
+
+[node name="m01_raizes_musgo41" parent="Terreno" unique_id=1066229397 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 0, 3.5)
+
+[node name="m01_raizes_musgo42" parent="Terreno" unique_id=355677097 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 3.5)
+
+[node name="m21_tronco_caido_grama2" parent="Terreno" unique_id=543990568 instance=ExtResource("6_jv8fc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 3.5)
+andavel = false
+
+[node name="m01_raizes_musgo43" parent="Terreno" unique_id=1170920136 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 12.5, 0, 3.5)
+
+[node name="m01_raizes_musgo44" parent="Terreno" unique_id=1221670665 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 13.5, 0, 3.5)
+
+[node name="m01_raizes_musgo45" parent="Terreno" unique_id=1078799494 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 3.5)
+
+[node name="m01_raizes_musgo46" parent="Terreno" unique_id=1401765232 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 15.5, 0, 3.5)
+
+[node name="m24_agua_funda" parent="Terreno" unique_id=1422306907 instance=ExtResource("7_xcohh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 4.5)
+
+[node name="m17_agua_rasa_pedras" parent="Terreno" unique_id=1813388755 instance=ExtResource("8_g5dg6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 4.5)
+
+[node name="m05_lama_furos" parent="Terreno" unique_id=793089303 instance=ExtResource("9_3u80s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 4.5)
+
+[node name="m05_lama_furos2" parent="Terreno" unique_id=1354922174 instance=ExtResource("9_3u80s")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.5, 0, 4.5)
+
+[node name="m01_raizes_musgo47" parent="Terreno" unique_id=728003191 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 4.5, 0, 4.5)
+
+[node name="m01_raizes_musgo48" parent="Terreno" unique_id=367663127 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 5.5, 0, 4.5)
+
+[node name="m01_raizes_musgo49" parent="Terreno" unique_id=2069057398 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 6.5, 0, 4.5)
+
+[node name="m01_raizes_musgo50" parent="Terreno" unique_id=1949249554 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 4.5)
+
+[node name="m01_raizes_musgo51" parent="Terreno" unique_id=1501982439 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.5, 0, 4.5)
+
+[node name="m01_raizes_musgo52" parent="Terreno" unique_id=2084670878 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 0, 4.5)
+
+[node name="m01_raizes_musgo53" parent="Terreno" unique_id=401246115 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 10.5, 0, 4.5)
+
+[node name="m01_raizes_musgo54" parent="Terreno" unique_id=1377692876 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 4.5)
+
+[node name="m05_lama_furos3" parent="Terreno" unique_id=835051989 instance=ExtResource("9_3u80s")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 12.5, 0, 4.5)
+
+[node name="m05_lama_furos4" parent="Terreno" unique_id=847063483 instance=ExtResource("9_3u80s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 4.5)
+
+[node name="m17_agua_rasa_pedras2" parent="Terreno" unique_id=1480208003 instance=ExtResource("8_g5dg6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 4.5)
+
+[node name="m24_agua_funda2" parent="Terreno" unique_id=2124629687 instance=ExtResource("7_xcohh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 4.5)
+
+[node name="m24_agua_funda3" parent="Terreno" unique_id=1612310693 instance=ExtResource("7_xcohh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 5.5)
+
+[node name="m17_agua_rasa_pedras3" parent="Terreno" unique_id=1205810360 instance=ExtResource("8_g5dg6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 5.5)
+
+[node name="m05_lama_furos5" parent="Terreno" unique_id=509681785 instance=ExtResource("9_3u80s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 5.5)
+
+[node name="m05_lama_furos6" parent="Terreno" unique_id=1275990405 instance=ExtResource("9_3u80s")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 3.5, 0, 5.5)
+
+[node name="m01_raizes_musgo55" parent="Terreno" unique_id=1179037341 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.5, 0, 5.5)
+
+[node name="m01_raizes_musgo56" parent="Terreno" unique_id=1936092913 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 5.5, 0, 5.5)
+
+[node name="m18_pedras_escuras" parent="Terreno" unique_id=562165969 instance=ExtResource("10_58sjr")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 6.5, 0, 5.5)
+
+[node name="m01_raizes_musgo57" parent="Terreno" unique_id=97772216 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 7.5, 0, 5.5)
+
+[node name="m01_raizes_musgo58" parent="Terreno" unique_id=1075122040 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.5, 0, 5.5)
+
+[node name="m18_pedras_escuras2" parent="Terreno" unique_id=1687176867 instance=ExtResource("10_58sjr")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 9.5, 0, 5.5)
+
+[node name="m01_raizes_musgo59" parent="Terreno" unique_id=1361850688 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 10.5, 0, 5.5)
+
+[node name="m01_raizes_musgo60" parent="Terreno" unique_id=218534091 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 11.5, 0, 5.5)
+
+[node name="m05_lama_furos7" parent="Terreno" unique_id=779677954 instance=ExtResource("9_3u80s")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12.5, 0, 5.5)
+
+[node name="m05_lama_furos8" parent="Terreno" unique_id=237036580 instance=ExtResource("9_3u80s")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 13.5, 0, 5.5)
+
+[node name="m17_agua_rasa_pedras4" parent="Terreno" unique_id=990157265 instance=ExtResource("8_g5dg6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 5.5)
+
+[node name="m24_agua_funda4" parent="Terreno" unique_id=115523381 instance=ExtResource("7_xcohh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 5.5)
+
+[node name="m01_raizes_musgo61" parent="Terreno" unique_id=821478099 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 6.5)
+
+[node name="m17_agua_rasa_pedras5" parent="Terreno" unique_id=180283425 instance=ExtResource("8_g5dg6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 6.5)
+
+[node name="m01_raizes_musgo62" parent="Terreno" unique_id=832471621 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.5, 0, 6.5)
+
+[node name="m01_raizes_musgo63" parent="Terreno" unique_id=1225530984 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 3.5, 0, 6.5)
+
+[node name="m01_raizes_musgo64" parent="Terreno" unique_id=391031302 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 6.5)
+
+[node name="m01_raizes_musgo65" parent="Terreno" unique_id=1955297455 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 5.5, 0, 6.5)
+
+[node name="m01_raizes_musgo66" parent="Terreno" unique_id=1155887523 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 6.5)
+
+[node name="m01_raizes_musgo67" parent="Terreno" unique_id=943041505 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 7.5, 0, 6.5)
+
+[node name="m01_raizes_musgo68" parent="Terreno" unique_id=772675750 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.5, 0, 6.5)
+
+[node name="m01_raizes_musgo69" parent="Terreno" unique_id=945653770 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 0, 6.5)
+
+[node name="m01_raizes_musgo70" parent="Terreno" unique_id=510038071 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 10.5, 0, 6.5)
+
+[node name="m01_raizes_musgo71" parent="Terreno" unique_id=999044185 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 11.5, 0, 6.5)
+
+[node name="m01_raizes_musgo72" parent="Terreno" unique_id=152868918 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 12.5, 0, 6.5)
+
+[node name="m01_raizes_musgo73" parent="Terreno" unique_id=1536331466 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.5, 0, 6.5)
+
+[node name="m17_agua_rasa_pedras6" parent="Terreno" unique_id=354103822 instance=ExtResource("8_g5dg6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 6.5)
+
+[node name="m01_raizes_musgo74" parent="Terreno" unique_id=1169298384 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 15.5, 0, 6.5)
+
+[node name="m01_raizes_musgo75" parent="Terreno" unique_id=1405711457 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 7.5)
+
+[node name="m21_tronco_caido_grama3" parent="Terreno" unique_id=318253640 instance=ExtResource("6_jv8fc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 7.5)
+andavel = false
+
+[node name="m01_raizes_musgo76" parent="Terreno" unique_id=997602597 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.5, 0, 7.5)
+
+[node name="m01_raizes_musgo77" parent="Terreno" unique_id=1023092105 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 7.5)
+
+[node name="m01_raizes_musgo78" parent="Terreno" unique_id=699002716 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 4.5, 0, 7.5)
+
+[node name="m01_raizes_musgo79" parent="Terreno" unique_id=536221079 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 7.5)
+
+[node name="m01_raizes_musgo80" parent="Terreno" unique_id=119092970 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.5, 0, 7.5)
+
+[node name="m01_raizes_musgo81" parent="Terreno" unique_id=1482257365 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.5, 0, 7.5)
+
+[node name="m01_raizes_musgo82" parent="Terreno" unique_id=12466725 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.5, 0, 7.5)
+
+[node name="m01_raizes_musgo83" parent="Terreno" unique_id=1380452933 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 9.5, 0, 7.5)
+
+[node name="m01_raizes_musgo84" parent="Terreno" unique_id=1977821675 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 7.5)
+
+[node name="m01_raizes_musgo85" parent="Terreno" unique_id=29988546 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 11.5, 0, 7.5)
+
+[node name="m01_raizes_musgo86" parent="Terreno" unique_id=493524556 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12.5, 0, 7.5)
+
+[node name="m01_raizes_musgo87" parent="Terreno" unique_id=567503778 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 13.5, 0, 7.5)
+
+[node name="m21_tronco_caido_grama4" parent="Terreno" unique_id=442060503 instance=ExtResource("6_jv8fc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 7.5)
+andavel = false
+
+[node name="m01_raizes_musgo88" parent="Terreno" unique_id=306080299 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 7.5)
+
+[node name="m01_raizes_musgo89" parent="Terreno" unique_id=832328630 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.5, 0, 8.5)
+
+[node name="m05_lama_furos9" parent="Terreno" unique_id=1834781370 instance=ExtResource("9_3u80s")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 1.5, 0, 8.5)
+
+[node name="m01_raizes_musgo90" parent="Terreno" unique_id=322047580 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.5, 0, 8.5)
+
+[node name="m01_raizes_musgo91" parent="Terreno" unique_id=5054300 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 3.5, 0, 8.5)
+
+[node name="m01_raizes_musgo92" parent="Terreno" unique_id=1881941896 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.5, 0, 8.5)
+
+[node name="m18_pedras_escuras3" parent="Terreno" unique_id=1367373090 instance=ExtResource("10_58sjr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 8.5)
+
+[node name="m01_raizes_musgo93" parent="Terreno" unique_id=1647110593 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 8.5)
+
+[node name="m01_raizes_musgo94" parent="Terreno" unique_id=490409415 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 7.5, 0, 8.5)
+
+[node name="m01_raizes_musgo95" parent="Terreno" unique_id=1258154096 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 8.5)
+
+[node name="m01_raizes_musgo96" parent="Terreno" unique_id=221460093 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 8.5)
+
+[node name="m18_pedras_escuras4" parent="Terreno" unique_id=1284021521 instance=ExtResource("10_58sjr")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 10.5, 0, 8.5)
+
+[node name="m01_raizes_musgo97" parent="Terreno" unique_id=687867141 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 11.5, 0, 8.5)
+
+[node name="m01_raizes_musgo98" parent="Terreno" unique_id=992383258 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12.5, 0, 8.5)
+
+[node name="m01_raizes_musgo99" parent="Terreno" unique_id=1997040464 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 13.5, 0, 8.5)
+
+[node name="m05_lama_furos10" parent="Terreno" unique_id=834573785 instance=ExtResource("9_3u80s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 8.5)
+
+[node name="m01_raizes_musgo100" parent="Terreno" unique_id=1108422345 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 15.5, 0, 8.5)
+
+[node name="m24_agua_funda5" parent="Terreno" unique_id=453084011 instance=ExtResource("7_xcohh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 9.5)
+
+[node name="m17_agua_rasa_pedras7" parent="Terreno" unique_id=1971328603 instance=ExtResource("8_g5dg6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 9.5)
+
+[node name="m05_lama_furos11" parent="Terreno" unique_id=108753530 instance=ExtResource("9_3u80s")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.5, 0, 9.5)
+
+[node name="m05_lama_furos12" parent="Terreno" unique_id=932177383 instance=ExtResource("9_3u80s")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 3.5, 0, 9.5)
+
+[node name="m01_raizes_musgo101" parent="Terreno" unique_id=721834505 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.5, 0, 9.5)
+
+[node name="m01_raizes_musgo102" parent="Terreno" unique_id=965412556 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5.5, 0, 9.5)
+
+[node name="m01_raizes_musgo103" parent="Terreno" unique_id=1765809046 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 6.5, 0, 9.5)
+
+[node name="m01_raizes_musgo104" parent="Terreno" unique_id=1902485532 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 7.5, 0, 9.5)
+
+[node name="m01_raizes_musgo105" parent="Terreno" unique_id=1153297881 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 9.5)
+
+[node name="m01_raizes_musgo106" parent="Terreno" unique_id=1011796548 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.5, 0, 9.5)
+
+[node name="m01_raizes_musgo107" parent="Terreno" unique_id=1678043547 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 10.5, 0, 9.5)
+
+[node name="m01_raizes_musgo108" parent="Terreno" unique_id=1725602643 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 11.5, 0, 9.5)
+
+[node name="m05_lama_furos13" parent="Terreno" unique_id=1771814343 instance=ExtResource("9_3u80s")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 12.5, 0, 9.5)
+
+[node name="m05_lama_furos14" parent="Terreno" unique_id=489098784 instance=ExtResource("9_3u80s")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 13.5, 0, 9.5)
+
+[node name="m17_agua_rasa_pedras8" parent="Terreno" unique_id=371150692 instance=ExtResource("8_g5dg6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 9.5)
+
+[node name="m24_agua_funda6" parent="Terreno" unique_id=65955597 instance=ExtResource("7_xcohh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 9.5)
+
+[node name="m24_agua_funda7" parent="Terreno" unique_id=1636394682 instance=ExtResource("7_xcohh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 10.5)
+
+[node name="m17_agua_rasa_pedras9" parent="Terreno" unique_id=1050245633 instance=ExtResource("8_g5dg6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 10.5)
+
+[node name="m05_lama_furos15" parent="Terreno" unique_id=1029109133 instance=ExtResource("9_3u80s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 10.5)
+
+[node name="m21_tronco_caido_grama5" parent="Terreno" unique_id=295791594 instance=ExtResource("6_jv8fc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 10.5)
+andavel = false
+
+[node name="m01_raizes_musgo109" parent="Terreno" unique_id=743058827 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 4.5, 0, 10.5)
+
+[node name="m01_raizes_musgo110" parent="Terreno" unique_id=983347955 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 10.5)
+
+[node name="m01_raizes_musgo111" parent="Terreno" unique_id=924168753 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.5, 0, 10.5)
+
+[node name="m01_raizes_musgo112" parent="Terreno" unique_id=1260838325 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 10.5)
+
+[node name="m01_raizes_musgo113" parent="Terreno" unique_id=126499025 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 10.5)
+
+[node name="m01_raizes_musgo114" parent="Terreno" unique_id=1350922016 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.5, 0, 10.5)
+
+[node name="m01_raizes_musgo115" parent="Terreno" unique_id=930048162 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 10.5, 0, 10.5)
+
+[node name="m01_raizes_musgo116" parent="Terreno" unique_id=1898822032 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 11.5, 0, 10.5)
+
+[node name="m21_tronco_caido_grama6" parent="Terreno" unique_id=14833823 instance=ExtResource("6_jv8fc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 10.5)
+andavel = false
+
+[node name="m05_lama_furos16" parent="Terreno" unique_id=751781550 instance=ExtResource("9_3u80s")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 13.5, 0, 10.5)
+
+[node name="m17_agua_rasa_pedras10" parent="Terreno" unique_id=32151002 instance=ExtResource("8_g5dg6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 10.5)
+
+[node name="m24_agua_funda8" parent="Terreno" unique_id=431834571 instance=ExtResource("7_xcohh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 10.5)
+
+[node name="m01_raizes_musgo117" parent="Terreno" unique_id=544567361 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.5, 0, 11.5)
+
+[node name="m05_lama_furos17" parent="Terreno" unique_id=206998756 instance=ExtResource("9_3u80s")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.5, 0, 11.5)
+
+[node name="m01_raizes_musgo118" parent="Terreno" unique_id=1181064145 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 11.5)
+
+[node name="m01_raizes_musgo119" parent="Terreno" unique_id=387010984 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 3.5, 0, 11.5)
+
+[node name="m01_raizes_musgo120" parent="Terreno" unique_id=1258307316 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 11.5)
+
+[node name="m01_raizes_musgo121" parent="Terreno" unique_id=1640179207 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 11.5)
+
+[node name="m01_raizes_musgo122" parent="Terreno" unique_id=1157030625 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.5, 0, 11.5)
+
+[node name="m01_raizes_musgo123" parent="Terreno" unique_id=1866010839 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.5, 0, 11.5)
+
+[node name="m01_raizes_musgo124" parent="Terreno" unique_id=2103185314 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.5, 0, 11.5)
+
+[node name="m01_raizes_musgo125" parent="Terreno" unique_id=1727701880 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.5, 0, 11.5)
+
+[node name="m01_raizes_musgo126" parent="Terreno" unique_id=684061584 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 10.5, 0, 11.5)
+
+[node name="m01_raizes_musgo127" parent="Terreno" unique_id=593835207 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 11.5)
+
+[node name="m01_raizes_musgo128" parent="Terreno" unique_id=942780511 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 12.5, 0, 11.5)
+
+[node name="m01_raizes_musgo129" parent="Terreno" unique_id=808559544 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 13.5, 0, 11.5)
+
+[node name="m05_lama_furos18" parent="Terreno" unique_id=769003103 instance=ExtResource("9_3u80s")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 14.5, 0, 11.5)
+
+[node name="m01_raizes_musgo130" parent="Terreno" unique_id=2085305901 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 15.5, 0, 11.5)
+
+[node name="m01_raizes_musgo131" parent="Terreno" unique_id=160127075 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 0.5, 0, 12.5)
+
+[node name="m15_raiz_tronco3" parent="Terreno" unique_id=1997174794 instance=ExtResource("5_deiov")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 12.5)
+
+[node name="m01_raizes_musgo132" parent="Terreno" unique_id=150484442 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 12.5)
+
+[node name="m01_raizes_musgo133" parent="Terreno" unique_id=135911954 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 12.5)
+
+[node name="m01_raizes_musgo134" parent="Terreno" unique_id=265338525 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 4.5, 0, 12.5)
+
+[node name="m01_raizes_musgo135" parent="Terreno" unique_id=349620853 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 5.5, 0, 12.5)
+
+[node name="m01_raizes_musgo136" parent="Terreno" unique_id=1787142187 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 6.5, 0, 12.5)
+
+[node name="m01_raizes_musgo137" parent="Terreno" unique_id=385197953 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 12.5)
+
+[node name="m01_raizes_musgo138" parent="Terreno" unique_id=1795535606 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 8.5, 0, 12.5)
+
+[node name="m01_raizes_musgo139" parent="Terreno" unique_id=71259626 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.5, 0, 12.5)
+
+[node name="m01_raizes_musgo140" parent="Terreno" unique_id=1097461897 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 10.5, 0, 12.5)
+
+[node name="m01_raizes_musgo141" parent="Terreno" unique_id=273512189 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, 12.5)
+
+[node name="m01_raizes_musgo142" parent="Terreno" unique_id=1062844496 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 12.5)
+
+[node name="m01_raizes_musgo143" parent="Terreno" unique_id=86815244 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 12.5)
+
+[node name="m15_raiz_tronco4" parent="Terreno" unique_id=1201657068 instance=ExtResource("5_deiov")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 12.5)
+
+[node name="m01_raizes_musgo144" parent="Terreno" unique_id=1866503988 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 12.5)
+
+[node name="m01_raizes_musgo145" parent="Terreno" unique_id=1551509765 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 0.5, 0, 13.5)
+
+[node name="m01_raizes_musgo146" parent="Terreno" unique_id=1007974234 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.5, 0, 13.5)
+
+[node name="m01_raizes_musgo147" parent="Terreno" unique_id=315657961 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.5, 0, 13.5)
+
+[node name="m01_raizes_musgo148" parent="Terreno" unique_id=275889823 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 13.5)
+
+[node name="m01_raizes_musgo149" parent="Terreno" unique_id=563096513 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 4.5, 0, 13.5)
+
+[node name="m01_raizes_musgo150" parent="Terreno" unique_id=1160615712 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5.5, 0, 13.5)
+
+[node name="m01_raizes_musgo151" parent="Terreno" unique_id=1552454039 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 6.5, 0, 13.5)
+
+[node name="m01_raizes_musgo152" parent="Terreno" unique_id=1818343023 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 7.5, 0, 13.5)
+
+[node name="m01_raizes_musgo153" parent="Terreno" unique_id=2053397135 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 8.5, 0, 13.5)
+
+[node name="m01_raizes_musgo154" parent="Terreno" unique_id=98001631 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 9.5, 0, 13.5)
+
+[node name="m01_raizes_musgo155" parent="Terreno" unique_id=1635346088 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 10.5, 0, 13.5)
+
+[node name="m01_raizes_musgo156" parent="Terreno" unique_id=1060130589 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 11.5, 0, 13.5)
+
+[node name="m01_raizes_musgo157" parent="Terreno" unique_id=1737310606 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12.5, 0, 13.5)
+
+[node name="m01_raizes_musgo158" parent="Terreno" unique_id=622199359 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 13.5, 0, 13.5)
+
+[node name="m01_raizes_musgo159" parent="Terreno" unique_id=406869298 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 13.5)
+
+[node name="m01_raizes_musgo160" parent="Terreno" unique_id=1544601944 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 13.5)
+
+[node name="m01_raizes_musgo161" parent="Terreno" unique_id=1362789579 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 0.5, 0, 14.5)
+
+[node name="m01_raizes_musgo162" parent="Terreno" unique_id=378332267 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.5, 0, 14.5)
+
+[node name="m16_raizes_grama5" parent="Terreno" unique_id=489911098 instance=ExtResource("3_rtt8a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 14.5)
+
+[node name="m01_raizes_musgo163" parent="Terreno" unique_id=963002348 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.5, 0, 14.5)
+
+[node name="m01_raizes_musgo164" parent="Terreno" unique_id=1008753956 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.5, 0, 14.5)
+
+[node name="m01_raizes_musgo165" parent="Terreno" unique_id=384581235 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5.5, 0, 14.5)
+
+[node name="m01_raizes_musgo166" parent="Terreno" unique_id=691820356 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.5, 0, 14.5)
+
+[node name="m01_raizes_musgo167" parent="Terreno" unique_id=214880962 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.5, 0, 14.5)
+
+[node name="m01_raizes_musgo168" parent="Terreno" unique_id=771748830 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 14.5)
+
+[node name="m01_raizes_musgo169" parent="Terreno" unique_id=353968255 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 9.5, 0, 14.5)
+
+[node name="m01_raizes_musgo170" parent="Terreno" unique_id=1470388093 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 10.5, 0, 14.5)
+
+[node name="m01_raizes_musgo171" parent="Terreno" unique_id=251937122 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 11.5, 0, 14.5)
+
+[node name="m01_raizes_musgo172" parent="Terreno" unique_id=1065207720 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 12.5, 0, 14.5)
+
+[node name="m16_raizes_grama6" parent="Terreno" unique_id=900149739 instance=ExtResource("3_rtt8a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 14.5)
+
+[node name="m01_raizes_musgo173" parent="Terreno" unique_id=2102235302 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 14.5, 0, 14.5)
+
+[node name="m01_raizes_musgo174" parent="Terreno" unique_id=1874886222 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 14.5)
+
+[node name="m01_raizes_musgo175" parent="Terreno" unique_id=719751745 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 0.5, 0, 15.5)
+
+[node name="m01_raizes_musgo176" parent="Terreno" unique_id=656046942 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 15.5)
+
+[node name="m01_raizes_musgo177" parent="Terreno" unique_id=941857132 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 15.5)
+
+[node name="m01_raizes_musgo178" parent="Terreno" unique_id=398472008 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 3.5, 0, 15.5)
+
+[node name="m01_raizes_musgo179" parent="Terreno" unique_id=2134420194 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 15.5)
+
+[node name="m01_raizes_musgo180" parent="Terreno" unique_id=778874719 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 15.5)
+
+[node name="m01_raizes_musgo181" parent="Terreno" unique_id=1616885431 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.5, 0, 15.5)
+
+[node name="m01_raizes_musgo182" parent="Terreno" unique_id=2054388246 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 15.5)
+
+[node name="m01_raizes_musgo183" parent="Terreno" unique_id=1930547766 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 8.5, 0, 15.5)
+
+[node name="m01_raizes_musgo184" parent="Terreno" unique_id=2066694211 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 15.5)
+
+[node name="m01_raizes_musgo185" parent="Terreno" unique_id=6526478 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 10.5, 0, 15.5)
+
+[node name="m01_raizes_musgo186" parent="Terreno" unique_id=1287731748 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 11.5, 0, 15.5)
+
+[node name="m01_raizes_musgo187" parent="Terreno" unique_id=204381467 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12.5, 0, 15.5)
+
+[node name="m01_raizes_musgo188" parent="Terreno" unique_id=1700871084 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 15.5)
+
+[node name="m01_raizes_musgo189" parent="Terreno" unique_id=390212159 instance=ExtResource("2_oyfac")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 14.5, 0, 15.5)
+
+[node name="m01_raizes_musgo190" parent="Terreno" unique_id=41532914 instance=ExtResource("2_oyfac")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 15.5)
+
+[node name="Cenario" type="Node3D" parent="." unique_id=1457870600]
+
+[node name="f01_samauma" parent="Cenario" unique_id=1212929759 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.8953516, 0, -0.13282272, 0, 1.9, 0, 0.13282272, 0, 1.8953516, 0.5, 0.36, 0.5)
+
+[node name="f01_samauma2" parent="Cenario" unique_id=133668568 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.5657487, 0, -1.0763043, 0, 1.9, 0, 1.0763043, 0, 1.5657487, 1.5, 0.36, 0.5)
+
+[node name="f01_samauma3" parent="Cenario" unique_id=2103565118 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.4064497, 0, 1.2774581, 0, 1.9, 0, -1.2774581, 0, -1.4064497, 2.5, 0.36, 0.5)
+
+[node name="r04_altar_cristal" parent="Cenario" unique_id=87251739 instance=ExtResource("12_5s407")]
+transform = Transform3D(0.50228304, 0, -0.86470324, 0, 1, 0, 0.86470324, 0, 0.50228304, 7.5, 0.31, 0.5)
+
+[node name="p3_03_pedra_runica" parent="Cenario" unique_id=1399380578 instance=ExtResource("13_3t6vt")]
+transform = Transform3D(0.66439646, 0, 0.6071057, 0, 0.9, 0, -0.6071057, 0, 0.66439646, 8.5, 0.31, 0.5)
+
+[node name="f01_samauma4" parent="Cenario" unique_id=1999432821 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.8791149, 0, -0.28093997, 0, 1.9, 0, 0.28093997, 0, -1.8791149, 13.5, 0.36, 0.5)
+
+[node name="f01_samauma5" parent="Cenario" unique_id=1465532012 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.5121794, 0, 1.1503536, 0, 1.9, 0, -1.1503536, 0, 1.5121794, 14.5, 0.36, 0.5)
+
+[node name="f01_samauma6" parent="Cenario" unique_id=1796055283 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.8814646, 0, -0.26474652, 0, 1.9, 0, 0.26474652, 0, -1.8814646, 15.5, 0.36, 0.5)
+
+[node name="f01_samauma7" parent="Cenario" unique_id=972569176 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.8809423, 0, 0.26843175, 0, 1.9, 0, -0.26843175, 0, 1.8809423, 0.5, 0.36, 1.5)
+
+[node name="f01_samauma8" parent="Cenario" unique_id=595148491 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.5733545, 0, 1.0651551, 0, 1.9, 0, -1.0651551, 0, 1.5733545, 1.5, 0.36, 1.5)
+
+[node name="f01_samauma9" parent="Cenario" unique_id=320814174 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.6943718, 0, 0.8597115, 0, 1.9, 0, -0.8597115, 0, -1.6943718, 14.5, 0.36, 1.5)
+
+[node name="f01_samauma10" parent="Cenario" unique_id=1462389333 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.8976542, 0, 0.09438527, 0, 1.9, 0, -0.09438527, 0, 1.8976542, 15.5, 0.36, 1.5)
+
+[node name="f01_samauma11" parent="Cenario" unique_id=730764988 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.8771178, 0, 0.29398838, 0, 1.9, 0, -0.29398838, 0, -1.8771178, 0.5, 0.36, 2.5)
+
+[node name="f01_samauma12" parent="Cenario" unique_id=1303232616 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(0.25914058, 0, 1.882245, 0, 1.9, 0, -1.882245, 0, 0.25914058, 15.5, 0.36, 2.5)
+
+[node name="f01_samauma13" parent="Cenario" unique_id=1343467739 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.1663624, 0, 1.4998662, 0, 1.9, 0, -1.4998662, 0, 1.1663624, 0.5, 0.36, 3.5)
+
+[node name="f01_samauma14" parent="Cenario" unique_id=508062347 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.8717452, 0, 0.32645017, 0, 1.9, 0, -0.32645017, 0, 1.8717452, 15.5, 0.36, 3.5)
+
+[node name="f01_samauma15" parent="Cenario" unique_id=192071807 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-0.37220263, 0, -1.8631868, 0, 1.9, 0, 1.8631868, 0, -0.37220263, 0.5, 0.36, 6.5)
+
+[node name="f07_cogumelos_brilhantes" parent="Cenario" unique_id=1033674624 instance=ExtResource("14_x2ued")]
+transform = Transform3D(-0.51068974, 0, 0.8597651, 0, 1, 0, -0.8597651, 0, -0.51068974, 2.5, 0.36, 6.5)
+
+[node name="f07_cogumelos_brilhantes2" parent="Cenario" unique_id=914064409 instance=ExtResource("14_x2ued")]
+transform = Transform3D(-0.5193642, 0, 0.854553, 0, 1, 0, -0.854553, 0, -0.5193642, 13.5, 0.36, 6.5)
+
+[node name="f01_samauma16" parent="Cenario" unique_id=1298155238 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-0.32426697, 0, -1.8721247, 0, 1.9, 0, 1.8721247, 0, -0.32426697, 15.5, 0.36, 6.5)
+
+[node name="f01_samauma17" parent="Cenario" unique_id=234807241 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.4307224, 0, -1.2502134, 0, 1.9, 0, 1.2502134, 0, 1.4307224, 0.5, 0.36, 7.5)
+
+[node name="f01_samauma18" parent="Cenario" unique_id=1601251228 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.4968275, 0, -1.1702596, 0, 1.9, 0, 1.1702596, 0, -1.4968275, 15.5, 0.36, 7.5)
+
+[node name="f01_samauma19" parent="Cenario" unique_id=1234768768 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.1131523, 0, -1.5397701, 0, 1.9, 0, 1.5397701, 0, -1.1131523, 0.5, 0.36, 8.5)
+
+[node name="f01_samauma20" parent="Cenario" unique_id=844367279 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.1615758, 0, -1.5035763, 0, 1.9, 0, 1.5035763, 0, -1.1615758, 15.5, 0.36, 8.5)
+
+[node name="f01_samauma21" parent="Cenario" unique_id=1193734567 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.8954382, 0, 0.13158242, 0, 1.9, 0, -0.13158242, 0, -1.8954382, 0.5, 0.36, 11.5)
+
+[node name="f01_samauma22" parent="Cenario" unique_id=969164113 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.7999159, 0, 0.60852486, 0, 1.9, 0, -0.60852486, 0, -1.7999159, 15.5, 0.36, 11.5)
+
+[node name="f01_samauma23" parent="Cenario" unique_id=836666525 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.4959501, 0, -1.1713809, 0, 1.9, 0, 1.1713809, 0, 1.4959501, 0.5, 0.36, 12.5)
+
+[node name="f07_cogumelos_brilhantes3" parent="Cenario" unique_id=1213056116 instance=ExtResource("14_x2ued")]
+transform = Transform3D(0.42636442, 0, -0.9045515, 0, 1, 0, 0.9045515, 0, 0.42636442, 4.5, 0.36, 12.5)
+
+[node name="f07_cogumelos_brilhantes4" parent="Cenario" unique_id=1190373655 instance=ExtResource("14_x2ued")]
+transform = Transform3D(-0.6999266, 0, 0.7142148, 0, 1, 0, -0.7142148, 0, -0.6999266, 11.5, 0.36, 12.5)
+
+[node name="f01_samauma24" parent="Cenario" unique_id=1535260941 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-0.5092597, 0, 1.8304793, 0, 1.9, 0, -1.8304793, 0, -0.5092597, 15.5, 0.36, 12.5)
+
+[node name="f01_samauma25" parent="Cenario" unique_id=958280616 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.8676122, 0, 0.3493197, 0, 1.9, 0, -0.3493197, 0, 1.8676122, 0.5, 0.36, 13.5)
+
+[node name="f01_samauma26" parent="Cenario" unique_id=582117169 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.8957372, 0, 0.12720309, 0, 1.9, 0, -0.12720309, 0, -1.8957372, 1.5, 0.36, 13.5)
+
+[node name="f01_samauma27" parent="Cenario" unique_id=1415018759 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-0.9108575, 0, 1.6674347, 0, 1.9, 0, -1.6674347, 0, -0.9108575, 14.5, 0.36, 13.5)
+
+[node name="f01_samauma28" parent="Cenario" unique_id=1832402391 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.8078012, 0, -0.58468336, 0, 1.9, 0, 0.58468336, 0, -1.8078012, 15.5, 0.36, 13.5)
+
+[node name="f01_samauma29" parent="Cenario" unique_id=1531158745 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.8027291, 0, -0.6001398, 0, 1.9, 0, 0.6001398, 0, 1.8027291, 0.5, 0.36, 14.5)
+
+[node name="f01_samauma30" parent="Cenario" unique_id=701217956 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(0.24812774, 0, -1.8837284, 0, 1.9, 0, 1.8837284, 0, 0.24812774, 1.5, 0.36, 14.5)
+
+[node name="f01_samauma31" parent="Cenario" unique_id=843563665 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(0.44542173, 0, -1.8470515, 0, 1.9, 0, 1.8470515, 0, 0.44542173, 14.5, 0.36, 14.5)
+
+[node name="f01_samauma32" parent="Cenario" unique_id=151319263 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.4360439, 0, 1.2440972, 0, 1.9, 0, -1.2440972, 0, -1.4360439, 15.5, 0.36, 14.5)
+
+[node name="f01_samauma33" parent="Cenario" unique_id=1497466563 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.126805, 0, -1.5298073, 0, 1.9, 0, 1.5298073, 0, 1.126805, 0.5, 0.36, 15.5)
+
+[node name="f01_samauma34" parent="Cenario" unique_id=368235988 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(0.97266436, 0, -1.6321532, 0, 1.9, 0, 1.6321532, 0, 0.97266436, 1.5, 0.36, 15.5)
+
+[node name="f01_samauma35" parent="Cenario" unique_id=163177933 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-0.2573854, 0, -1.8824859, 0, 1.9, 0, 1.8824859, 0, -0.2573854, 2.5, 0.36, 15.5)
+
+[node name="f01_samauma36" parent="Cenario" unique_id=1977524938 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-0.5804571, 0, 1.8091626, 0, 1.9, 0, -1.8091626, 0, -0.5804571, 3.5, 0.36, 15.5)
+
+[node name="f01_samauma37" parent="Cenario" unique_id=814116494 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.4167544, 0, -1.2660202, 0, 1.9, 0, 1.2660202, 0, 1.4167544, 4.5, 0.36, 15.5)
+
+[node name="f01_samauma38" parent="Cenario" unique_id=1064605830 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-0.9536592, 0, -1.6433301, 0, 1.9, 0, 1.6433301, 0, -0.9536592, 11.5, 0.36, 15.5)
+
+[node name="f01_samauma39" parent="Cenario" unique_id=627942133 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.7606763, 0, -0.7141561, 0, 1.9, 0, 0.7141561, 0, -1.7606763, 12.5, 0.36, 15.5)
+
+[node name="f01_samauma40" parent="Cenario" unique_id=302333185 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(1.5231644, 0, 1.1357685, 0, 1.9, 0, -1.1357685, 0, 1.5231644, 13.5, 0.36, 15.5)
+
+[node name="f01_samauma41" parent="Cenario" unique_id=567216571 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(0.06294307, 0, -1.898957, 0, 1.9, 0, 1.898957, 0, 0.06294307, 14.5, 0.36, 15.5)
+
+[node name="f01_samauma42" parent="Cenario" unique_id=1302026085 instance=ExtResource("11_a6ac4")]
+transform = Transform3D(-1.8411754, 0, -0.46911913, 0, 1.9, 0, 0.46911913, 0, -1.8411754, 15.5, 0.36, 15.5)
+
+[node name="Brilho" type="OmniLight3D" parent="Cenario" unique_id=352198396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.91, 0.5)
+light_color = Color(0.55, 0.9, 1, 1)
+light_energy = 1.4
+omni_range = 2.5
+
+[node name="Brilho2" type="OmniLight3D" parent="Cenario" unique_id=1438555280]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0.91, 0.5)
+light_color = Color(0.6, 0.45, 1, 1)
+light_energy = 1.4
+omni_range = 2.5
+
+[node name="Brilho3" type="OmniLight3D" parent="Cenario" unique_id=1089231868]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.96, 6.5)
+light_color = Color(0.35, 0.9, 1, 1)
+light_energy = 1.4
+omni_range = 2.5
+
+[node name="Brilho4" type="OmniLight3D" parent="Cenario" unique_id=1416427282]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0.96, 6.5)
+light_color = Color(0.35, 0.9, 1, 1)
+light_energy = 1.4
+omni_range = 2.5
+
+[node name="Brilho5" type="OmniLight3D" parent="Cenario" unique_id=2003238303]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.96, 12.5)
+light_color = Color(0.35, 0.9, 1, 1)
+light_energy = 1.4
+omni_range = 2.5
+
+[node name="Brilho6" type="OmniLight3D" parent="Cenario" unique_id=352370185]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0.96, 12.5)
+light_color = Color(0.35, 0.9, 1, 1)
+light_energy = 1.4
+omni_range = 2.5
+
+[node name="Personagens" type="Node3D" parent="." unique_id=572100863]
+
+[node name="Node3D" type="Node3D" parent="Personagens" unique_id=1123505044]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.36, 4.5)
+script = ExtResource("15_g5f8m")
+modelo = ExtResource("16_v4l50")
+display_name = "Mapinguari"
+classe = "chefe"
+enemy = true
+escala = 1.6
+especie = "mapinguari"
+nivel = 7
+papel = "chefe"
+forca = 20
+destreza = 8
+constituicao = 18
+inteligencia = 6
+carisma = 8
+
+[node name="Inicio" type="Node3D" parent="." unique_id=135085927]
+
+[node name="Casa1" type="Marker3D" parent="Inicio" unique_id=1140075499]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0.36, 12.5)
+
+[node name="Casa2" type="Marker3D" parent="Inicio" unique_id=1789208163]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0.36, 12.5)
+
+[node name="Casa3" type="Marker3D" parent="Inicio" unique_id=437817936]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.36, 13.5)
+
+[node name="Casa4" type="Marker3D" parent="Inicio" unique_id=188623798]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0.36, 13.5)
+
+[node name="Camera" type="Camera3D" parent="." unique_id=1046372695]
+transform = Transform3D(0.70710677, -0.35355338, 0.6123724, 0, 0.8660254, 0.5, -0.70710677, -0.35355338, 0.6123724, 69.23724, 50.3, 69.23724)
+projection = 1
+current = true
+size = 13.5
+near = 1.0
+far = 300.0
+
+[node name="Contorno" type="MeshInstance3D" parent="Camera" unique_id=298945160]
+material_override = SubResource("ShaderMaterial_wbx43")
+cast_shadow = 0
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_lspad")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=894545826]
+environment = SubResource("Environment_w1kvd")
+
+[node name="Sol" type="DirectionalLight3D" parent="." unique_id=831718751]
+transform = Transform3D(0.9848077, -0.15038374, 0.08682408, 0, 0.49999997, 0.86602545, -0.17364818, -0.85286856, 0.49240384, 0, 0, 0)
+light_color = Color(0.8, 0.72, 0.95, 1)
+shadow_enabled = true
+shadow_blur = 1.5
+directional_shadow_max_distance = 200.0
+
+[node name="LuzDoCeu" type="DirectionalLight3D" parent="." unique_id=1268392161]
+transform = Transform3D(-0.9396926, -0.19617474, 0.28016657, 0, 0.81915206, 0.57357645, -0.3420202, 0.53898555, -0.76975113, 0, 0, 0)
+light_color = Color(0.55, 0.7, 1, 1)
+light_energy = 0.35

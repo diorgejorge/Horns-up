@@ -17,6 +17,8 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 [autoload]
 
 ProtoNav="*res://scripts/proto_nav.gd"
+Campanha="*res://scripts/campanha/campanha.gd"
+Dialogo="*res://scripts/dialogo/dialogo.gd"
 
 [display]
 

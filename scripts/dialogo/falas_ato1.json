@@ -1,0 +1,462 @@
+{
+	"cenas": {
+		"b01_antes": [
+			[
+				"morador",
+				"Eles vieram do lado do igarapé! Não estão agindo como animais normais!"
+			],
+			[
+				"bufalo",
+				"Levem todos para as casas. Eu seguro a passagem!"
+			],
+			[
+				"morador",
+				"São nossos próprios vizinhos... o que aconteceu com eles?"
+			],
+			[
+				"bufalo",
+				"Não sei. Mas não vou deixar que cheguem à vila."
+			]
+		],
+		"b01_depois": [
+			[
+				"morador",
+				"A água está diferente. Os peixes sumiram e a mata parece... inquieta."
+			],
+			[
+				"bufalo",
+				"Encontrei fragmentos de cerâmica perto das pegadas. Alguém esteve nas ruínas."
+			],
+			[
+				"morador",
+				"Você vai atrás disso?"
+			],
+			[
+				"bufalo",
+				"Se a ameaça veio da floresta, é para lá que eu vou."
+			]
+		],
+		"b02_antes": [
+			[
+				"bufalo",
+				"Essas marcas seguem para a várzea. Não são rastros de uma migração."
+			],
+			[
+				"bufalo",
+				"Alguém está reunindo essas criaturas. Vou descobrir quem."
+			]
+		],
+		"b02_depois": [
+			[
+				"bufalo",
+				"Este fragmento tem o mesmo desenho encontrado perto da vila."
+			],
+			[
+				"voz",
+				"Não atravesse a passagem!"
+			],
+			[
+				"bufalo",
+				"Mostre-se. Não vim procurar briga com quem protege estas terras."
+			],
+			[
+				"",
+				"A voz não responde. O caminho para a Várzea das Águas fica aberto."
+			]
+		],
+		"b03_antes": [
+			[
+				"tartaruga",
+				"Pare onde está. Ninguém atravessa esta passagem."
+			],
+			[
+				"bufalo",
+				"Minha comunidade foi atacada. Estou seguindo os rastros até a origem."
+			],
+			[
+				"tartaruga",
+				"Foi assim que os outros justificaram sua entrada. Não vou permitir que cheguem ao altar."
+			],
+			[
+				"bufalo",
+				"Então está defendendo o lugar errado. A corrupção já está aqui."
+			],
+			[
+				"tartaruga",
+				"Prove que consegue passar."
+			]
+		],
+		"b03_depois": [
+			[
+				"tartaruga",
+				"Você teve a chance de me derrubar de verdade. Por que parou?"
+			],
+			[
+				"bufalo",
+				"Não vim lutar contra quem tenta proteger a própria terra."
+			],
+			[
+				"tartaruga",
+				"A água está recuando e voltando sem seguir o ciclo. As raízes estão doentes."
+			],
+			[
+				"bufalo",
+				"Venha comigo. Se existe uma origem, precisamos encontrá-la."
+			],
+			[
+				"tartaruga",
+				"Vou acompanhá-lo. Mas, se ameaçar o altar, ficarei no seu caminho novamente."
+			]
+		],
+		"b04_antes": [
+			[
+				"tartaruga",
+				"Essas plantas não deveriam se mover assim. A várzea está reagindo a alguma coisa."
+			],
+			[
+				"bufalo",
+				"Então abrimos caminho e seguimos o rastro."
+			],
+			[
+				"tartaruga",
+				"Não subestime a água. O terreno pode ser tão perigoso quanto os inimigos."
+			]
+		],
+		"b04_depois": [
+			[
+				"bufalo",
+				"A passarela termina perto de um igarapé."
+			],
+			[
+				"tartaruga",
+				"Conheço esse caminho. Chamam-no de Igarapé dos Ossos."
+			],
+			[
+				"bufalo",
+				"Por quê?"
+			],
+			[
+				"tartaruga",
+				"Porque a água devolve coisas que a mata tentou esconder."
+			]
+		],
+		"b05_antes": [
+			[
+				"bufalo",
+				"Há marcas nas pedras. Não parecem pegadas."
+			],
+			[
+				"tartaruga",
+				"São sinais antigos. Alguém passou por aqui carregando algo retirado de um santuário."
+			],
+			[
+				"bufalo",
+				"A pedra rúnica?"
+			],
+			[
+				"tartaruga",
+				"Talvez. Mas o que quer que tenham levado deixou a água doente."
+			]
+		],
+		"b05_depois": [
+			[
+				"tartaruga",
+				"O caminho segue para a floresta."
+			],
+			[
+				"bufalo",
+				"Então a origem está além das árvores."
+			],
+			[
+				"tartaruga",
+				"A mata não costuma permitir que estranhos avancem tão longe."
+			],
+			[
+				"bufalo",
+				"Não somos nós que estamos invadindo. Estamos tentando impedir que ela alcance nossas casas."
+			]
+		],
+		"b06_antes": [
+			[
+				"tartaruga",
+				"A floresta está fechando o caminho."
+			],
+			[
+				"bufalo",
+				"Não são animais. São plantas."
+			],
+			[
+				"tartaruga",
+				"A energia que as anima está fora de controle. Não podemos deixá-las nos cercar."
+			],
+			[
+				"bufalo",
+				"Vamos abrir passagem sem destruir mais do que for necessário."
+			]
+		],
+		"b06_depois": [
+			[
+				"bufalo",
+				"Elas pararam de avançar."
+			],
+			[
+				"tartaruga",
+				"Não estavam defendendo um território por vontade própria. Algo as está conduzindo."
+			],
+			[
+				"bufalo",
+				"O Mapinguari?"
+			],
+			[
+				"tartaruga",
+				"É o nome que os antigos dão ao guardião da mata profunda. Mas ainda não sabemos o que o despertou."
+			]
+		],
+		"b07_antes": [
+			[
+				"tartaruga",
+				"Este círculo é antigo. Os grafismos são dos Ceramistas."
+			],
+			[
+				"bufalo",
+				"O que faziam aqui?"
+			],
+			[
+				"tartaruga",
+				"Protegiam algo. Ou mantinham algo em equilíbrio."
+			],
+			[
+				"bufalo",
+				"Se alguém retirou uma pedra daqui, precisamos descobrir para onde foi."
+			]
+		],
+		"b07_depois": [
+			[
+				"tartaruga",
+				"Veja a marca no altar. Uma peça foi removida."
+			],
+			[
+				"bufalo",
+				"E a trilha segue para o norte."
+			],
+			[
+				"tartaruga",
+				"As ruínas principais ficam além desta mata."
+			],
+			[
+				"bufalo",
+				"Então vamos encontrar quem rompeu o selo."
+			]
+		],
+		"b08_antes": [
+			[
+				"bufalo",
+				"Estas ruínas não parecem abandonadas."
+			],
+			[
+				"tartaruga",
+				"Talvez os defensores estejam tentando impedir que alguém alcance o altar."
+			],
+			[
+				"bufalo",
+				"Ou estão protegendo quem causou tudo isso."
+			],
+			[
+				"tartaruga",
+				"Não saberemos enquanto não passarmos."
+			]
+		],
+		"b08_depois": [
+			[
+				"bufalo",
+				"Há sinais de acampamento recente."
+			],
+			[
+				"tartaruga",
+				"E marcas de uma pedra que foi arrastada."
+			],
+			[
+				"bufalo",
+				"A expedição esteve aqui."
+			]
+		],
+		"b09_antes": [
+			[
+				"tartaruga",
+				"As urnas estão posicionadas como parte de um ritual."
+			],
+			[
+				"bufalo",
+				"O que havia no centro?"
+			],
+			[
+				"tartaruga",
+				"Um selo. Uma pedra rúnica ligada à proteção da floresta."
+			],
+			[
+				"bufalo",
+				"E alguém a retirou."
+			]
+		],
+		"b09_depois": [
+			[
+				"bufalo",
+				"O encaixe está vazio."
+			],
+			[
+				"tartaruga",
+				"A pedra foi levada para a mata profunda. Veja os sinais no chão."
+			],
+			[
+				"bufalo",
+				"O que acontece se o selo não for restaurado?"
+			],
+			[
+				"tartaruga",
+				"A corrupção continuará avançando. E o guardião não terá razão para parar."
+			]
+		],
+		"b10_antes": [
+			[
+				"bufalo",
+				"Este é o lugar. O selo foi arrancado."
+			],
+			[
+				"tartaruga",
+				"A energia está escapando pelas rachaduras."
+			],
+			[
+				"bufalo",
+				"A pedra foi levada para o covil do guardião?"
+			],
+			[
+				"tartaruga",
+				"É o único lugar onde a energia pode estar se concentrando."
+			],
+			[
+				"bufalo",
+				"Então vamos terminar isso."
+			]
+		],
+		"b10_depois": [
+			[
+				"tartaruga",
+				"Agora entendo. O Mapinguari não está apenas atacando a floresta. Está reagindo à ruptura."
+			],
+			[
+				"bufalo",
+				"Se restaurarmos a pedra, ele vai parar?"
+			],
+			[
+				"tartaruga",
+				"Não sei. Mas sem o selo, a corrupção continuará."
+			],
+			[
+				"bufalo",
+				"Então vamos até ele."
+			]
+		],
+		"b11_antes": [
+			[
+				"tartaruga",
+				"Estamos perto. Sinto a energia do selo."
+			],
+			[
+				"bufalo",
+				"E o guardião?"
+			],
+			[
+				"tartaruga",
+				"Está logo adiante. Não sei se ainda consegue nos ouvir."
+			],
+			[
+				"bufalo",
+				"Vamos tentar chegar até ele."
+			]
+		],
+		"b11_depois": [
+			[
+				"bufalo",
+				"O chão está tremendo."
+			],
+			[
+				"tartaruga",
+				"Ele sabe que estamos aqui."
+			],
+			[
+				"bufalo",
+				"Então não há mais como evitar o encontro."
+			]
+		],
+		"b12_antes": [
+			[
+				"bufalo",
+				"Mapinguari! Não viemos tomar sua floresta."
+			],
+			[
+				"tartaruga",
+				"O selo foi rompido. A energia está ferindo você e toda a mata."
+			],
+			[
+				"mapinguari",
+				"(rugido)"
+			],
+			[
+				"bufalo",
+				"Ele não entende. Está vendo todos nós como inimigos."
+			],
+			[
+				"tartaruga",
+				"Precisamos contê-lo antes que destrua o altar."
+			]
+		],
+		"b12_durante": [
+			[
+				"tartaruga",
+				"A energia está diminuindo! Ele está perdendo a força!"
+			],
+			[
+				"bufalo",
+				"Não vou matá-lo se ainda houver outra saída."
+			],
+			[
+				"tartaruga",
+				"O selo precisa ser restaurado. Proteja-me!"
+			]
+		],
+		"b12_depois": [
+			[
+				"",
+				"O Mapinguari cai, ainda respirando. A energia que distorcia a vegetação começa a diminuir."
+			],
+			[
+				"tartaruga",
+				"A pedra voltou ao altar. A energia está se estabilizando."
+			],
+			[
+				"bufalo",
+				"Então acabou?"
+			],
+			[
+				"tartaruga",
+				"A corrupção diminuiu, mas não desapareceu. Alguém retirou a pedra de propósito."
+			],
+			[
+				"bufalo",
+				"O Mapinguari foi despertado, mas não foi quem rompeu o selo."
+			],
+			[
+				"tartaruga",
+				"Há algo por trás disso."
+			],
+			[
+				"bufalo",
+				"Então nossa jornada não termina aqui. Primeiro vamos proteger nosso povo. Depois descobriremos quem fez isso."
+			],
+			[
+				"",
+				"O Mapinguari deixa de atacar e permanece como guardião da floresta, debilitado, mas vivo. O selo foi estabilizado. Quem retirou a pedra continua um mistério."
+			]
+		]
+	}
+}

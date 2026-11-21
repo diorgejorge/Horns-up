@@ -32,6 +32,13 @@ extends Node3D
 		escala = v
 		_queue()
 
+@export_group("Campanha")
+## Espécie em DadosAto1.ESPECIES (inimigos) ou id do herói (vazio = unidade de teste).
+@export var especie := ""
+@export_range(1, 30) var nivel := 1
+## "" = comum, "lider" = vencer ele encerra a batalha, "chefe" = boss.
+@export var papel := ""
+
 @export_group("Atributos (D&D)")
 @export_range(1, 30) var forca := 10
 @export_range(1, 30) var destreza := 10
