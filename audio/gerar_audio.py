@@ -4,6 +4,8 @@ Instrumentos sintetizados aqui mesmo (Python puro, só biblioteca padrão):
   carimbó  -> curimbó (tambor de tronco), maracá, pandeiro
   marujada -> viola (corda dedilhada, Karplus-Strong) e acordeom (palheta dupla)
 Melodias originais em compasso binário (2/4).
+Trilhas em rock rápido (bateria, guitarra distorcida, baixo) sem perder o
+curimbó, o maracá, o pandeiro, a viola e o acordeom.
 
 Uso:   python audio/gerar_audio.py            (gera tudo)
        python audio/gerar_audio.py acoes      (só os efeitos)
@@ -610,7 +612,7 @@ ACORDES = {
 }
 
 EXPLORACAO = {
-    "bpm": 100,
+    "bpm": 152,
     "acordes": ["G", "G", "D7", "D7", "D7", "D7", "G", "G", "C", "C", "G", "G", "D7", "D7", "G", "G"],
     "melodia": [
         [(74, 2), (71, 1), (74, 1), (79, 2), (74, 2)], [(76, 2), (74, 1), (71, 1), (67, 4)],
@@ -625,7 +627,7 @@ EXPLORACAO = {
 }
 
 CHEFE = {
-    "bpm": 132,
+    "bpm": 176,
     "acordes": ["Em", "Em", "B7", "B7", "Em", "Em", "C", "B7", "Am", "Am", "Em", "Em", "C", "B7", "Em", "Em"],
     "melodia": [
         [(64, 1), (64, 1), (67, 1), (64, 1), (71, 2), (64, 2)], [(67, 1), (69, 1), (71, 1), (67, 1), (76, 4)],
@@ -639,9 +641,67 @@ CHEFE = {
     ],
 }
 
-# Toque de carimbó no curimbó (8 semicolcheias): G = grave, T = tapa, . = nada
+# --- banda de rock (para as trilhas) ----------------------------------------------
+
+def guitarra(nota, seg, abafar=False, power=True):
+    """Guitarra elétrica distorcida: corda dedilhada (power chord = tônica, quinta
+    e oitava) passando por saturação e uma 'caixa' de amplificador."""
+    def fazer():
+        notas = (nota, nota + 7, nota + 12) if power else (nota,)
+        x = [0.0] * n_am(seg)
+        for k, m in enumerate(notas):
+            misturar(x, viola(m, seg, 0.9, abafar), k * 0.004)
+        ganho = 6.0 if abafar else 9.0
+        x = [math.tanh(v * ganho) for v in x]
+        x = passa_baixa(passa_alta(x, 90), 4200)
+        meio = passa_faixa(x, 1100, 0.8)
+        return janela([a + 0.5 * b for a, b in zip(x, meio)], 0.001, 0.02)
+    return _guardado(("guitarra", nota, seg, abafar, power), fazer)
+
+
+def baixo(nota, seg):
+    def fazer():
+        x = viola(nota, seg, 0.35)
+        x = [math.tanh(v * 2.5) for v in x]
+        return janela(passa_baixa(x, 900), 0.001, 0.02)
+    return _guardado(("baixo", nota, seg), fazer)
+
+
+def bumbo():
+    def fazer():
+        x = envelope(seno_glide(0.3, 160, 45, curva=6), 0.001, 0.12)
+        return misturar(x, envelope(passa_alta(ruido(0.01), 2000), 0.0005, 0.003), 0, 0.5)
+    return _guardado("bumbo", fazer)
+
+
+def caixa():
+    def fazer():
+        x = envelope(seno_glide(0.15, 230, 180, curva=3), 0.001, 0.05)
+        esteira = envelope(passa_faixa(ruido(0.22), 2200, 0.7), 0.001, 0.07)
+        return misturar(x, esteira, 0, 1.3)
+    return _guardado("caixa", fazer)
+
+
+def chimbal(aberto=False):
+    def fazer():
+        return envelope(passa_alta(ruido(0.3 if aberto else 0.06), 7000), 0.0005, 0.12 if aberto else 0.015)
+    return _guardado(("chimbal", aberto), fazer)
+
+
+def prato():
+    def fazer():
+        x = passa_alta(ruido(1.8), 4500)
+        return envelope(x, 0.002, 0.6)
+    return _guardado("prato", fazer)
+
+
+# Toque de carimbó no curimbó (8 semicolcheias): G = grave, T = tapa, . = nada.
+# Continua por cima da bateria de rock: é ele que dá o balanço paraense.
 CARIMBO = "G..T.GT."
 CARIMBO_CHEFE = "G.TTG.TG"
+# Bateria (8 semicolcheias): B = bumbo, C = caixa. Chimbal em todas as colcheias.
+BATERIA = "B..BC.B."
+BATERIA_CHEFE = "B.BBC.BB"
 
 
 def tocar_melodia(trilha, compassos, inicio, semi, instrumento, transpor=0, vol=1.0):
@@ -652,73 +712,91 @@ def tocar_melodia(trilha, compassos, inicio, semi, instrumento, transpor=0, vol=
             if nota is not None:
                 if instrumento == "acordeom":
                     misturar(trilha, acordeom(nota + transpor, seg * 0.95, vol), t)
+                elif instrumento == "guitarra":
+                    misturar(trilha, guitarra(nota + transpor, seg * 1.1, power=False), t, vol)
                 else:
                     misturar(trilha, viola(nota + transpor, max(0.5, seg * 2), 0.6), t, vol)
             t += seg
 
 
 def musica(partitura, voltas, chefe=False):
+    """Rock marajoara: bateria + guitarra + baixo, com curimbó, maracá e pandeiro
+    do carimbó por cima e a melodia de marujada no acordeom e na guitarra."""
     semi = 60.0 / partitura["bpm"] / 4
     comp_seg = semi * 8
     acordes = partitura["acordes"]
     total = len(acordes) * voltas
     x = [0.0] * n_am(total * comp_seg)
     padrao = CARIMBO_CHEFE if chefe else CARIMBO
+    bateria = BATERIA_CHEFE if chefe else BATERIA
     for c in range(total):
         t0 = c * comp_seg
         volta = c // len(acordes)
-        ac = ACORDES[acordes[c % len(acordes)]]
-        # percussão
+        pos = c % len(acordes)
+        ac = ACORDES[acordes[pos]]
+        raiz = ac[0] - 12 if ac[0] >= 52 else ac[0]  # guitarra entre Lá1 e Mi2
+        # bateria de rock
+        for s, ch in enumerate(bateria):
+            ts = t0 + s * semi
+            if ch == "B":
+                misturar(x, bumbo(), ts, 1.0)
+            elif ch == "C":
+                misturar(x, caixa(), ts, 0.8)
+            if s % 2 == 0:
+                misturar(x, chimbal(s == 6 and pos % 4 == 3), ts, 0.25)
+        if pos % 8 == 0:
+            misturar(x, prato(), t0, 0.35)
+        if pos == len(acordes) - 1:  # virada de caixa no fim da volta
+            for s in range(4, 8):
+                misturar(x, caixa(), t0 + s * semi, 0.5 + 0.1 * s)
+        # carimbó por cima
         for s, ch in enumerate(padrao):
             ts = t0 + s * semi
             if ch == "G":
-                misturar(x, curimba(80 if chefe else 95, seg=0.4), ts, 0.9)
+                misturar(x, curimba(80 if chefe else 95, seg=0.4), ts, 0.6)
             elif ch == "T":
-                misturar(x, curimba(110 if chefe else 120, tapa=True), ts, 0.45)
-            misturar(x, maraca(0.07 if s % 2 else 0.1, 0.35 if s % 2 else 0.55), ts)
-        if chefe or volta % 2 == 1:
-            misturar(x, pandeiro(), t0 + 2 * semi, 0.35)
-            misturar(x, pandeiro(), t0 + 6 * semi, 0.35)
-        # baixo: viola grave na tônica de cada tempo
-        misturar(x, viola(ac[0] - 12, 0.6, 0.2), t0, 0.7)
-        misturar(x, viola(ac[0] - 12 + (7 if not chefe else 0), 0.6, 0.2), t0 + 4 * semi, 0.6)
-        # viola rasgueada
-        if chefe:
-            for s in range(8):  # tremolo abafado, tenso
-                for k, nota in enumerate(ac[1:]):
-                    misturar(x, viola(nota, 0.25, 0.5, abafar=True), t0 + s * semi + k * 0.008, 0.18)
-        else:
-            for s, forca in ((0, 0.3), (3, 0.15), (4, 0.25), (6, 0.15)):
-                ordem = ac if s % 2 == 0 else list(reversed(ac))
-                for k, nota in enumerate(ordem):
-                    misturar(x, viola(nota, 0.7, 0.45), t0 + s * semi + k * 0.012, forca)
-            if volta % 2 == 0:  # acordeom segurando o acorde, baixinho
-                for nota in ac[1:]:
-                    misturar(x, acordeom(nota, comp_seg, 0.12), t0)
-    # melodias: viola na 1ª volta, acordeom na 2ª (exploração); acordeom sempre no chefe
+                misturar(x, curimba(110 if chefe else 120, tapa=True), ts, 0.4)
+            misturar(x, maraca(0.07 if s % 2 else 0.1, 0.3 if s % 2 else 0.45), ts)
+        misturar(x, pandeiro(), t0 + 2 * semi, 0.3)
+        misturar(x, pandeiro(), t0 + 6 * semi, 0.3)
+        # guitarra base: colcheias abafadas com acento no tempo
+        for s in range(0, 8, 2 if not chefe else 1):
+            forte = s in (0, 3) if not chefe else s % 4 == 0
+            if forte and not chefe:
+                misturar(x, guitarra(raiz, semi * 3), t0 + s * semi, 0.5)
+            else:
+                misturar(x, guitarra(raiz, semi * 0.9, abafar=True), t0 + s * semi, 0.35)
+        # baixo colado no bumbo
+        for s, ch in enumerate(bateria):
+            if ch == "B":
+                misturar(x, baixo(raiz - 12, semi * 1.8), t0 + s * semi, 0.7)
+        # viola de marujada rasgando o acorde, mais baixinho
+        for s in (0, 4) if not chefe else (0, 2, 4, 6):
+            for k, nota in enumerate(ac):
+                misturar(x, viola(nota + 12, 0.4, 0.5), t0 + s * semi + k * 0.01, 0.1)
+    # melodia: acordeom, depois guitarra solo, depois os dois juntos
     for v in range(voltas):
         ini = v * len(acordes) * comp_seg
-        if chefe:
-            tocar_melodia(x, partitura["melodia"], ini, semi, "acordeom", -12 if v == 0 else 0, 0.55)
-            if v == 1:
-                tocar_melodia(x, partitura["melodia"], ini, semi, "acordeom", -12, 0.35)
-        elif v % 2 == 0:
-            tocar_melodia(x, partitura["melodia"], ini, semi, "viola", 0, 0.8)
+        if v % 3 == 0:
+            tocar_melodia(x, partitura["melodia"], ini, semi, "acordeom", 0, 0.45)
+        elif v % 3 == 1:
+            tocar_melodia(x, partitura["melodia"], ini, semi, "guitarra", 0, 0.3)
         else:
-            tocar_melodia(x, partitura["melodia"], ini, semi, "acordeom", 0, 0.5)
+            tocar_melodia(x, partitura["melodia"], ini, semi, "acordeom", 0, 0.35)
+            tocar_melodia(x, partitura["melodia"], ini, semi, "guitarra", -12, 0.25)
     # notas que soam depois do último compasso voltam para o começo: o arquivo
     # fica com o número exato de compassos e o loop não atrasa o ritmo
     n = n_am(total * comp_seg)
     for i, v in enumerate(x[n:]):
         x[i % n] += v
     del x[n:]
-    return reverb(x, 0.6 if chefe else 0.4, 0.3, circular=True)
+    return reverb(x, 0.4, 0.15, circular=True)
 
 
 def gerar_trilhas():
     print("Trilhas (demora um pouco):")
-    salvar(os.path.join(DIR_TRILHAS, "exploracao_carimbo.wav"), musica(EXPLORACAO, 2), 0.8)
-    salvar(os.path.join(DIR_TRILHAS, "chefe_mapinguari.wav"), musica(CHEFE, 2, chefe=True), 0.85)
+    salvar(os.path.join(DIR_TRILHAS, "exploracao_carimbo.wav"), musica(EXPLORACAO, 3), 0.85)
+    salvar(os.path.join(DIR_TRILHAS, "chefe_mapinguari.wav"), musica(CHEFE, 3, chefe=True), 0.85)
 
 
 if __name__ == "__main__":
