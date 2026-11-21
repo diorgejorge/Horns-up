@@ -1,7 +1,8 @@
 class_name TemaUI
 extends RefCounted
-## Visual da interface: painéis de madeira escura com molduras de grafismo
-## marajoara (vermelho, preto e creme). Tudo com StyleBoxFlat e _draw — sem imagens.
+## Visual da interface: pergaminho com molduras de grafismo marajoara e botões de
+## madeira, pintados pelo Diorge (peças em ArteHud). Texto em tinta escura sobre o
+## pergaminho; rotulo() converte as cores claras antigas (creme, ouro) para tinta.
 
 const MADEIRA := Color(0.2, 0.12, 0.07, 0.94)
 const MADEIRA_CLARA := Color(0.32, 0.2, 0.11, 0.96)
@@ -28,35 +29,49 @@ static func painel(clara := false, borda := VERMELHO) -> StyleBoxFlat:
 	return s
 
 
-static func aplicar_painel(p: Control, clara := false, borda := VERMELHO) -> void:
-	p.add_theme_stylebox_override("panel", painel(clara, borda))
+## Moldura de pergaminho pintada (os parâmetros ficam pela compatibilidade).
+static func aplicar_painel(p: Control, _clara := false, _borda := VERMELHO) -> void:
+	p.add_theme_stylebox_override("panel", ArteHud.estilo("painel"))
+
+
+## Cor de texto legível no pergaminho: creme vira tinta, ouro vira terracota etc.
+static func no_papel(c: Color) -> Color:
+	var base := Color(c, 1.0)
+	var trocas := [[CREME, ArteHud.TINTA], [OURO, ArteHud.TINTA_OURO], [INIMIGO, ArteHud.TINTA_INIMIGO], [ALIADO, ArteHud.TINTA_ALIADO]]
+	for t in trocas:
+		if base.is_equal_approx(t[0]):
+			return Color(t[1], c.a)
+	if base.get_luminance() > 0.6:
+		return Color(base.darkened(0.55), c.a)
+	return c
 
 
 static func tema() -> Theme:
 	var t := Theme.new()
 	t.default_font_size = 18
-	t.set_color("font_color", "Label", CREME)
-	t.set_color("font_outline_color", "Label", PRETO)
-	t.set_constant("outline_size", "Label", 4)
-	for estado in ["normal", "hover", "pressed", "disabled", "focus"]:
-		var s := StyleBoxFlat.new()
-		s.bg_color = {"normal": MADEIRA_CLARA, "hover": Color(0.45, 0.27, 0.13), "pressed": VERMELHO,
-			"disabled": Color(0.18, 0.13, 0.1, 0.8), "focus": Color(0, 0, 0, 0)}[estado]
-		s.border_color = OURO if estado == "focus" else (VERMELHO if estado != "disabled" else Color(0.3, 0.2, 0.15))
-		s.set_border_width_all(2)
-		s.set_corner_radius_all(3)
-		s.set_content_margin_all(8)
-		t.set_stylebox(estado, "Button", s)
-	t.set_color("font_color", "Button", CREME)
-	t.set_color("font_hover_color", "Button", OURO)
-	t.set_color("font_pressed_color", "Button", CREME)
-	t.set_color("font_disabled_color", "Button", Color(0.55, 0.48, 0.4))
+	t.set_color("font_color", "Label", ArteHud.TINTA)
+	t.set_color("font_outline_color", "Label", Color(CREME, 0.8))
+	t.set_constant("outline_size", "Label", 3)
+	# botão de madeira do painel de comandos; hover clareia, pressed avermelha
+	var cores := {"normal": Color.WHITE, "hover": Color(1.0, 0.92, 0.74), "pressed": Color(1.0, 0.8, 0.72),
+		"disabled": Color(0.85, 0.82, 0.78, 0.6)}
+	for estado in cores:
+		t.set_stylebox(estado, "Button", ArteHud.estilo("botao", cores[estado]))
+	var foco := StyleBoxEmpty.new()
+	t.set_stylebox("focus", "Button", foco)
+	t.set_color("font_color", "Button", ArteHud.TINTA)
+	t.set_color("font_hover_color", "Button", ArteHud.TINTA_OURO)
+	t.set_color("font_pressed_color", "Button", ArteHud.TINTA_INIMIGO)
+	t.set_color("font_focus_color", "Button", ArteHud.TINTA_OURO)
+	t.set_color("font_disabled_color", "Button", Color(ArteHud.TINTA, 0.45))
 	var fundo := StyleBoxFlat.new()
 	fundo.bg_color = PRETO
 	fundo.set_corner_radius_all(2)
 	t.set_stylebox("background", "ProgressBar", fundo)
-	t.set_stylebox("panel", "PanelContainer", painel())
-	t.set_stylebox("panel", "Panel", painel())
+	t.set_stylebox("panel", "PanelContainer", ArteHud.estilo("painel"))
+	t.set_stylebox("panel", "Panel", ArteHud.estilo("painel"))
+	t.set_color("font_color", "TooltipLabel", ArteHud.TINTA)
+	t.set_stylebox("panel", "TooltipPanel", ArteHud.estilo("painel_p"))
 	return t
 
 
@@ -78,7 +93,7 @@ static func rotulo(texto: String, tamanho := 18, cor := CREME) -> Label:
 	var l := Label.new()
 	l.text = texto
 	l.add_theme_font_size_override("font_size", tamanho)
-	l.add_theme_color_override("font_color", cor)
+	l.add_theme_color_override("font_color", no_papel(cor))
 	return l
 
 

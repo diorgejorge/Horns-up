@@ -3,6 +3,15 @@ extends Control
 ## Barra de HP/MP/XP no estilo de RPG moderno: fundo afundado, preenchimento
 ## com gradiente e brilho de vidro, marcas a cada 10% e "rastro" que desce
 ## devagar quando o valor cai (mostra o dano recebido). Texto atual/máx dentro.
+## Com `arte` (padrão), o fundo é o tubo de cerâmica pintado (tubo_hp / tubo_mp do
+## ArteHud): tampa marajoara à esquerda e o líquido correndo no canal.
+
+## Tubo pintado (191 x 46 px): tampa até x=30, ponta a partir de x=176, canal em
+## x 29..177 e y 15..31.
+const TUBO_TAMPA := 30.0
+const TUBO_PONTA := 15.0
+const TUBO_CANAL := Rect2(29, 15, 148, 16)
+static var arte := true
 
 var cor := TemaUI.HP
 var maximo := 1
@@ -20,7 +29,7 @@ static func criar(c: Color, v: int, m: int, largura := 160.0, altura := 14.0, co
 	b._rastro = b.valor
 	b.texto = com_texto
 	b.icone = ic
-	b.custom_minimum_size = Vector2(largura, altura)
+	b.custom_minimum_size = Vector2(largura, maxf(altura, 22.0) if arte else altura)
 	b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	return b
@@ -42,6 +51,9 @@ func definir(v: int, m := -1) -> void:
 
 
 func _draw() -> void:
+	if arte:
+		_draw_tubo()
+		return
 	var r := Rect2(Vector2.ZERO, size)
 	if icone != "":
 		var lado := size.y * 1.25
@@ -76,6 +88,39 @@ func _draw() -> void:
 		var tw := fonte.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 		var p := Vector2(maxf(size.x - tw - raio * 0.8, base_x + 2.0), size.y * 0.5 + fs * 0.36)
 		draw_string_outline(fonte, p, t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 3, TemaUI.PRETO)
+		draw_string(fonte, p, t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, TemaUI.CREME)
+
+
+## Tubo de cerâmica em 3 fatias (tampa e ponta mantêm a proporção; o meio estica).
+func _draw_tubo() -> void:
+	var tex := ArteHud.textura("tubo_mp" if icone == "mp" else "tubo_hp")
+	var ts := tex.get_size()
+	var k := size.y / ts.y
+	var tampa := TUBO_TAMPA * k
+	var ponta := TUBO_PONTA * k
+	draw_texture_rect_region(tex, Rect2(0, 0, tampa, size.y), Rect2(0, 0, TUBO_TAMPA, ts.y))
+	draw_texture_rect_region(tex, Rect2(tampa, 0, size.x - tampa - ponta, size.y), Rect2(TUBO_TAMPA, 0, ts.x - TUBO_TAMPA - TUBO_PONTA, ts.y))
+	draw_texture_rect_region(tex, Rect2(size.x - ponta, 0, ponta, size.y), Rect2(ts.x - TUBO_PONTA, 0, TUBO_PONTA, ts.y))
+	var dentro := Rect2(TUBO_CANAL.position.x * k, TUBO_CANAL.position.y * k,
+		size.x - TUBO_CANAL.position.x * k - (ts.x - TUBO_CANAL.end.x) * k, TUBO_CANAL.size.y * k)
+	var raio := dentro.size.y * 0.5
+	var f := float(valor) / maximo
+	var fr := float(_rastro) / maximo
+	if fr > f:
+		_caixa(Rect2(dentro.position, Vector2(dentro.size.x * fr, dentro.size.y)), Color(1, 0.95, 0.8, 0.8), raio)
+	if f > 0.0:
+		var w := maxf(dentro.size.x * f, dentro.size.y)
+		var cheio := Rect2(dentro.position, Vector2(w, dentro.size.y))
+		_caixa(cheio, cor.darkened(0.15), raio)
+		_caixa(Rect2(cheio.position, Vector2(w, cheio.size.y * 0.55)), cor.lightened(0.2), raio)
+		draw_rect(Rect2(cheio.position + Vector2(raio * 0.6, 1.0), Vector2(maxf(w - raio * 1.2, 0), maxf(cheio.size.y * 0.2, 1.0))), Color(1, 1, 1, 0.4))
+	if texto:
+		var fonte := ThemeDB.fallback_font
+		var fs := int(clampf(size.y * 0.6, 11.0, 18.0))
+		var t := "%d/%d" % [valor, maximo]
+		var tw := fonte.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var p := Vector2(dentro.end.x - tw - raio * 0.5, dentro.get_center().y + fs * 0.36)
+		draw_string_outline(fonte, p, t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 4, TemaUI.PRETO)
 		draw_string(fonte, p, t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, TemaUI.CREME)
 
 

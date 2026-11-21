@@ -24,7 +24,7 @@ var _texto: Label
 var _dica: Label
 var _icone: IconeUnidade
 var _retrato: RetratoModelo
-var _moldura: PanelContainer
+var _moldura: Control
 var _t := 0.0
 var _letra_t := 0.0  # tempo acumulado até a próxima letra
 var _cima: ColorRect
@@ -70,22 +70,14 @@ void fragment() {
 	raiz.add_child(_painel)
 	var v := VBoxContainer.new()
 	_painel.add_child(v)
-	var faixa := FaixaMarajoara.new()
-	v.add_child(faixa)
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 16)
 	h.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v.add_child(h)
-	_moldura = PanelContainer.new()
-	var st := TemaUI.painel(true, TemaUI.OURO)
-	st.set_content_margin_all(3)
-	st.bg_color = Color(0.1, 0.07, 0.05)
-	_moldura.add_theme_stylebox_override("panel", st)
-	_moldura.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	h.add_child(_moldura)
 	_retrato = RetratoModelo.new()
 	_retrato.custom_minimum_size = Vector2(128, 128)
-	_moldura.add_child(_retrato)
+	_moldura = ArteHud.retrato_redondo(_retrato, 136.0)  # anel de cerâmica da arte
+	h.add_child(_moldura)
 	_icone = TemaUI.icone("?", TemaUI.ALIADO, 96.0)
 	_icone.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	h.add_child(_icone)
@@ -169,7 +161,7 @@ func _exibir() -> void:
 	_icone.cor = TemaUI.INIMIGO if quem in ["mapinguari", "voz"] else (TemaUI.OURO if quem == "bufalo" else TemaUI.ALIADO)
 	_icone.destaque = quem == "bufalo"
 	_icone.queue_redraw()
-	_texto.add_theme_color_override("font_color", TemaUI.CREME if quem != "" else Color(0.85, 0.85, 0.75))
+	_texto.add_theme_color_override("font_color", ArteHud.TINTA if quem != "" else Color(ArteHud.TINTA, 0.7))
 
 
 func _process(delta: float) -> void:

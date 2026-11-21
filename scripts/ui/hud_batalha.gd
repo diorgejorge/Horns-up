@@ -6,8 +6,10 @@ extends CanvasLayer
 ##               (altura, se é andável)
 ##   baixo/esq.  cards do grupo (retrato, nível, HP/MP), o da vez pulsando
 ##   baixo/dir.  janela de comandos com cursor e caixa com a descrição da ação
-## Sem inventário nem equipamento: isso só existe fora da batalha.
-## Painéis de madeira com moldura marajoara (PainelMarajoara, scripts/ui/hud/).
+## Poções entram nos comandos (ações "item:<id>"); equipamento só fora da batalha.
+## Arte 2D marajoara do Diorge (ArteHud): barra de turnos com casas, cards de
+## pergaminho com retrato no anel de cerâmica, tubos de HP/MP com as urnas, botões
+## de madeira com a pena como cursor, moeda no ouro e brasão no resultado.
 
 signal acao(nome: String)
 
@@ -37,6 +39,7 @@ var _cartas := {}  # Unidade3D -> carta da fila de turnos (retrato 3D reaproveit
 var _painel_cmd: PainelMarajoara
 var _cmds: VBoxContainer
 var _info_cmd := {}  # id da ação -> [título, texto da ajuda]
+var _ouro: Label     # valor da placa de ouro no topo
 
 
 func _ready() -> void:
@@ -47,37 +50,44 @@ func _ready() -> void:
 	_raiz.theme = TemaUI.tema()
 	add_child(_raiz)
 
-	# Topo: título, objetivo e fila de turnos
-	var topo := PainelMarajoara.new(10.0)
+	# Topo: barra de turnos pintada. Título e objetivo à esquerda, fila dos próximos
+	# turnos nas casas quadradas, ouro do grupo na placa à direita.
+	var topo := PanelContainer.new()
+	topo.add_theme_stylebox_override("panel", ArteHud.estilo("barra"))
 	topo.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	topo.offset_left = 16
 	topo.offset_right = -16
-	topo.offset_top = 12
+	topo.offset_top = 10
 	topo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_raiz.add_child(topo)
-	var tv := VBoxContainer.new()
-	topo.add_child(tv)
 	var linha := HBoxContainer.new()
-	linha.add_theme_constant_override("separation", 18)
-	tv.add_child(linha)
-	_titulo = TemaUI.rotulo("", 22, TemaUI.OURO)
-	linha.add_child(_titulo)
-	_objetivo = TemaUI.rotulo("", 18)
-	_objetivo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	linha.add_theme_constant_override("separation", 14)
+	topo.add_child(linha)
+	var tv := VBoxContainer.new()
+	tv.add_theme_constant_override("separation", 0)
+	tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tv.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	linha.add_child(tv)
+	_titulo = TemaUI.rotulo("", 20, TemaUI.OURO)
+	_titulo.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	tv.add_child(_titulo)
+	_objetivo = TemaUI.rotulo("", 16)
 	_objetivo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	linha.add_child(_objetivo)
-	tv.add_child(FaixaMarajoara.new())
-	var ol := HBoxContainer.new()
-	ol.add_theme_constant_override("separation", 8)
-	tv.add_child(ol)
-	var ot := TemaUI.rotulo("PRÓXIMOS ▸", 16, TemaUI.OURO)
+	tv.add_child(_objetivo)
+	var ot := TemaUI.rotulo("PRÓXIMOS", 14, TemaUI.OURO)
 	ot.tooltip_text = "Ordem dos turnos por Destreza"
 	ot.mouse_filter = Control.MOUSE_FILTER_PASS
 	ot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	ol.add_child(ot)
+	linha.add_child(ot)
 	_ordem = HBoxContainer.new()
-	_ordem.add_theme_constant_override("separation", 5)
-	ol.add_child(_ordem)
+	_ordem.add_theme_constant_override("separation", 4)
+	_ordem.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	linha.add_child(_ordem)
+	var placa := ArteHud.placa_ouro(campanha.ouro, 18)
+	placa.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	placa.tooltip_text = "Ouro do grupo"
+	linha.add_child(placa)
+	_ouro = placa.find_child("Valor", true, false)
 
 	# Baixo-esquerda: cards do grupo
 	_grupo_box = HBoxContainer.new()
@@ -104,7 +114,7 @@ func _ready() -> void:
 	_painel_cmd.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	_raiz.add_child(_painel_cmd)
 	_cmds = VBoxContainer.new()
-	_cmds.add_theme_constant_override("separation", 2)
+	_cmds.add_theme_constant_override("separation", 3)
 	_painel_cmd.add_child(_cmds)
 	_painel_cmd.hide()
 
@@ -200,6 +210,7 @@ func atualizar() -> void:
 	var b: Dictionary = D.BATALHAS[batalha.numero]
 	_titulo.text = "%02d · %s · %s" % [batalha.numero, b["nome"], batalha.clima_nome()]
 	_objetivo.text = "Objetivo: " + b["objetivo"]
+	_ouro.text = str(campanha.ouro)
 	var atual: Unidade3D = batalha.atual()
 	_preencher_ordem(atual)
 	_preencher_grupo(atual)
@@ -229,13 +240,14 @@ func _preencher_ordem(atual: Unidade3D) -> void:
 		_ordem.move_child(c, k)
 		var vez := u == atual
 		c.pulso = vez
-		c.custom_minimum_size = Vector2(78, 78) if vez else Vector2(56, 56)
+		c.custom_minimum_size = Vector2(70, 70) if vez else Vector2(52, 52)
 		c.visible = k < 10
 
 
+## Casa quadrada da barra de turnos com o retrato; o filete diz o lado (azul aliado,
+## vermelho inimigo, ouro o Búfalo) e pulsa na unidade da vez.
 func _carta(u: Unidade3D) -> PainelMarajoara:
-	var c := PainelMarajoara.new(4.0, _cor(u))
-	c.margem = 0.0
+	var c := PainelMarajoara.new(4.0, _cor(u), "casa")
 	c.tooltip_text = "%s · DES %d" % [u.display_name, u.destreza]
 	c.mouse_filter = Control.MOUSE_FILTER_PASS
 	c.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -270,9 +282,7 @@ func _preencher_grupo(atual: Unidade3D) -> void:
 			var h := HBoxContainer.new()
 			h.add_theme_constant_override("separation", 8)
 			p.add_child(h)
-			var r := _retrato(u)
-			r.custom_minimum_size = Vector2(64, 64)
-			h.add_child(r)
+			h.add_child(ArteHud.retrato_redondo(_retrato(u), 72.0))
 			var info := VBoxContainer.new()
 			info.add_theme_constant_override("separation", 2)
 			h.add_child(info)
@@ -295,15 +305,24 @@ func _info_card(v: VBoxContainer, u: Unidade3D, vez: bool) -> void:
 	if vez:
 		extra = " · Mov %d · Alc %d" % [batalha.movimento(u), batalha.info_acao(u, "ataque").get("alc", cls["alc"])]
 	v.add_child(TemaUI.rotulo("%s · Nv %d%s" % [cls["nome"], e.get("nivel", 1), extra], 13))
-	v.add_child(BarraHud.criar(TemaUI.HP, e.get("hp", 0), e.get("hpmax", 1), 190.0, 14.0, true, "hp"))
+	v.add_child(_urna_barra("hp", e.get("hp", 0), e.get("hpmax", 1), 180.0))
 	if e.get("mpmax", 0) > 0:
-		v.add_child(BarraHud.criar(TemaUI.MP, e.get("mp", 0), e.get("mpmax", 1), 190.0, 14.0, true, "mp"))
+		v.add_child(_urna_barra("mp", e.get("mp", 0), e.get("mpmax", 1), 180.0))
 	var ef: String = batalha.efeitos_texto(u)
 	if ef != "":
 		v.add_child(TemaUI.rotulo(ef, 12, TemaUI.OURO))
 	var cl: String = batalha.clima_texto(u)
 	if cl != "":
 		v.add_child(TemaUI.rotulo(cl, 12, Color(0.6, 0.8, 1.0)))
+
+
+## Urna de cerâmica (HP vermelha, MP azul) seguida do tubo com o valor.
+func _urna_barra(tipo: String, v: int, m: int, largura: float) -> HBoxContainer:
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 2)
+	h.add_child(ArteHud.icone("urna_" + tipo, 26.0))
+	h.add_child(BarraHud.criar(TemaUI.HP if tipo == "hp" else TemaUI.MP, v, m, largura, 22.0, true, tipo))
+	return h
 
 
 # --- comandos e ajuda -------------------------------------------------------------------
@@ -318,7 +337,6 @@ func _preencher_comandos(u: Unidade3D) -> void:
 	if not nossa:
 		return
 	_cmds.add_child(TemaUI.rotulo("Comandos · " + u.display_name, 16, TemaUI.OURO))
-	_cmds.add_child(FaixaMarajoara.new())
 	var lista := [["mover", "Mover", batalha.pode_mover()]]
 	_info_cmd["mover"] = ["Mover", "Anda até %d casas. Água funda, troncos e vitórias-régias não são andáveis." % batalha.movimento(u)]
 	var n := 0
@@ -332,7 +350,7 @@ func _preencher_comandos(u: Unidade3D) -> void:
 	var m: String = batalha.modo()
 	for a in lista:
 		var id: String = a[0]
-		var bt := _comando(a[1], m == id)
+		var bt := _comando(a[1], m == id, ArteHud.icone_item(id.substr(5)) if id.begins_with("item:") else "")
 		bt.disabled = not a[2]
 		bt.pressed.connect(func(): acao.emit(id))
 		bt.mouse_entered.connect(func(): _mostrar_ajuda(id))
@@ -372,34 +390,27 @@ func _mostrar_ajuda(id: String) -> void:
 		_ajuda.text += "\nClique no alvo marcado."
 
 
-## Botão de comando: texto à esquerda, faixa vermelha e cursor ▶ no item ativo
-## ou sob o mouse (como o dedo apontando dos menus de JRPG).
-func _comando(texto: String, ativo: bool) -> Button:
+## Botão de comando: tábua de madeira do painel de comandos; a pena pintada é o
+## cursor no item ativo ou sob o mouse (como o dedo apontando dos menus de JRPG).
+## Itens com arte (poções) mostram o frasco quando a pena não está neles.
+func _comando(texto: String, ativo: bool, icone := "") -> Button:
 	var bt := Button.new()
-	bt.text = ("▶ " if ativo else "   ") + texto
+	bt.text = texto
 	bt.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	bt.focus_mode = Control.FOCUS_NONE
 	bt.add_theme_font_size_override("font_size", 15)
-	var vazio := StyleBoxEmpty.new()
-	vazio.content_margin_left = 6
-	vazio.content_margin_top = 3
-	vazio.content_margin_bottom = 3
-	var faixa := StyleBoxFlat.new()
-	faixa.bg_color = Color(TemaUI.VERMELHO, 0.55)
-	faixa.border_color = TemaUI.OURO
-	faixa.border_width_left = 3
-	faixa.content_margin_left = 6
-	faixa.content_margin_top = 3
-	faixa.content_margin_bottom = 3
-	faixa.set_corner_radius_all(2)
-	bt.add_theme_stylebox_override("normal", faixa if ativo else vazio)
-	bt.add_theme_stylebox_override("hover", faixa)
-	bt.add_theme_stylebox_override("pressed", faixa)
-	bt.add_theme_stylebox_override("disabled", vazio)
-	bt.add_theme_color_override("font_color", TemaUI.OURO if ativo else TemaUI.CREME)
-	bt.add_theme_color_override("font_hover_color", TemaUI.OURO)
-	bt.mouse_entered.connect(func(): if not bt.disabled: bt.text = "▶ " + texto)
-	bt.mouse_exited.connect(func(): bt.text = ("▶ " if ativo else "   ") + texto)
+	bt.add_theme_constant_override("icon_max_width", 26)
+	bt.add_theme_constant_override("h_separation", 6)
+	var dourado := ArteHud.estilo("botao", Color(1.0, 0.86, 0.55))
+	if ativo:
+		bt.add_theme_stylebox_override("normal", dourado)
+		bt.add_theme_color_override("font_color", ArteHud.TINTA_OURO)
+	bt.add_theme_stylebox_override("hover", dourado)
+	var pena := ArteHud.textura("pena")
+	var proprio := ArteHud.textura(icone if icone != "" else "vazio")
+	bt.icon = pena if ativo else proprio
+	bt.mouse_entered.connect(func(): if not bt.disabled: bt.icon = pena)
+	bt.mouse_exited.connect(func(): bt.icon = pena if ativo else proprio)
 	return bt
 
 
@@ -439,9 +450,7 @@ func _ficha(parent: Control, u: Unidade3D) -> void:
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 10)
 	parent.add_child(h)
-	var r := _retrato(u)
-	r.custom_minimum_size = Vector2(72, 72)
-	h.add_child(r)
+	h.add_child(ArteHud.retrato_redondo(_retrato(u), 80.0))
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 2)
 	h.add_child(col)
@@ -456,9 +465,9 @@ func _ficha(parent: Control, u: Unidade3D) -> void:
 	var mov: int = batalha.movimento(u) if not e.is_empty() else cls["mov"]
 	var alc: int = batalha.info_acao(u, "ataque").get("alc", cls["alc"]) if not e.is_empty() else cls["alc"]
 	col.add_child(TemaUI.rotulo("%s · Nível %d · Mov %d · Alcance %d" % [cls["nome"], e.get("nivel", 1), mov, alc], 14))
-	col.add_child(BarraHud.criar(TemaUI.HP, e.get("hp", 0), e.get("hpmax", 1), 230.0, 15.0, true, "hp"))
+	col.add_child(_urna_barra("hp", e.get("hp", 0), e.get("hpmax", 1), 220.0))
 	if e.get("mpmax", 0) > 0:
-		col.add_child(BarraHud.criar(TemaUI.MP, e.get("mp", 0), e.get("mpmax", 1), 230.0, 15.0, true, "mp"))
+		col.add_child(_urna_barra("mp", e.get("mp", 0), e.get("mpmax", 1), 220.0))
 	var ef: String = batalha.efeitos_texto(u) if not e.is_empty() else ""
 	if ef != "":
 		col.add_child(TemaUI.rotulo(ef, 13, TemaUI.OURO))
@@ -491,6 +500,10 @@ func mostrar_resultado(vitoria: bool, resumo: Dictionary, estado: Dictionary) ->
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
 	_resultado.add_child(v)
+	if vitoria:  # brasão de cocar da arte do resultado
+		var br := ArteHud.icone("brasao", 150.0)
+		br.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		v.add_child(br)
 	var t := TemaUI.rotulo("Vitória!" if vitoria else "Derrota", 34, TemaUI.OURO if vitoria else TemaUI.INIMIGO)
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(t)
@@ -500,8 +513,16 @@ func mostrar_resultado(vitoria: bool, resumo: Dictionary, estado: Dictionary) ->
 			v.add_child(TemaUI.rotulo("%s: +%d XP" % [D.HEROIS[id]["nome"], resumo.get("xp", 0)], 18))
 		for n in resumo.get("niveis", []):
 			v.add_child(TemaUI.rotulo("%s subiu para o nível %d!" % [D.HEROIS[n[0]]["nome"], n[1]], 18, TemaUI.OURO))
+		if resumo.get("ouro", 0) > 0:
+			v.add_child(_linha_ouro(resumo["ouro"]))
 		for item in resumo.get("itens", {}):
-			v.add_child(TemaUI.rotulo("Obtido: %s x%d" % [D.ITENS[item]["nome"], resumo["itens"][item]], 18))
+			var h := HBoxContainer.new()
+			h.add_theme_constant_override("separation", 6)
+			var ic := ArteHud.icone_item(item)
+			if ic != "":
+				h.add_child(ArteHud.icone(ic, 30.0))
+			h.add_child(TemaUI.rotulo("Obtido: %s x%d" % [D.ITENS[item]["nome"], resumo["itens"][item]], 18))
+			v.add_child(h)
 		if resumo.get("recruta", "") != "":
 			v.add_child(TemaUI.rotulo("%s entrou para o grupo!" % D.HEROIS[resumo["recruta"]]["nome"], 20, TemaUI.OURO))
 		var bt := Button.new()
@@ -526,3 +547,21 @@ func mostrar_resultado(vitoria: bool, resumo: Dictionary, estado: Dictionary) ->
 			batalha.voltar_ao_mapa())
 		h.add_child(b2)
 		b1.grab_focus()
+
+
+## Barra dourada do resultado com a moeda pintada e o ouro ganho.
+func _linha_ouro(valor: int) -> Control:
+	var tex := ArteHud.textura("barra_ouro")
+	var barra := TextureRect.new()
+	barra.texture = tex
+	barra.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	barra.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	barra.custom_minimum_size = Vector2(300, 300.0 * tex.get_height() / tex.get_width())
+	barra.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	var l := TemaUI.rotulo("+%d de ouro" % valor, 20, TemaUI.OURO)
+	l.set_anchors_preset(Control.PRESET_FULL_RECT)
+	l.offset_left = 60
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	barra.add_child(l)
+	return barra

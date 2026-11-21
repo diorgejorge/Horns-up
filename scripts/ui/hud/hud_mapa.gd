@@ -156,8 +156,9 @@ func _preencher_lista() -> void:
 		bt.text = marca + (r["nome"] if aberta else "???") + ("  ◆" if aqui else "")
 		bt.disabled = not aberta
 		if i == _sel:
-			bt.add_theme_color_override("font_color", TemaUI.OURO)
-			bt.add_theme_color_override("font_hover_color", TemaUI.OURO)
+			bt.add_theme_stylebox_override("normal", ArteHud.estilo("botao", Color(1.0, 0.86, 0.55)))
+			bt.add_theme_color_override("font_color", ArteHud.TINTA_OURO)
+			bt.add_theme_color_override("font_hover_color", ArteHud.TINTA_OURO)
 		bt.pressed.connect(func(): selecionou.emit(i))
 		_lista.add_child(bt)
 		# Sub-área de travessia: só depois que o grupo chega lá.

@@ -44,7 +44,7 @@ func rolar(unidades: Array, rng: RandomNumberGenerator) -> Dictionary:
 		if t > 0.9 + parado * 0.18:
 			var l: Array = _linhas[parado]
 			l[1].text = str(l[3])
-			l[1].add_theme_color_override("font_color", TemaUI.OURO)
+			l[1].add_theme_color_override("font_color", ArteHud.TINTA_INIMIGO)
 			l[2].text = "%d + %d = %d" % [l[3], l[0].destreza, totais[l[0]]]
 			parado += 1
 	_mostrar_ordem(totais)
@@ -63,8 +63,7 @@ func _montar() -> void:
 	fundo.color = Color(0, 0, 0, 0.55)
 	fundo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_raiz.add_child(fundo)
-	var p := PanelContainer.new()
-	TemaUI.aplicar_painel(p, false, TemaUI.OURO)
+	var p := PainelMarajoara.new(12.0, TemaUI.OURO)
 	p.set_anchors_preset(Control.PRESET_CENTER)
 	p.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	p.grow_vertical = Control.GROW_DIRECTION_BOTH
@@ -73,9 +72,18 @@ func _montar() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 8)
 	p.add_child(v)
-	var t := TemaUI.rotulo("Iniciativa — d20 + Destreza", 28, TemaUI.OURO)
+	var topo := HBoxContainer.new()
+	topo.alignment = BoxContainer.ALIGNMENT_CENTER
+	topo.add_theme_constant_override("separation", 14)
+	v.add_child(topo)
+	topo.add_child(ArteHud.icone("d20", 64.0))
+	var placa := PanelContainer.new()
+	placa.add_theme_stylebox_override("panel", ArteHud.estilo("placa"))
+	placa.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	topo.add_child(placa)
+	var t := TemaUI.rotulo("Iniciativa · d20 + Destreza", 28, TemaUI.OURO)
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	v.add_child(t)
+	placa.add_child(t)
 	v.add_child(FaixaMarajoara.new())
 	var g := GridContainer.new()
 	g.columns = 2
@@ -109,19 +117,13 @@ func _montar() -> void:
 	v.add_child(ordem)
 
 
-## Quadradinho do dado (painel creme com o número).
-func _dado() -> PanelContainer:
-	var d := PanelContainer.new()
-	var st := StyleBoxFlat.new()
-	st.bg_color = TemaUI.PRETO
-	st.border_color = TemaUI.CREME
-	st.set_border_width_all(2)
-	st.set_corner_radius_all(6)
-	st.set_content_margin_all(4)
-	d.add_theme_stylebox_override("panel", st)
-	d.custom_minimum_size = Vector2(44, 34)
-	var n := TemaUI.rotulo("?", 20)
+## d20 pintado (cerâmica marajoara) com o número rolado na face da frente.
+func _dado() -> TextureRect:
+	var d := ArteHud.icone("d20", 46.0)
+	var n := TemaUI.rotulo("?", 17)
+	n.set_anchors_preset(Control.PRESET_FULL_RECT)
 	n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	n.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	d.add_child(n)
 	return d
 
