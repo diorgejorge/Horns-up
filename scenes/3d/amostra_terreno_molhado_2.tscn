@@ -1,0 +1,264 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m06_terra_vermelha.tscn" id="t0"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m13_areia.tscn" id="t1"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m18_pedras_escuras.tscn" id="t2"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m29_piso_marajoara.tscn" id="t3"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/terreno3/m09_brejo_capim.tscn" id="t4"]
+[ext_resource type="PackedScene" path="res://scenes/3d/pecas/efeitos/terreno_molhado.tscn" id="molh"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ceu_mat"]
+sky_top_color = Color(0.32, 0.55, 0.8, 1)
+sky_horizon_color = Color(0.85, 0.82, 0.72, 1)
+ground_bottom_color = Color(0.2, 0.25, 0.18, 1)
+ground_horizon_color = Color(0.5, 0.55, 0.45, 1)
+
+[sub_resource type="Sky" id="ceu"]
+sky_material = SubResource("ceu_mat")
+
+[sub_resource type="Environment" id="amb"]
+background_mode = 1
+background_color = Color(0.12, 0.2, 0.14, 1)
+sky = SubResource("ceu")
+ambient_light_source = 3
+ambient_light_energy = 0.45
+reflected_light_source = 2
+tonemap_mode = 3
+tonemap_exposure = 1.15
+ssao_enabled = true
+ssao_radius = 0.6
+ssao_intensity = 1.6
+glow_enabled = true
+
+
+[node name="AmostraTerrenoMolhado2" type="Node3D"]
+
+[node name="LEIA" type="Node" parent="."]
+editor_description = "Amostra 2 de terreno molhado. Cada linha é um tile, cada coluna é o MESMO tile com um nó TerrenoMolhado dentro (filho da peça). Para voltar ao seco, apague o nó TerrenoMolhado. Os GLBs não foram alterados."
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("amb")
+
+[node name="Sol" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.9848077, 0.14224426, -0.09960051, 0, 0.57357645, 0.81915206, 0.17364818, -0.80670726, 0.56486255, 0, 0, 0)
+light_color = Color(0.95, 0.95, 0.75, 1)
+light_energy = 1.2
+shadow_enabled = true
+shadow_blur = 1.5
+
+[node name="LuzDoCeu" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.9396926, -0.19617474, 0.28016657, 0, 0.81915206, 0.57357645, -0.3420202, 0.53898555, -0.76975113, 0, 0, 0)
+light_color = Color(0.55, 0.7, 1, 1)
+light_energy = 0.35
+
+
+[node name="Col0" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.75, -0.6)
+billboard = 1
+text = "SECO"
+font_size = 36
+outline_size = 10
+
+[node name="Col1" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0.75, -0.6)
+billboard = 1
+text = "CHUVA (poças)"
+font_size = 36
+outline_size = 10
+
+[node name="Col2" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0.75, -0.6)
+billboard = 1
+text = "ÁGUA BARRENTA"
+font_size = 36
+outline_size = 10
+
+[node name="Col3" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.800000000000001, 0.75, -0.6)
+billboard = 1
+text = "IGARAPÉ ESCURO"
+font_size = 36
+outline_size = 10
+
+[node name="Lin0" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 0.6, 0.0)
+billboard = 1
+text = "Barro vermelho"
+font_size = 30
+outline_size = 10
+
+[node name="m06_terra_vermelha_0" parent="." instance=ExtResource("t0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0, 0.0)
+encaixar = false
+
+[node name="m06_terra_vermelha_1" parent="." instance=ExtResource("t0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 0.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m06_terra_vermelha_1" instance=ExtResource("molh")]
+estado = 1
+chuva = 1.0
+cobertura_pocas = 0.5
+
+[node name="m06_terra_vermelha_2" parent="." instance=ExtResource("t0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0, 0.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m06_terra_vermelha_2" instance=ExtResource("molh")]
+estado = 2
+
+[node name="m06_terra_vermelha_3" parent="." instance=ExtResource("t0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.800000000000001, 0, 0.0)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m06_terra_vermelha_3" instance=ExtResource("molh")]
+estado = 2
+liquido = 1
+
+[node name="Lin1" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 0.6, 1.6)
+billboard = 1
+text = "Areia de rio"
+font_size = 30
+outline_size = 10
+
+[node name="m13_areia_0" parent="." instance=ExtResource("t1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0, 1.6)
+encaixar = false
+
+[node name="m13_areia_1" parent="." instance=ExtResource("t1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 1.6)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m13_areia_1" instance=ExtResource("molh")]
+estado = 1
+chuva = 1.0
+cobertura_pocas = 0.5
+
+[node name="m13_areia_2" parent="." instance=ExtResource("t1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0, 1.6)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m13_areia_2" instance=ExtResource("molh")]
+estado = 2
+
+[node name="m13_areia_3" parent="." instance=ExtResource("t1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.800000000000001, 0, 1.6)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m13_areia_3" instance=ExtResource("molh")]
+estado = 2
+liquido = 1
+
+[node name="Lin2" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 0.6, 3.2)
+billboard = 1
+text = "Pedras escuras"
+font_size = 30
+outline_size = 10
+
+[node name="m18_pedras_escuras_0" parent="." instance=ExtResource("t2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0, 3.2)
+encaixar = false
+
+[node name="m18_pedras_escuras_1" parent="." instance=ExtResource("t2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 3.2)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m18_pedras_escuras_1" instance=ExtResource("molh")]
+estado = 1
+chuva = 1.0
+cobertura_pocas = 0.5
+
+[node name="m18_pedras_escuras_2" parent="." instance=ExtResource("t2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0, 3.2)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m18_pedras_escuras_2" instance=ExtResource("molh")]
+estado = 2
+
+[node name="m18_pedras_escuras_3" parent="." instance=ExtResource("t2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.800000000000001, 0, 3.2)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m18_pedras_escuras_3" instance=ExtResource("molh")]
+estado = 2
+liquido = 1
+
+[node name="Lin3" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 0.6, 4.800000000000001)
+billboard = 1
+text = "Laje marajoara"
+font_size = 30
+outline_size = 10
+
+[node name="m29_piso_marajoara_0" parent="." instance=ExtResource("t3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0, 4.800000000000001)
+encaixar = false
+
+[node name="m29_piso_marajoara_1" parent="." instance=ExtResource("t3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 4.800000000000001)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m29_piso_marajoara_1" instance=ExtResource("molh")]
+estado = 1
+chuva = 1.0
+cobertura_pocas = 0.5
+
+[node name="m29_piso_marajoara_2" parent="." instance=ExtResource("t3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0, 4.800000000000001)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m29_piso_marajoara_2" instance=ExtResource("molh")]
+estado = 2
+
+[node name="m29_piso_marajoara_3" parent="." instance=ExtResource("t3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.800000000000001, 0, 4.800000000000001)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m29_piso_marajoara_3" instance=ExtResource("molh")]
+estado = 2
+liquido = 1
+
+[node name="Lin4" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 0.6, 6.4)
+billboard = 1
+text = "Brejo com capim"
+font_size = 30
+outline_size = 10
+
+[node name="m09_brejo_capim_0" parent="." instance=ExtResource("t4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0, 6.4)
+encaixar = false
+
+[node name="m09_brejo_capim_1" parent="." instance=ExtResource("t4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0, 6.4)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m09_brejo_capim_1" instance=ExtResource("molh")]
+estado = 1
+chuva = 1.0
+cobertura_pocas = 0.5
+
+[node name="m09_brejo_capim_2" parent="." instance=ExtResource("t4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0, 6.4)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m09_brejo_capim_2" instance=ExtResource("molh")]
+estado = 2
+
+[node name="m09_brejo_capim_3" parent="." instance=ExtResource("t4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.800000000000001, 0, 6.4)
+encaixar = false
+
+[node name="TerrenoMolhado" parent="m09_brejo_capim_3" instance=ExtResource("molh")]
+estado = 2
+liquido = 1
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(0.70710677, -0.35355338, 0.6123724, 0, 0.8660254, 0.5, -0.70710677, -0.35355338, 0.6123724, 14.6, 10.0, 15.4)
+projection = 1
+current = true
+size = 7.5
+near = 0.1
+far = 100.0
